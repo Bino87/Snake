@@ -2,7 +2,7 @@
 
 namespace Network
 {
-    public class Network
+    public class NeuralNetwork
     {
         private const double cBiasRange = 5;
         private const double cWeightRange = 5;
@@ -13,7 +13,7 @@ namespace Network
         readonly double[][] _weights;
         readonly IActivationFunction _evaluationFunction;
 
-        public Network(IActivationFunction evaluationFunction, params int[] layers)
+        public NeuralNetwork(IActivationFunction evaluationFunction, params int[] layers)
         {
             if (layers.Length < 2 || evaluationFunction is null)
                 throw new Exception();
