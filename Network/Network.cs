@@ -6,8 +6,8 @@ namespace Network
     {
         private const double cBiasRange = 5;
         private const double cWeightRange = 5;
-        private readonly int inputCount;
-        private readonly int numLayers;
+        private readonly int _inputCount;
+        private readonly int _numLayers;
 
         readonly double[][] _biases;
         readonly double[][] _weights;
@@ -18,8 +18,8 @@ namespace Network
             if (layers.Length < 2 || evaluationFunction is null)
                 throw new Exception();
 
-            inputCount = layers[0];
-            numLayers = layers.Length - 1;
+            _inputCount = layers[0];
+            _numLayers = layers.Length - 1;
 
             _biases = new double[layers.Length - 1][];
             _weights = new double[layers.Length - 1][];
@@ -50,7 +50,7 @@ namespace Network
 
         public double[] Evaluate(params double[] input)
         {
-            if (input.Length != inputCount) throw new Exception();
+            if (input.Length != _inputCount) throw new Exception();
 
             double[] output;
             int index = 0;
@@ -74,7 +74,7 @@ namespace Network
                 input = output;
                 index++;
 
-            } while (index < numLayers);
+            } while (index < _numLayers);
 
             return output;
         }

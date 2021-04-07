@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
-using UserControls.Enums;
+using Simulation.Enums;
 
 namespace UserControls.Converters
 {
@@ -15,7 +15,6 @@ namespace UserControls.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             if (value is MapCellStatus mcs)
             {
                 return mcs switch

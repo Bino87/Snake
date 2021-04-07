@@ -1,33 +1,33 @@
 ﻿using UserControls.Core.Base;
-using UserControls.Enums;
+using Simulation.Enums;
 
 namespace UserControls.Models
 {
     public class MapCell : Observable
     {
-        private double x;
-        private double y;
-        private MapCellStatus mapCellStatus;
+        private double _x;
+        private double _y;
+        private MapCellStatus _mapCellStatus;
 
         public MapCellStatus MapCellStatus
         {
-            get => mapCellStatus;
-            set => SetField(ref mapCellStatus, value);
+            get => _mapCellStatus;
+            set => SetField(ref _mapCellStatus, value);
         }
 
         public double Width { get; }
         public double Height{ get; }
-
+            
         public double X
         {
-            get => x;
-            set => SetField(ref x, value);
+            get => _x;
+            set => SetField(ref _x, value);
         }
 
         public double Y
         {
-            get => y;
-            set => SetField(ref y, value);
+            get => _y;
+            set => SetField(ref _y, value);
         }
 
         public MapCell(double x, double y, double width, double height)

@@ -6,23 +6,31 @@ namespace UserControls.Models
 {
     public class SnakeMapViewModel : Observable
     {
+        private readonly int _numberOfTiles;
+
         public ObservableCollection<MapCell> Rects { get; set; }
         public SnakeMapViewModel(int numTiles)
         {
-            Rects = CreateMap(numTiles);
+            _numberOfTiles = numTiles;
+            CreateMap();
+        }
+
+        public void CreateMap()
+        {
+            Rects = CreateMap(_numberOfTiles);
         }
 
         private static ObservableCollection<MapCell> CreateMap(int numTiles)
         {
             ObservableCollection<MapCell> res = new();
 
-            double SIZE = Cons.cMapSize / numTiles - 1;
+            double size = Cons.cMapSize / numTiles - 1;
 
             for (int x = 0; x < numTiles; x++)
             {
                 for (int y = 0; y < numTiles; y++)
                 {
-                    MapCell mc = new(x * SIZE + x, y * SIZE + y, SIZE, SIZE);
+                    MapCell mc = new(x * size + x, y * size + y, size, size);
 
                     res.Add(mc);
                 }
