@@ -36,7 +36,7 @@ namespace UserControls.Models
             Y = y;
             Width = width;
             Height = height;
-
+            MapCellStatus = MapCellStatus.Food;
         }
     }
 }
