@@ -16,7 +16,7 @@ namespace Simulation
         {
             changeDirTreshold = changeDirectionTreshhold;
             _inputCount = layersInts[0];
-            _neuralNetwork = new NeuralNetwork(new Sigmoid(), layersInts);
+            _neuralNetwork = new NeuralNetwork(new ReLu(), layersInts);
         }
 
         public Direction Calculate(HashSet<int> occupiedTiles, SnakePart head, Food food, Direction tailDirection, int mapSize)
@@ -39,8 +39,8 @@ namespace Simulation
                 }
             }
 
-            if (max > changeDirTreshold)
-                return head.Direction;
+            //if (max > changeDirTreshold)
+            //    return head.Direction;
             return (Direction)index;
         }
 

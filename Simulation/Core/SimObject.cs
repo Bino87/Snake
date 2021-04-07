@@ -11,6 +11,6 @@ namespace Simulation.Core
 
         
         public abstract MapCellStatus Status { get; }
-        public int InternalIndex { get; protected set; }
+        public int InternalIndex { get;  set; }
     }
 }

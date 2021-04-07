@@ -13,23 +13,16 @@ namespace Simulation.Core
             Direction = direction;
         }
 
-        public void Move(int mapSize)
+        public int Move(int mapSize)
         {
-            switch(Direction)
-            {
-                case Direction.North:
-                    InternalIndex -= mapSize; break;
-                case Direction.East:
-                    InternalIndex--;
-                    break;
-                case Direction.South:
-                    InternalIndex += mapSize;
-                    break;
-                case Direction.West:
-                    InternalIndex++;
-                    break;
-                default: throw new ArgumentOutOfRangeException();
-            }
+            return Direction switch
+                {
+                    Direction.North => InternalIndex - mapSize,
+                    Direction.East => InternalIndex - 1,
+                    Direction.South => InternalIndex + mapSize,
+                    Direction.West => InternalIndex + 1,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
         }
 
         public bool IsValidMove(int mapSize, int numTiles)

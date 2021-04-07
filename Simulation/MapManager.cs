@@ -26,12 +26,16 @@ namespace Simulation
             _rand = new Random();
             _snake = new List<SnakePart>();
             _occupiedTiles = new HashSet<int>();
-            na = new NetworkAgent(0.5, 2 * 4 + 8 * 3, 18, 12, 4);
+            na = new NetworkAgent(0.5, 2 * 4 + 8 * 3, 30,20, 10, 4);
 
             int startIndex = mapSize * mapSize / 2;
 
             _snake.Add(new SnakePart(startIndex, Direction.North));
-            _food = new Food(startIndex - 2* mapSize);
+            _snake.Add(new SnakePart(startIndex - mapSize, Direction.North));
+            _snake.Add(new SnakePart(startIndex - mapSize *2, Direction.North));
+            _snake.Add(new SnakePart(startIndex - mapSize *3, Direction.North));
+            for(int i = 0; i < 25; i++)
+                SpawnNewFood();
             callback(_food.InternalIndex, MapCellStatus.Food);
         }
 
@@ -49,15 +53,22 @@ namespace Simulation
             callback(_food.InternalIndex, MapCellStatus.Food);
         }
 
-        private void Move(Action<int, MapCellStatus> callback)
+        private void Move(Action<int, MapCellStatus> callback, ref int movesSinceLastFood, List<int> list)
         {
             //if eat food than do something else
+            if (Head.Move(_mapSize) == _food.InternalIndex)
+            {
+                list.Add(movesSinceLastFood);
+                EatFood(callback);
+                movesSinceLastFood = 0;
+                return;
+            }
 
             _occupiedTiles.Remove(Tail.InternalIndex);
             callback(Tail.InternalIndex, MapCellStatus.Empty);
 
             Direction dir = Head.Direction;
-            Head.Move(_mapSize);
+            Head.InternalIndex = Head.Move(_mapSize);
             //_occupiedTiles.Add(Head.InternalIndex);
             callback(Head.InternalIndex, MapCellStatus.Snake);
 
@@ -65,16 +76,18 @@ namespace Simulation
             {
                 _snake[i].Direction = dir; //sets the direction to that of an previous element, head is getting it's own direction.
 
-                _snake[i].Move(_mapSize);
+                _snake[i].InternalIndex = _snake[i].Move(_mapSize);
             }
         }
+
+
 
         public SimulationResult Run([NotNull] Action<int, MapCellStatus> callback)
         {
             int movesSinceLastFood = 0;
             List<int> list = new List<int>();
             bool shouldRun = true;
-            Move(callback);
+            Move(callback, ref movesSinceLastFood, list);
             while (shouldRun)
             {
                 SetSnakeDirection();
@@ -82,13 +95,13 @@ namespace Simulation
                 switch (GetMoveResults())
                 {
                     case MoveResults.Ok:
-                        Move(callback);
+                        Move(callback, ref movesSinceLastFood, list);
                         break;
-                    case MoveResults.EatFood:
-                        list.Add(movesSinceLastFood);
-                        EatFood(callback);
-                        movesSinceLastFood = 0;
-                        break;
+                    //case MoveResults.EatFood:
+                    //    list.Add(movesSinceLastFood);
+                    //    EatFood(callback);
+                    //    movesSinceLastFood = 0;
+                    //    break;
                     case MoveResults.OutOfBounds:
                     case MoveResults.SelfCollision:
                         //needs some more things to happen
@@ -105,6 +118,7 @@ namespace Simulation
             return new SimulationResult(_snake.Count, list);
         }
 
+       
         private void SpawnNewFood()
         {
             int min = 0;
@@ -129,10 +143,6 @@ namespace Simulation
 
             if (_occupiedTiles.Contains(Head.InternalIndex))
                 return MoveResults.SelfCollision;
-
-            if (Head.InternalIndex == _food.InternalIndex)
-                return MoveResults.EatFood;
-
 
             return MoveResults.Ok;
 

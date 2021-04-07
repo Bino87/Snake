@@ -11,6 +11,5 @@ namespace Simulation.Enums
         Ok,
         OutOfBounds,
         SelfCollision,
-        EatFood
     }
 }
