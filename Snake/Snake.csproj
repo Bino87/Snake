@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Network\Network.csproj" />
+    <ProjectReference Include="..\UserControls\UserControls.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace UserControls.Models.Base
+namespace UserControls.Core.Base
 {
-    internal abstract class Observable : INotifyPropertyChanged
+    public abstract class Observable : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

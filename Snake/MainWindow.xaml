@@ -3,8 +3,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="clr-namespace:UserControls.Models;assembly=UserControls"
+        xmlns:converters="clr-namespace:UserControls.Converters;assembly=UserControls"
+        xmlns:constants="clr-namespace:UserControls.Constants;assembly=UserControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-    </Grid>
+        Title="MainWindow" Height="550" Width="800"
+        d:DataContext="{d:DesignInstance models:MainViewModel}"
+        >
+    <StackPanel Orientation="Vertical">
+
+        <ItemsControl ItemsSource="{Binding Path=Rects}">
+            <ItemsControl.Resources>
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="Snake" Color="Blue"/>
+                    <SolidColorBrush x:Key="Food" Color="Green"/>
+                    <SolidColorBrush x:Key="Empty" Color="Transparent"/>
+                    <converters:SnakeMapColorConverter x:Key="SnakeMapColorConverter" Transparent="{StaticResource Empty}" Food="{StaticResource Food}" Snake="{StaticResource Snake}"/>
+                </ResourceDictionary>
+            </ItemsControl.Resources>
+            <ItemsControl.ItemsPanel>   
+                <ItemsPanelTemplate>
+                    <Canvas Background="Black" Width="{x:Static constants:Cons.cMapSize}" Height="{x:Static constants:Cons.cMapHeight}"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Canvas.Left" Value="{Binding Path=X}"/>
+                    <Setter Property="Canvas.Top" Value="{Binding Path=Y}"/>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Rectangle Width="{Binding Width, Mode= OneWay}" Height="{Binding Height}"
+                               Margin="1"
+                               Fill="{Binding Path=MapCellStatus, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+
+    </StackPanel>
 </Window>
