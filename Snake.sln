@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snake", "Snake\Snake.csproj", "{B81C399B-5C64-44AB-B737-9708614E0082}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Network\Network.csproj", "{787094DC-03A8-44A3-89A3-CA330F72A7CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Network", "Network\Network.csproj", "{787094DC-03A8-44A3-89A3-CA330F72A7CD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserControls", "UserControls\UserControls.csproj", "{FCF9D1DC-B370-435D-B490-FBA424975906}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{787094DC-03A8-44A3-89A3-CA330F72A7CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{787094DC-03A8-44A3-89A3-CA330F72A7CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{787094DC-03A8-44A3-89A3-CA330F72A7CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF9D1DC-B370-435D-B490-FBA424975906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF9D1DC-B370-435D-B490-FBA424975906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF9D1DC-B370-435D-B490-FBA424975906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF9D1DC-B370-435D-B490-FBA424975906}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
