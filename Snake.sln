@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snake", "Snake\Snake.csproj", "{B81C399B-5C64-44AB-B737-9708614E0082}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network", "Network\Network.csproj", "{787094DC-03A8-44A3-89A3-CA330F72A7CD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B81C399B-5C64-44AB-B737-9708614E0082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B81C399B-5C64-44AB-B737-9708614E0082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B81C399B-5C64-44AB-B737-9708614E0082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B81C399B-5C64-44AB-B737-9708614E0082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{787094DC-03A8-44A3-89A3-CA330F72A7CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{787094DC-03A8-44A3-89A3-CA330F72A7CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{787094DC-03A8-44A3-89A3-CA330F72A7CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{787094DC-03A8-44A3-89A3-CA330F72A7CD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E096B0C1-0AA9-477A-9C62-9F95789A7495}
+	EndGlobalSection
+EndGlobal
