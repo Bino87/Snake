@@ -32,7 +32,7 @@ namespace Network
                 _biases[i - 1] = new double[layers[i]];
             }
 
-            Random rand = new();
+            Random rand = new Random();
 
             for (int i = 0; i < layers.Length - 1; i++)
             {
@@ -78,6 +78,5 @@ namespace Network
 
             return output;
         }
-
     }
 }
