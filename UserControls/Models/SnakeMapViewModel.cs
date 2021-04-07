@@ -6,7 +6,7 @@ namespace UserControls.Models
 {
     public class SnakeMapViewModel : Observable
     {
-        private readonly int _numberOfTiles;
+        public readonly int _numberOfTiles;
 
         public ObservableCollection<MapCell> Rects { get; set; }
         public SnakeMapViewModel(int numTiles)
@@ -25,11 +25,11 @@ namespace UserControls.Models
             ObservableCollection<MapCell> res = new();
 
             double size = Cons.cMapSize / numTiles - 1;
-
-            for (int x = 0; x < numTiles; x++)
+            for (int y = 0; y < numTiles; y++)
             {
-                for (int y = 0; y < numTiles; y++)
+                for (int x = 0; x < numTiles; x++)
                 {
+
                     MapCell mc = new(x * size + x, y * size + y, size, size);
 
                     res.Add(mc);

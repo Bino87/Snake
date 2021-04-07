@@ -17,20 +17,27 @@ namespace Simulation
         private SnakePart Head => _snake[0];
         private SnakePart Tail => _snake[^1];
 
+        private NetworkAgent na;
 
-
-        public MapManager(int mapSize, int maxMovesWithoutFood)
+        public MapManager(int mapSize, int maxMovesWithoutFood, Action<int, MapCellStatus> callback)
         {
             _mapSize = mapSize;
             _maxMovesWithoutFood = maxMovesWithoutFood;
             _rand = new Random();
             _snake = new List<SnakePart>();
             _occupiedTiles = new HashSet<int>();
+            na = new NetworkAgent(0.5, 2 * 4 + 8 * 3, 18, 12, 4);
+
+            int startIndex = mapSize * mapSize / 2;
+
+            _snake.Add(new SnakePart(startIndex, Direction.North));
+            _food = new Food(startIndex - 2* mapSize);
+            callback(_food.InternalIndex, MapCellStatus.Food);
         }
 
-        private void SetSnakeDirection(Direction current)
+        private void SetSnakeDirection()
         {
-            Head.Direction = current;
+            Head.Direction = na.Calculate(_occupiedTiles, Head, _food, Tail.Direction, _mapSize);
         }
 
         private void EatFood(Action<int, MapCellStatus> callback)
@@ -44,12 +51,14 @@ namespace Simulation
 
         private void Move(Action<int, MapCellStatus> callback)
         {
+            //if eat food than do something else
+
             _occupiedTiles.Remove(Tail.InternalIndex);
             callback(Tail.InternalIndex, MapCellStatus.Empty);
 
             Direction dir = Head.Direction;
             Head.Move(_mapSize);
-            _occupiedTiles.Add(Head.InternalIndex);
+            //_occupiedTiles.Add(Head.InternalIndex);
             callback(Head.InternalIndex, MapCellStatus.Snake);
 
             for (int i = 1; i < _snake.Count; i++)
@@ -65,10 +74,10 @@ namespace Simulation
             int movesSinceLastFood = 0;
             List<int> list = new List<int>();
             bool shouldRun = true;
-
+            Move(callback);
             while (shouldRun)
             {
-                SetSnakeDirection(Head.Direction);
+                SetSnakeDirection();
 
                 switch (GetMoveResults())
                 {
@@ -115,13 +124,13 @@ namespace Simulation
 
         private MoveResults GetMoveResults()
         {
-            if (!Head.IsValidMove(_mapSize, _snake.Count))//checks if it leaves the bounds of map
+            if (!Head.IsValidMove(_mapSize, _mapSize * _mapSize))//checks if it leaves the bounds of map
                 return MoveResults.OutOfBounds;
 
             if (_occupiedTiles.Contains(Head.InternalIndex))
                 return MoveResults.SelfCollision;
 
-            if (_occupiedTiles.Contains(_food.InternalIndex))
+            if (Head.InternalIndex == _food.InternalIndex)
                 return MoveResults.EatFood;
 
 
