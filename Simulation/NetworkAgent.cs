@@ -23,8 +23,6 @@ namespace Simulation
         {
             double[] input = GetInputValues(occupiedTiles, head, food, tailDirection, mapSize);
 
-            //create input
-
             double[] results = _neuralNetwork.Evaluate(input);
 
             double max = Double.MinValue;
@@ -67,82 +65,85 @@ namespace Simulation
             bool seesSelf, seesFood;
             //north
             int steps = hIndex / mapSize;
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, -mapSize, out seesSelf, out seesFood, mapSize) / mapSize;
+
+            double GetValue(int increment)
+            {
+                seesFood = false;
+                seesSelf = false;
+                int current = hIndex + increment;
+
+                for (int i = 0; i < steps; i++)
+                {
+                    if (occTiles.Contains(index))
+                    {
+                        seesSelf = true;
+                        return i;
+                    }
+                    if (fIndex == current)
+                    {
+                        seesFood = true;
+                        return i;
+                    }
+
+                    current += increment;
+
+                    if (current < 0 || current > mapSize * mapSize)
+                        return i;
+                }
+
+
+                return steps; ;
+            }
+
+            res[index++] = GetValue(-mapSize) / mapSize;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             //northWest
             steps = Math.Min(hIndex / mapSize, mapSize - hIndex % mapSize);
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, -mapSize + 1, out seesSelf, out seesFood, mapSize) / mapSize * 1.44;
+            res[index++] = GetValue(-mapSize + 1) / mapSize * 1.44;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             //west 
             steps = mapSize - hIndex % mapSize;
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, 1, out seesSelf, out seesFood, mapSize) / mapSize;
+            res[index++] = GetValue(1) / mapSize;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             //southWest
             steps = Math.Min(mapSize - hIndex % mapSize, mapSize - hIndex / mapSize);
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, mapSize + 1, out seesSelf, out seesFood, mapSize) / mapSize;
+            res[index++] = GetValue(mapSize + 1) / mapSize;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             //south
             steps = mapSize - hIndex / mapSize;
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, mapSize, out seesSelf, out seesFood, mapSize) / mapSize;
+            res[index++] = GetValue(mapSize) / mapSize;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             //southEast
             steps = Math.Min(hIndex % mapSize, mapSize - hIndex / mapSize);
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, mapSize + 1, out seesSelf, out seesFood, mapSize) / mapSize * 1.44;
+            res[index++] = GetValue(mapSize + 1) / mapSize * 1.44;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             //east
             steps = hIndex % mapSize;
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, -1, out seesSelf, out seesFood, mapSize) / mapSize;
+            res[index++] = GetValue(-1) / mapSize;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             //northEast
             steps = Math.Min(hIndex % mapSize, hIndex / mapSize);
-            res[index++] = GetValue(occTiles, hIndex, fIndex, steps, -mapSize - 1, out seesSelf, out seesFood, mapSize) / mapSize * 1.44;
+            res[index++] = GetValue(-mapSize - 1) / mapSize * 1.44;
             res[index++] = seesSelf ? 1 : 0;
             res[index++] = seesFood ? 1 : 0;
 
             return res;
         }
 
-        double GetValue(HashSet<int> occupied, int index, int foodIndex, int steps, int increment, out bool seesSelf, out bool seesFood, int mapSize)
-        {
-            seesFood = false;
-            seesSelf = false;
-            index += increment;
-
-            for (int i = 0; i < steps; i++)
-            {
-                if (occupied.Contains(index))
-                {
-                    seesSelf = true;
-                    return i;
-                }
-                if (foodIndex == index)
-                {
-                    seesFood = true;
-                    return i;
-                }
-
-                index += increment;
-
-                if (index < 0 || index > mapSize * mapSize)
-                    return steps;
-            }
-
-
-            return steps; ;
-        }
+        
     }
 }

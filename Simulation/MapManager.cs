@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Simulation.Core;
 using Simulation.Enums;
@@ -69,6 +70,7 @@ namespace Simulation
 
             Direction dir = Head.Direction;
             Head.InternalIndex = Head.Move(_mapSize);
+            _occupiedTiles.Add(Head.InternalIndex);
             //_occupiedTiles.Add(Head.InternalIndex);
             callback(Head.InternalIndex, MapCellStatus.Snake);
 
@@ -88,31 +90,22 @@ namespace Simulation
             List<int> list = new List<int>();
             bool shouldRun = true;
             Move(callback, ref movesSinceLastFood, list);
-            while (shouldRun)
+            while (movesSinceLastFood < _maxMovesWithoutFood)
             {
                 SetSnakeDirection();
 
-                switch (GetMoveResults())
-                {
-                    case MoveResults.Ok:
-                        Move(callback, ref movesSinceLastFood, list);
-                        break;
-                    //case MoveResults.EatFood:
-                    //    list.Add(movesSinceLastFood);
-                    //    EatFood(callback);
-                    //    movesSinceLastFood = 0;
-                    //    break;
-                    case MoveResults.OutOfBounds:
-                    case MoveResults.SelfCollision:
-                        //needs some more things to happen
-                        shouldRun = false;
-                        break;
+                MovePrognosis movePrognosis = GetMoveResults();
 
-                    default: throw new ArgumentOutOfRangeException();
+                if (movePrognosis == MovePrognosis.Ok)
+                {
+                    Move(callback, ref movesSinceLastFood, list);
+                }
+                else
+                {
+                    break;
                 }
 
                 movesSinceLastFood++;
-                shouldRun = shouldRun && movesSinceLastFood < _maxMovesWithoutFood;
             }
 
             return new SimulationResult(_snake.Count, list);
@@ -136,16 +129,35 @@ namespace Simulation
             _food = new Food(nextFoodIndex);
         }
 
-        private MoveResults GetMoveResults()
+        private MovePrognosis GetMoveResults()
         {
             if (!Head.IsValidMove(_mapSize, _mapSize * _mapSize))//checks if it leaves the bounds of map
-                return MoveResults.OutOfBounds;
+                return MovePrognosis.OutOfBounds;
 
-            if (_occupiedTiles.Contains(Head.InternalIndex))
-                return MoveResults.SelfCollision;
 
-            return MoveResults.Ok;
+            //calculate this shit after you move you cunt
+            if (_occupiedTiles.Contains(GetIndexAfterMove()))
+                return MovePrognosis.SelfCollision;
 
+            return MovePrognosis.Ok;
+
+        }
+
+        int GetIndexAfterMove()
+        {
+            int CalculateMove()
+            {
+                return Head.Direction switch
+                    {
+                        Direction.North => -_mapSize,
+                        Direction.East => 1,
+                        Direction.South => _mapSize,
+                        Direction.West => -1,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+            }
+
+            return CalculateMove() + Head.InternalIndex;
         }
     }
 }

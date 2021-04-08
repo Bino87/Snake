@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Simulation.Enums
 {
-    public enum MoveResults
+    public enum MovePrognosis
     {
         Ok,
         OutOfBounds,

@@ -55,7 +55,11 @@ namespace Snake
         private void Callback(int arg1, MapCellStatus arg2)
         {
             Application.Current.Dispatcher.Invoke(() => {
-                                                      mvm.SnakeMapViewModel.Rects[arg1].MapCellStatus = arg2;
+
+                                                      if(arg1 < 0 || arg1 >+ mvm.SnakeMapViewModel.Rects.Count)
+                                                          Console.Beep();
+                                                      else 
+                                                        mvm.SnakeMapViewModel.Rects[arg1].MapCellStatus = arg2;
                                                   });
             Thread.Sleep(10);
         }
