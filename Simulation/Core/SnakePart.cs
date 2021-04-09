@@ -4,7 +4,7 @@ using Simulation.Enums;
 
 namespace Simulation.Core
 {
-    [DebuggerDisplay("II:{X}")]
+    [DebuggerDisplay("X:{X} Y:{Y} D:{Direction}")]
     public class SnakePart : SimObject
     {
         public override MapCellStatus Status => MapCellStatus.Snake;

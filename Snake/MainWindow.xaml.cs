@@ -42,6 +42,8 @@ namespace Snake
                     try
                     {
                         SimulationResult a = mm.Run(Callback);
+
+                        Debug.WriteLine(a.Points);
                     }
                     catch (Exception e)
                     {
@@ -71,7 +73,7 @@ namespace Snake
 
 
             });
-            Thread.Sleep(100);
+            Thread.Sleep(10);
         }
     }
 }
