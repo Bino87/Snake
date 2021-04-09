@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Network;
 using Simulation.Core;
 using Simulation.Enums;
@@ -9,16 +8,16 @@ namespace Simulation
 {
     internal class NetworkAgent
     {
-        private int _inputCount;
-        private IMapCell[,] _map;
-        private NeuralNetwork _neuralNetwork;
-        private double[] result;
+        private readonly int _inputCount;
+        private readonly IMapCell[,] _map;
+        private readonly NeuralNetwork _neuralNetwork;
+        private double[] _result;
         internal NetworkAgent(IMapCell[,] map, params LayerInfo[] layerInfos)
         {
             _map = map;
             _inputCount = layerInfos[0].NodeCount;
 
-            result = new double[layerInfos[^1].NodeCount];
+            _result = new double[layerInfos[^1].NodeCount];
 
             _neuralNetwork = new NeuralNetwork(new NetworkInfo(layerInfos));
         }
@@ -27,21 +26,26 @@ namespace Simulation
         {
             double[] input = GetInputValues(head, tailDirection, mapSize);
 
-            result = _neuralNetwork.Evaluate(input);
+            _result = _neuralNetwork.Evaluate(input);
 
-            double max = Double.MinValue;
+            return PickBest();
+        }
+
+        private Direction PickBest()
+        {
+            double max = double.MinValue;
             int index = -1;
 
-            for (int i = 0; i < result.Length; i++)
+            for(int i = 0; i < _result.Length; i++)
             {
-                if (result[i] > max)
+                if (_result[i] > max)
                 {
-                    max = result[i];
+                    max = _result[i];
                     index = i;
                 }
             }
 
-            return (Direction)index;
+            return (Direction) index;
         }
 
         private double[] GetInputValues(SnakePart head, Direction tailDirection, int mapSize)
@@ -50,10 +54,10 @@ namespace Simulation
             int index = 0;
 
             //Previous Results
-            res[index] = result[index++];
-            res[index] = result[index++];
-            res[index] = result[index++];
-            res[index] = result[index++];
+            res[index] = _result[index++];
+            res[index] = _result[index++];
+            res[index] = _result[index++];
+            res[index] = _result[index++];
 
             //Head Direction
             res[index++] = head.Direction == Direction.North ? 1 : 0;
@@ -75,20 +79,18 @@ namespace Simulation
                     if (x == 0 && y == 0)
                         continue;
 
-                    (double value, bool seesSelf, bool seesFood) = GetValue(x, y, mapSize,  head.X, head.Y, mapSize);
+                    (double value, bool seesSelf, bool seesFood) = GetValue(x, y, mapSize, head.X, head.Y, mapSize);
 
                     res[index++] = value;
                     res[index++] = seesSelf ? 1 : 0;
                     res[index++] = seesFood ? 1 : 0;
-
                 }
             }
-
 
             return res;
         }
 
-        private (double value, bool seesSelf, bool seesFood) GetValue(int incX, int incY, double divideBy,  int headX, int headY, int mapSize)
+        private (double value, bool seesSelf, bool seesFood) GetValue(int incX, int incY, double divideBy, int headX, int headY, int mapSize)
         {
             bool seesFood = false;
             bool seesSelf = false;
@@ -97,32 +99,25 @@ namespace Simulation
             int y = headY + incY;
             double value = 0;
 
-            while(x >= 0 && x < mapSize && y >= 0 && y < mapSize)
+            while (x >= 0 && x < mapSize && y >= 0 && y < mapSize)
             {
                 IMapCell cell = _map[x, y];
 
                 x += incX;
                 y += incY;
 
-                switch(cell.CellStatus)
+                switch (cell.CellStatus)
                 {
-                    case MapCellStatus.Empty:
-                        value++;
-                        continue;
-                        break;
-                    case MapCellStatus.Food:
-                        seesFood = true;
-                        break;
-                    case MapCellStatus.Snake:
-                        seesSelf = true;
-                        break;
+                    case MapCellStatus.Empty: value++; continue;
+                    case MapCellStatus.Food: seesFood = true; break;
+                    case MapCellStatus.Snake: seesSelf = true; break;
                     default: throw new ArgumentOutOfRangeException();
                 }
 
                 break;
             }
 
-            return (value / divideBy, seesSelf, seesFood;
+            return (value / divideBy, seesSelf, seesFood);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Simulation
 {
@@ -8,8 +9,12 @@ namespace Simulation
         {
             Points = points;
             Moves = moves;
+            SelfCollision = selfCollision;
+            OutOfMemory = outOfBounds;
         }
 
+        public bool OutOfMemory { get; }
+        public bool SelfCollision { get; }
         public int Points { get; }
         public List<int> Moves { get; }
     }
