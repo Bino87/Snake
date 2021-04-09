@@ -23,7 +23,19 @@ namespace Snake
         public MainWindow()
         {
             InitializeComponent();
-            var temp = new BitMutator(0, 101);
+            var temp = new BitMutator(1, .1);
+
+            temp.GetOffsprings(new NeuralNetwork(
+                                   new NetworkInfo(
+                                       new LayerInfo(new Input(), 2 * 4 + 8 * 3 + 4),
+                                       new LayerInfo(new ReLu(), 15),
+                                       new LayerInfo(new Sigmoid(), 4))),
+                               new NeuralNetwork(
+                                   new NetworkInfo(
+                                       new LayerInfo(new Input(), 2 * 4 + 8 * 3 + 4),
+                                                  new LayerInfo(new ReLu(), 15),
+                                                   new LayerInfo(new Sigmoid(), 4))));
+
             dudd += Dudd;
             dudd.Invoke(null, null);
 
@@ -37,7 +49,7 @@ namespace Snake
                 this.DataContext = mvm;
 
 
-                mm = new MapManager(mvm.SnakeMapViewModel.RectArr,mvm.SnakeMapViewModel._numberOfTiles, 200);
+                mm = new MapManager(mvm.SnakeMapViewModel.RectArr, mvm.SnakeMapViewModel._numberOfTiles, 200);
 
                 Task.Run(() =>
                 {

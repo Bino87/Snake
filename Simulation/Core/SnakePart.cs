@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Simulation.Enums;
+using Simulation.Interfaces;
 
 namespace Simulation.Core
 {
@@ -34,11 +35,13 @@ namespace Simulation.Core
             Y += y;
         }
 
-        public bool IsValidMove(int numTiles)
+        public bool IsValidMove(IMapCell[,] map)
         {
             (int x, int y) = GetMove();
 
-            return X + x >= 0 && Y + y >= 0 && X + x < numTiles && Y + y <= numTiles;
+            return X + x >= 0 && X + x < map.GetLength(0) &&
+                   Y + y >= 0 && Y + y < map.GetLength(1);
+
         }
     }
 }

@@ -68,46 +68,6 @@ namespace Simulation
             res[index++] = tailDirection == Direction.East ? 1 : 0;
 
 
-
-            bool seesSelf, seesFood;
-
-            double GetValue(int incX, int incY, double divideBy)
-            {
-                seesFood = false;
-                seesSelf = false;
-
-                int x = head.X + incX;
-                int y = head.Y + incY;
-                double value = 0;
-
-                while (x >= 0 && x < mapSize && y >= 0 && y < mapSize)
-                {
-                    IMapCell cell = _map[x, y];
-
-                    x += incX;
-                    y += incY;
-
-                    switch (cell.CellStatus)
-                    {
-                        case MapCellStatus.Empty:
-                            value++;
-                            continue;
-                            break;
-                        case MapCellStatus.Food:
-                            seesFood = true;
-                            break;
-                        case MapCellStatus.Snake:
-                            seesSelf = true;
-                            break;
-                        default: throw new ArgumentOutOfRangeException();
-                    }
-
-                    break;
-                }
-
-                return value / divideBy;
-            }
-
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
@@ -115,7 +75,9 @@ namespace Simulation
                     if (x == 0 && y == 0)
                         continue;
 
-                    res[index++] = GetValue(x, y, mapSize);
+                    (double value, bool seesSelf, bool seesFood) = GetValue(x, y, mapSize,  head.X, head.Y, mapSize);
+
+                    res[index++] = value;
                     res[index++] = seesSelf ? 1 : 0;
                     res[index++] = seesFood ? 1 : 0;
 
@@ -126,6 +88,41 @@ namespace Simulation
             return res;
         }
 
+        private (double value, bool seesSelf, bool seesFood) GetValue(int incX, int incY, double divideBy,  int headX, int headY, int mapSize)
+        {
+            bool seesFood = false;
+            bool seesSelf = false;
 
+            int x = headX + incX;
+            int y = headY + incY;
+            double value = 0;
+
+            while(x >= 0 && x < mapSize && y >= 0 && y < mapSize)
+            {
+                IMapCell cell = _map[x, y];
+
+                x += incX;
+                y += incY;
+
+                switch(cell.CellStatus)
+                {
+                    case MapCellStatus.Empty:
+                        value++;
+                        continue;
+                        break;
+                    case MapCellStatus.Food:
+                        seesFood = true;
+                        break;
+                    case MapCellStatus.Snake:
+                        seesSelf = true;
+                        break;
+                    default: throw new ArgumentOutOfRangeException();
+                }
+
+                break;
+            }
+
+            return (value / divideBy, seesSelf, seesFood;
+        }
     }
 }

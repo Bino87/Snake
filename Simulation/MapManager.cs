@@ -151,7 +151,7 @@ namespace Simulation
 
         private MovePrognosis GetMoveResults()
         {
-            if (!Head.IsValidMove(_mapSize))//checks if it leaves the bounds of map
+            if (!Head.IsValidMove(_map))//checks if it leaves the bounds of map
                 return MovePrognosis.OutOfBounds;
 
             //calculate this shit after you move you cunt
