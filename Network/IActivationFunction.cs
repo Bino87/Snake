@@ -7,6 +7,13 @@ namespace Network
         double Evaluate(double value);
     }
 
+    public class Input : IActivationFunction
+    {
+        public double Evaluate(double value)
+        {
+            return value;
+        }
+    }
     public class Sigmoid : IActivationFunction
     {
         public double Evaluate(double value)

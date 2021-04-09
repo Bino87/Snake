@@ -4,57 +4,23 @@ namespace Network
 {
     public class NeuralNetwork
     {
-        private const double cBiasRange = 5;
-        private const double cWeightRange = 5;
         private readonly int _inputCount;
         private readonly int _numLayers;
 
         readonly double[][] _biases;
         readonly double[][] _weights;
-        readonly IActivationFunction _evaluationFunction;
+        readonly IActivationFunction[] _activationFuntionFunction;
 
-        public NeuralNetwork(IActivationFunction evaluationFunction, params int[] layers)
+        public NeuralNetwork(NetworkInfo networkInfo)
         {
-            if (layers.Length < 2 || evaluationFunction is null)
-                throw new Exception();
-
-            _inputCount = layers[0];
-            _numLayers = layers.Length - 1;
-
-            _biases = new double[layers.Length - 1][];
-            _weights = new double[layers.Length - 1][];
-            _evaluationFunction = evaluationFunction;
-
-            for (int i = 1; i < layers.Length; i++)
-            {
-                int count = layers[i] * layers[i - 1];
-                _weights[i - 1] = new double[count];
-                _biases[i - 1] = new double[layers[i]];
-            }
-
-            CreateWeightsAndBiasies(layers);
+            _biases = networkInfo.Bias;
+            _weights = networkInfo.Weights;
+            _numLayers = networkInfo.Layers;
+            _inputCount = networkInfo.InputCount;
+            _activationFuntionFunction = networkInfo.ActivationFunction;
         }
 
-        internal NetworkData GetNetworkData() => new(_weights, _biases);
-
-        private void CreateWeightsAndBiasies(int[] layers)
-        {
-
-            Random rand = new Random();
-
-            for(int i = 0; i < layers.Length - 1; i++)
-            {
-                for(int x = 0; x < _biases[i].Length; x++)
-                {
-                    _biases[i][x] = rand.NextDouble(-cBiasRange, cBiasRange);
-                }
-
-                for(int x = 0; x < _weights[i].Length; x++)
-                {
-                    _weights[i][x] = rand.NextDouble(-cWeightRange, cWeightRange);
-                }
-            }
-        }
+        internal NetworkInfo ToNetworkData() => new(_activationFuntionFunction, _weights, _biases);
 
         public double[] Evaluate(params double[] input)
         {
@@ -75,7 +41,7 @@ namespace Network
                         value += input[i] * _weights[index][i * output.Length + x];
                     }
 
-                    output[i] = _evaluationFunction.Evaluate(value + _biases[index][i]) ;
+                    output[i] = _activationFuntionFunction[index].Evaluate(value + _biases[index][i]) ;
                 }
 
 

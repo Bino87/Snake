@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Network;
 using Simulation.Core;
 using Simulation.Enums;
 using Simulation.Interfaces;
@@ -29,7 +30,10 @@ namespace Simulation
             _maxMovesWithoutFood = maxMovesWithoutFood;
             _rand = new Random();
             _snake = new List<SnakePart>();
-            _networkAgent = new NetworkAgent(map, 2 * 4 + 8 * 3, 15, 4);
+            _networkAgent = new NetworkAgent(map,
+                                             new LayerInfo(new Input(), 2 * 4 + 8 * 3 + 4),
+                                             new LayerInfo(new ReLu(),15), 
+                                             new LayerInfo(new Sigmoid(),4));
         }
 
         void SpawnSnake(int snakeSize, Action<(int X, int Y), MapCellStatus> callback)
