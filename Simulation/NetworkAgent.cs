@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using Network;
 using Simulation.Core;
 using Simulation.Enums;
+using Simulation.Interfaces;
 using Math = System.Math;
 
 namespace Simulation
 {
     internal class NetworkAgent
     {
-        private double changeDirTreshold;
         private int _inputCount;
+        private IMapCell[,] _map;
         private NeuralNetwork _neuralNetwork;
-        internal NetworkAgent(double changeDirectionTreshhold, params int[] layersInts)
+        internal NetworkAgent(IMapCell[,] map, params int[] layersInts)
         {
-            changeDirTreshold = changeDirectionTreshhold;
+            _map = map;
             _inputCount = layersInts[0];
             _neuralNetwork = new NeuralNetwork(new ReLu(), layersInts);
         }
 
-        public Direction Calculate(HashSet<int> occupiedTiles, SnakePart head, Food food, Direction tailDirection, int mapSize)
+        public Direction Calculate(SnakePart head, Food food, Direction tailDirection, int mapSize)
         {
-            double[] input = GetInputValues(occupiedTiles, head, food, tailDirection, mapSize);
+            double[] input = GetInputValues(head, food, tailDirection, mapSize);
 
             double[] results = _neuralNetwork.Evaluate(input);
 
@@ -42,11 +43,10 @@ namespace Simulation
             return (Direction)index;
         }
 
-        private double[] GetInputValues(HashSet<int> occTiles, SnakePart head, Food food, Direction tailDirection, int mapSize)
+        private double[] GetInputValues(SnakePart head, Food food, Direction tailDirection, int mapSize)
         {
             double[] res = new double[_inputCount];
             int index = 0;
-            int fIndex = food.InternalIndex;
 
             //Head Direction
             res[index++] = head.Direction == Direction.North ? 1 : 0;
@@ -60,90 +60,63 @@ namespace Simulation
             res[index++] = tailDirection == Direction.South ? 1 : 0;
             res[index++] = tailDirection == Direction.East ? 1 : 0;
 
-            int hIndex = head.InternalIndex;
-
             bool seesSelf, seesFood;
-            //north
-            int steps = hIndex / mapSize;
 
-            double GetValue(int increment)
+            double GetValue(int incX, int incY, double divideBy)
             {
                 seesFood = false;
                 seesSelf = false;
-                int current = hIndex + increment;
 
-                for (int i = 0; i < steps; i++)
+                int x = head.X + incX;
+                int y = head.Y + incY;
+                double value = 0;
+
+                while(x >= 0  && x < mapSize && y >=0 && y < mapSize )
                 {
-                    if (occTiles.Contains(index))
+                    IMapCell cell = _map[x, y];
+
+                    x += incX;
+                    y += incY;
+
+                    switch(cell.CellStatus)
                     {
-                        seesSelf = true;
-                        return i;
-                    }
-                    if (fIndex == current)
-                    {
-                        seesFood = true;
-                        return i;
+                        case MapCellStatus.Empty: 
+                            value++;
+                            continue;
+                            break;
+                        case MapCellStatus.Food: 
+                            seesFood = true;
+                            break;
+                        case MapCellStatus.Snake: 
+                            seesSelf = true;
+                            break;
+                        default: throw new ArgumentOutOfRangeException();
                     }
 
-                    current += increment;
-
-                    if (current < 0 || current > mapSize * mapSize)
-                        return i;
+                    break;
                 }
 
-
-                return steps; ;
+                return value / divideBy;
             }
 
-            res[index++] = GetValue(-mapSize) / mapSize;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    if (x == 0 && y == 0)
+                        continue;
 
-            //northWest
-            steps = Math.Min(hIndex / mapSize, mapSize - hIndex % mapSize);
-            res[index++] = GetValue(-mapSize + 1) / mapSize * 1.44;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
+                    res[index++] = GetValue(x, y, mapSize);
+                    res[index++] = seesSelf ? 1 : 0;
+                    res[index++] = seesFood ? 1 : 0;
 
-            //west 
-            steps = mapSize - hIndex % mapSize;
-            res[index++] = GetValue(1) / mapSize;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
+                }
+            }
 
-            //southWest
-            steps = Math.Min(mapSize - hIndex % mapSize, mapSize - hIndex / mapSize);
-            res[index++] = GetValue(mapSize + 1) / mapSize;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
-
-            //south
-            steps = mapSize - hIndex / mapSize;
-            res[index++] = GetValue(mapSize) / mapSize;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
-
-            //southEast
-            steps = Math.Min(hIndex % mapSize, mapSize - hIndex / mapSize);
-            res[index++] = GetValue(mapSize + 1) / mapSize * 1.44;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
-
-            //east
-            steps = hIndex % mapSize;
-            res[index++] = GetValue(-1) / mapSize;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
-
-            //northEast
-            steps = Math.Min(hIndex % mapSize, hIndex / mapSize);
-            res[index++] = GetValue(-mapSize - 1) / mapSize * 1.44;
-            res[index++] = seesSelf ? 1 : 0;
-            res[index++] = seesFood ? 1 : 0;
 
             return res;
         }
 
-        
+
     }
 }

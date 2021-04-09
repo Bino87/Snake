@@ -11,7 +11,7 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance models:SnakeMapViewModel}">
     <StackPanel Orientation="Vertical">
-        <ItemsControl ItemsSource="{Binding Path=Rects}">
+        <ItemsControl ItemsSource="{Binding Path=RectList}">
             <ItemsControl.Resources>
                 <ResourceDictionary>
                     <SolidColorBrush x:Key="Snake" Color="Blue"/>
@@ -34,7 +34,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Rectangle Width="{Binding Width, Mode= OneWay}" Height="{Binding Height}"
-                               Fill="{Binding Path=MapCellStatus, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}"/>
+                               Fill="{Binding Path=CellStatus, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

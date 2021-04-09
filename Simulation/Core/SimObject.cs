@@ -4,13 +4,15 @@ namespace Simulation.Core
 {
     public abstract class SimObject
     {
-        protected SimObject(int internalIndex)
+        protected SimObject(int x, int y)
         {
-            InternalIndex = internalIndex;
+            X = x;
+            Y = y;
         }
 
         
         public abstract MapCellStatus Status { get; }
-        public int InternalIndex { get;  set; }
+        public int X { get;  set; }
+        public int Y { get; set; }
     }
 }

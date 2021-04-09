@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Simulation.Interfaces;
 using UserControls.Constants;
 using UserControls.Core.Base;
 
@@ -8,19 +9,22 @@ namespace UserControls.Models
     {
         public readonly int _numberOfTiles;
 
-        public ObservableCollection<MapCell> Rects { get; set; }
+        public ObservableCollection<MapCell> RectList { get; set; }
+        public IMapCell[,] RectArr { get; }
+
         public SnakeMapViewModel(int numTiles)
         {
             _numberOfTiles = numTiles;
+            RectArr = new MapCell[numTiles, numTiles];
             CreateMap();
         }
 
         public void CreateMap()
         {
-            Rects = CreateMap(_numberOfTiles);
+            CreateMap(_numberOfTiles);
         }
 
-        private static ObservableCollection<MapCell> CreateMap(int numTiles)
+        private void  CreateMap(int numTiles)
         {
             ObservableCollection<MapCell> res = new();
 
@@ -29,14 +33,14 @@ namespace UserControls.Models
             {
                 for (int x = 0; x < numTiles; x++)
                 {
-
                     MapCell mc = new(x * size + x, y * size + y, size, size);
+                    RectArr[x, y] = mc;
 
                     res.Add(mc);
                 }
             }
 
-            return res;
+            RectList = res;
         }
     }
 }

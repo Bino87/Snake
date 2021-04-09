@@ -6,7 +6,7 @@ namespace Simulation.Core
     {
         public override MapCellStatus Status => MapCellStatus.Food;
 
-        public Food(int internalIndex) : base(internalIndex)
+        public Food(int x,int y) : base(x, y)
         {
         }
     }

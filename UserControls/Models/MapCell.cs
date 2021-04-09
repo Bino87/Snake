@@ -1,18 +1,21 @@
-﻿using UserControls.Core.Base;
+﻿using System.Diagnostics;
+using UserControls.Core.Base;
 using Simulation.Enums;
+using Simulation.Interfaces;
 
 namespace UserControls.Models
 {
-    public class MapCell : Observable
+    [DebuggerDisplay("X:{X} Y:{Y} {CellStatus}")]
+    public class MapCell : Observable, IMapCell
     {
         private double _x;
         private double _y;
-        private MapCellStatus _mapCellStatus;
+        private MapCellStatus _cellStatus;
 
-        public MapCellStatus MapCellStatus
+        public MapCellStatus CellStatus
         {
-            get => _mapCellStatus;
-            set => SetField(ref _mapCellStatus, value);
+            get => _cellStatus;
+            set => SetField(ref _cellStatus, value);
         }
 
         public double Width { get; }

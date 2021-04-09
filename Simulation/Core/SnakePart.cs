@@ -4,39 +4,41 @@ using Simulation.Enums;
 
 namespace Simulation.Core
 {
-    [DebuggerDisplay("II:{InternalIndex}")]
+    [DebuggerDisplay("II:{X}")]
     public class SnakePart : SimObject
     {
         public override MapCellStatus Status => MapCellStatus.Snake;
 
         public Direction Direction { get; set; }
-        public SnakePart(int internalIndex, Direction direction) : base(internalIndex)
+        public SnakePart(int x, int y, Direction direction) : base(x, y)
         {
             Direction = direction;
         }
 
-        public int Move(int mapSize)
-        {
-            return Direction switch
-                {
-                    Direction.North => InternalIndex - mapSize,
-                    Direction.East => InternalIndex - 1,
-                    Direction.South => InternalIndex + mapSize,
-                    Direction.West => InternalIndex + 1,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-        }
-
-        public bool IsValidMove(int mapSize, int numTiles)
+        public (int X, int Y) GetMove()
         {
             return Direction switch
             {
-                Direction.North => InternalIndex - mapSize > 0,
-                Direction.East => InternalIndex - 1 > 0 && (InternalIndex - 1) % mapSize < InternalIndex % mapSize,
-                Direction.South => InternalIndex + mapSize < numTiles,
-                Direction.West => InternalIndex + 1 < numTiles && (InternalIndex + 1) % mapSize > InternalIndex % mapSize,
-                _ => throw new ArgumentOutOfRangeException(),
-                };
+                Direction.North => (0, -1),
+                Direction.East => (-1, 0),
+                Direction.South => (0, 1),
+                Direction.West => (1, 0),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        public void Move()
+        {
+            var move = GetMove();
+            X += move.X;
+            Y += move.Y;
+        }
+
+        public bool IsValidMove(int numTiles)
+        {
+            (int x, int y) = GetMove();
+
+            return X + x >= 0 && Y + y >= 0 && X + x < numTiles && Y + y <= numTiles;
         }
     }
 }

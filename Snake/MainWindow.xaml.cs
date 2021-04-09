@@ -16,52 +16,62 @@ namespace Snake
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel mvm ;
+        private MainViewModel mvm;
         private MapManager mm;
         private EventHandler dudd;
         public MainWindow()
         {
             InitializeComponent();
             dudd += Dudd;
-            dudd.Invoke(null,null);
-            
+            dudd.Invoke(null, null);
+
         }
 
         private void Dudd(object? sender, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() => {
-                                                      mvm = new MainViewModel();
-                                                      this.DataContext = mvm;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                mvm = new MainViewModel();
+                this.DataContext = mvm;
 
 
-                                                      mm = new MapManager(mvm.SnakeMapViewModel._numberOfTiles, 200, Callback);
+                mm = new MapManager(mvm.SnakeMapViewModel.RectArr,mvm.SnakeMapViewModel._numberOfTiles, 200);
 
-                                                      Task.Run(() => {
-                                                                   try
-                                                                   {
-                                                                       var a = mm.Run(Callback);
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        SimulationResult a = mm.Run(Callback);
+                    }
+                    catch (Exception e)
+                    {
 
-                                                                       Debug.WriteLine(string.Join(": ",a.Points,a.Moves.Min(), a.Moves.Max(), a.Moves.Average()));
-                                                                   } catch(Exception)
-                                                                   {
+                    }
 
-                                                                   }
-
-                                                                   dudd.Invoke(null, null);
-                                                               });
-                                                  });
+                    dudd.Invoke(null, null);
+                });
+            });
         }
 
-        private void Callback(int arg1, MapCellStatus arg2)
+        private void Callback((int X, int Y) tpl, MapCellStatus newStatus)
         {
-            Application.Current.Dispatcher.Invoke(() => {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
 
-                                                      if(arg1 < 0 || arg1 >+ mvm.SnakeMapViewModel.Rects.Count)
-                                                          Console.Beep();
-                                                      else 
-                                                        mvm.SnakeMapViewModel.Rects[arg1].MapCellStatus = arg2;
-                                                  });
-            Thread.Sleep(10);
+                if (tpl.X < 0 || tpl.X > mvm.SnakeMapViewModel._numberOfTiles || tpl.Y < 0 || tpl.Y > mvm.SnakeMapViewModel._numberOfTiles)
+                {
+
+                }
+                else
+                {
+                    mvm.SnakeMapViewModel.RectArr[tpl.X, tpl.Y].CellStatus = newStatus;
+                }
+
+
+
+
+            });
+            Thread.Sleep(100);
         }
     }
 }

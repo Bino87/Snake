@@ -1,4 +1,5 @@
-﻿using UserControls.Core.Base;
+﻿using UserControls.Constants;
+using UserControls.Core.Base;
 
 namespace UserControls.Models
 {
@@ -7,7 +8,7 @@ namespace UserControls.Models
         public SnakeMapViewModel SnakeMapViewModel {get; set; }
         public MainViewModel()
         {
-            SnakeMapViewModel = new SnakeMapViewModel(50);
+            SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
         }
     }
 }
