@@ -23,7 +23,7 @@ namespace Snake
         public MainWindow()
         {
             InitializeComponent();
-
+            var temp = new BitMutator(0, 101);
             dudd += Dudd;
             dudd.Invoke(null, null);
 

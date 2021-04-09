@@ -3,21 +3,6 @@ using System.Collections.Generic;
 
 namespace Network
 {
-    public class LayerInfo
-    {
-        public IActivationFunction ActivationFunction { get; }
-        public int NodeCount { get; }
-
-
-        public LayerInfo(IActivationFunction activationFunction, int nodeCount)
-        {
-            ActivationFunction = activationFunction;
-            NodeCount = nodeCount;
-        }
-
-        
-    }
-
     public class NetworkInfo
     {
         private const double cBiasRange = 1d;
@@ -77,7 +62,7 @@ namespace Network
         
         private void CreateWeightsAndBiases()
         {
-            Random rand = new Random();
+            Random rand = new();
 
             for(int i = 0; i < Layers ; i++)
             {
