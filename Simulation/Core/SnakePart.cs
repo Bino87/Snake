@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using Simulation.Enums;
 
 namespace Simulation.Core
 {
+    [DebuggerDisplay("II:{InternalIndex}")]
     public class SnakePart : SimObject
     {
         public override MapCellStatus Status => MapCellStatus.Snake;

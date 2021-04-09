@@ -7,7 +7,7 @@ namespace UserControls.Models
         public SnakeMapViewModel SnakeMapViewModel {get; set; }
         public MainViewModel()
         {
-            SnakeMapViewModel = new SnakeMapViewModel(25);
+            SnakeMapViewModel = new SnakeMapViewModel(50);
         }
     }
 }
