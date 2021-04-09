@@ -32,16 +32,24 @@ namespace Network
                 _biases[i - 1] = new double[layers[i]];
             }
 
+            CreateWeightsAndBiasies(layers);
+        }
+
+        internal NetworkData GetNetworkData() => new(_weights, _biases);
+
+        private void CreateWeightsAndBiasies(int[] layers)
+        {
+
             Random rand = new Random();
 
-            for (int i = 0; i < layers.Length - 1; i++)
+            for(int i = 0; i < layers.Length - 1; i++)
             {
-                for (int x = 0; x < _biases[i].Length; x++)
+                for(int x = 0; x < _biases[i].Length; x++)
                 {
                     _biases[i][x] = rand.NextDouble(-cBiasRange, cBiasRange);
                 }
 
-                for (int x = 0; x < _weights[i].Length; x++)
+                for(int x = 0; x < _weights[i].Length; x++)
                 {
                     _weights[i][x] = rand.NextDouble(-cWeightRange, cWeightRange);
                 }

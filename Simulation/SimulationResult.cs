@@ -4,7 +4,7 @@ namespace Simulation
 {
     public readonly struct SimulationResult
     {
-        public SimulationResult(int points, List<int> moves)
+        public SimulationResult(int points, List<int> moves, bool selfCollision, bool outOfBounds)
         {
             Points = points;
             Moves = moves;

@@ -29,9 +29,9 @@ namespace Simulation.Core
 
         public void Move()
         {
-            var move = GetMove();
-            X += move.X;
-            Y += move.Y;
+            (int x, int y) = GetMove();
+            X += x;
+            Y += y;
         }
 
         public bool IsValidMove(int numTiles)

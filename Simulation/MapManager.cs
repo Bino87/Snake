@@ -7,6 +7,8 @@ using Simulation.Interfaces;
 
 namespace Simulation
 {
+    
+
     public class MapManager
     {
         private readonly int _mapSize;
@@ -32,13 +34,14 @@ namespace Simulation
 
         void SpawnSnake(int snakeSize, Action<(int X, int Y), MapCellStatus> callback)
         {
+            _snake.Clear();
             int x = _mapSize / 2;
+
             for (int i = 0; i < snakeSize && i < _mapSize; i++)
             {
                 int y = x + i;
                 _snake.Add(new SnakePart(x, y, Direction.North));
                 callback?.Invoke((x, y), MapCellStatus.Snake);
-
             }
         }
 
@@ -79,6 +82,8 @@ namespace Simulation
                 Head.Move();
                 callback((Head.X, Head.Y), MapCellStatus.Snake);
                 (x, y) = (Tail.X, Tail.Y);
+                callback((x, y), MapCellStatus.Empty);
+
                 for (int i = 1; i < _snake.Count; i++)
                 {
                     Direction tDir = _snake[i].Direction;
@@ -86,8 +91,6 @@ namespace Simulation
                     _snake[i].Direction = dir; //sets the direction to that of an previous element, head is getting it's own direction.
                     dir = tDir;
                 }
-
-                callback((x, y), MapCellStatus.Empty);
             }
         }
 
@@ -101,18 +104,19 @@ namespace Simulation
 
         public SimulationResult Run([NotNull] Action<(int X, int Y), MapCellStatus> callback)
         {
+            ResetMap(callback);
             SpawnSnake(4, callback);
             SpawnNewFood(callback);
+            MovePrognosis movePrognosis = MovePrognosis.Ok;
 
             int movesSinceLastFood = 0;
-            List<int> list = new List<int>();
-            //Move(callback, ref movesSinceLastFood, list);
+            List<int> list = new();
 
             while (movesSinceLastFood < _maxMovesWithoutFood)
             {
                 CalculateSnakeDirection();
 
-                MovePrognosis movePrognosis = GetMoveResults();
+                movePrognosis = GetMoveResults();
 
                 if (movePrognosis == MovePrognosis.Ok)
                 {
@@ -126,10 +130,20 @@ namespace Simulation
                 movesSinceLastFood++;
             }
 
-            return new SimulationResult(_snake.Count, list);
+            return new SimulationResult(_snake.Count, list, movePrognosis == MovePrognosis.SelfCollision, movePrognosis == MovePrognosis.OutOfBounds);
         }
 
-
+        private void ResetMap(Action<(int X, int Y), MapCellStatus> callback)
+        {
+            for(int x = 0; x < _mapSize; x++)
+            {
+                for(int y = 0; y < _mapSize; y++)
+                {
+                    if(_map[x,y].CellStatus != MapCellStatus.Empty)
+                        callback?.Invoke((x,y), MapCellStatus.Empty);
+                }
+            }
+        }
 
         private MovePrognosis GetMoveResults()
         {
@@ -143,7 +157,6 @@ namespace Simulation
                 return MovePrognosis.SelfCollision;
 
             return MovePrognosis.Ok;
-
         }
 
         (int X, int Y) GetPositionAfterMove()

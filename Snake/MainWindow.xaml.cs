@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Network.Mutators;
 using Simulation;
 using Simulation.Enums;
 using UserControls.Models;
@@ -22,6 +23,13 @@ namespace Snake
         public MainWindow()
         {
             InitializeComponent();
+
+            NeuralNetwork n1 = new NeuralNetwork(new ReLu(), 3, 2, 1);
+            NeuralNetwork n2 = new NeuralNetwork(new ReLu(), 3, 2, 1);
+            BitMutator bnm = new BitMutator();
+
+            (NeuralNetwork First, NeuralNetwork Second) off = bnm.GetOffspring(n1, n2);
+
             dudd += Dudd;
             dudd.Invoke(null, null);
 
