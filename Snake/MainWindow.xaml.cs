@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Network.ActivationFunctions;
 using Network.Mutators;
 using Simulation;
 using Simulation.Enums;
@@ -23,25 +24,13 @@ namespace Snake
         public MainWindow()
         {
             InitializeComponent();
-            var temp = new BitMutator(1, .1);
-
-            temp.GetOffsprings(new NeuralNetwork(
-                                   new NetworkInfo(
-                                       new LayerInfo(new Input(), 2 * 4 + 8 * 3 + 4),
-                                       new LayerInfo(new ReLu(), 15),
-                                       new LayerInfo(new Sigmoid(), 4))),
-                               new NeuralNetwork(
-                                   new NetworkInfo(
-                                       new LayerInfo(new Input(), 2 * 4 + 8 * 3 + 4),
-                                                  new LayerInfo(new ReLu(), 15),
-                                                   new LayerInfo(new Sigmoid(), 4))));
 
             dudd += Dudd;
             dudd.Invoke(null, null);
 
         }
 
-        private void Dudd(object? sender, EventArgs e)
+        private void Dudd(object sender, EventArgs e)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -53,39 +42,35 @@ namespace Snake
 
                 Task.Run(() =>
                 {
-                    try
-                    {
+                    //try
+                    //{
                         SimulationResult a = mm.Run(Callback);
 
-                        Debug.WriteLine(a.Points);
-                    }
-                    catch (Exception e)
-                    {
+                    //}
+                    //catch (Exception e)
+                    //{
 
-                    }
+                    //}
 
                     dudd.Invoke(null, null);
                 });
             });
         }
 
-        private void Callback((int X, int Y) tpl, MapCellStatus newStatus)
+        private void Callback(int x, int y, MapCellStatus newStatus)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
 
-                if (tpl.X < 0 || tpl.X > mvm.SnakeMapViewModel._numberOfTiles || tpl.Y < 0 || tpl.Y > mvm.SnakeMapViewModel._numberOfTiles)
+                if (x < 0 || x > mvm.SnakeMapViewModel._numberOfTiles || y < 0 || y > mvm.SnakeMapViewModel._numberOfTiles)
                 {
-
+                    //error
+                    Console.Beep();
                 }
                 else
                 {
-                    mvm.SnakeMapViewModel.RectArr[tpl.X, tpl.Y].CellStatus = newStatus;
+                    mvm.SnakeMapViewModel.RectArr[x, y].CellStatus = newStatus;
                 }
-
-
-
-
             });
             Thread.Sleep(10);
         }

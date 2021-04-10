@@ -1,4 +1,6 @@
-﻿namespace Network
+﻿using Network.ActivationFunctions;
+
+namespace Network
 {
     public class LayerInfo
     {
@@ -11,7 +13,5 @@
             ActivationFunction = activationFunction;
             NodeCount = nodeCount;
         }
-
-        
     }
 }

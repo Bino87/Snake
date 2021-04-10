@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Network.ActivationFunctions;
 
 namespace Network
 {
     public class NetworkInfo
     {
-        private const double cBiasRange = 1000d;
-        private const double cWeightRange = 1000d;
+        private const double cBiasRange = 5;
+        private const double cWeightRange = 1;
 
         internal double[][] Weights { get; }
         internal double[][] Bias { get; }
@@ -129,7 +130,5 @@ namespace Network
                 }
             }
         }
-
-
     }
 }

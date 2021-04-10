@@ -53,7 +53,7 @@ namespace Network.Mutators
             return (new NeuralNetwork(fNetworkInfo), new NeuralNetwork(mNetworkInfo));
         }
 
-        void Mutate(byte[] arr)
+        private void Mutate(byte[] arr)
         {
             if (_rand.NextDouble() < _mutationChancePercentage)
             {

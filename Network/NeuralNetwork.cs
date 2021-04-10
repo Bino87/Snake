@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Network.ActivationFunctions;
 
 namespace Network
 {
@@ -9,7 +12,7 @@ namespace Network
 
         readonly double[][] _biases;
         readonly double[][] _weights;
-        readonly IActivationFunction[] _activationFuntionFunction;
+        readonly IActivationFunction[] _activationFunction;
 
         public NeuralNetwork(NetworkInfo networkInfo)
         {
@@ -17,38 +20,46 @@ namespace Network
             _weights = networkInfo.Weights;
             _numLayers = networkInfo.Layers;
             _inputCount = networkInfo.InputCount;
-            _activationFuntionFunction = networkInfo.ActivationFunction;
+            _activationFunction = networkInfo.ActivationFunction;
         }
 
-        internal NetworkInfo ToNetworkData() => new(_activationFuntionFunction, _weights, _biases);
+        internal NetworkInfo ToNetworkData() => new(_activationFunction, _weights, _biases);
 
-        public double[] Evaluate(params double[] input)
+        public double[] Evaluate(double[] input)
         {
             if (input.Length != _inputCount) throw new Exception();
 
             double[] output;
-            int index = 0;
+            int layerIndex = 0;
 
             do
             {
-                output = new double[_biases[index].Length];
+                output = new double[_biases[layerIndex].Length];
 
-                for (int i = 0; i < output.Length; i++)
-                {
-                    double value = 0;
-                    for (int x = 0; x < input.Length; x++)
-                    {
-                        value += input[i] * _weights[index][i * output.Length + x];
-                    }
 
-                    output[i] = _activationFuntionFunction[index].Evaluate(value + _biases[index][i]) ;
-                }
+                Parallel.For(0, output.Length,
+                             (outputIndex) =>
+                             {
+                                 double value = 0;
 
+
+                                 for (int inputIndex = 0; inputIndex < input.Length; inputIndex++)
+                                 {
+                                     int weightIndex = outputIndex * input.Length + inputIndex;
+                                     double r = input[inputIndex] * _weights[layerIndex][weightIndex];
+
+                                     value += r;
+                                 }
+
+                                 double res = _activationFunction[layerIndex].Evaluate(value + _biases[layerIndex][outputIndex]);
+                                 output[outputIndex] = res;
+                             }
+                    );
 
                 input = output;
-                index++;
+                layerIndex++;
 
-            } while (index < _numLayers);
+            } while (layerIndex < _numLayers);
 
             return output;
         }
