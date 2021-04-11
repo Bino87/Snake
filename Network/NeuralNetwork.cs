@@ -36,7 +36,6 @@ namespace Network
             {
                 output = new double[_biases[layerIndex].Length];
 
-
                 Parallel.For(0, output.Length,
                              (outputIndex) =>
                              {
@@ -46,13 +45,10 @@ namespace Network
                                  for (int inputIndex = 0; inputIndex < input.Length; inputIndex++)
                                  {
                                      int weightIndex = outputIndex * input.Length + inputIndex;
-                                     double r = input[inputIndex] * _weights[layerIndex][weightIndex];
-
-                                     value += r;
+                                     value += input[inputIndex] * _weights[layerIndex][weightIndex];
                                  }
 
-                                 double res = _activationFunction[layerIndex].Evaluate(value + _biases[layerIndex][outputIndex]);
-                                 output[outputIndex] = res;
+                                 output[outputIndex] = _activationFunction[layerIndex].Evaluate(value + _biases[layerIndex][outputIndex]);
                              }
                     );
 

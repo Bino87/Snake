@@ -22,13 +22,15 @@ namespace Simulation
             _neuralNetwork = new NeuralNetwork(new NetworkInfo(layerInfos));
         }
 
-        public double[] Calculate(SnakePart head, Food food, Direction tailDirection, int mapSize)
+        public double[] Calculate(SnakePart head, Direction tailDirection, int mapSize)
         {
             double[] input = GetInputValues(head, tailDirection, mapSize);
 
-            return _result = _neuralNetwork.Evaluate(input);
+            _result = _neuralNetwork.Evaluate(input);
 
+            return _result;
         }
+
 
         private double[] GetInputValues(SnakePart head, Direction tailDirection, int mapSize)
         {

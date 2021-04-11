@@ -10,7 +10,7 @@ using Simulation.Interfaces;
 
 namespace Simulation
 {
-    
+
 
     public class MapManager
     {
@@ -34,9 +34,9 @@ namespace Simulation
             _snake = new List<SnakePart>();
             _networkAgent = new NetworkAgent(map,
                                              new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 4),
-                                             new LayerInfo( new Sigmoid(),300), 
-                                             new LayerInfo( new Tanh(),300), 
-                                             new LayerInfo(new ReLu(),4));
+                                             new LayerInfo(new Sigmoid(), 300),
+                                             new LayerInfo(new Tanh(), 300),
+                                             new LayerInfo(new ReLu(), 4));
         }
 
         void SpawnSnake(int snakeSize, Action<int, int, MapCellStatus> callback)
@@ -69,25 +69,25 @@ namespace Simulation
 
         private void CalculateSnakeDirection()
         {
-            Head.Direction = PickBest(_networkAgent.Calculate(Head, _food, Tail.Direction, _mapSize));
+            var results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize);
+            Head.Direction = PickBest(results);
         }
-        
+
         private static Direction PickBest(double[] result)
         {
-            Debug.WriteLine(string.Join( " : ", result));
+            Debug.WriteLine(string.Join(" : ", result));
             double max = double.MinValue;
             int index = -1;
 
-            for(int i = 0; i < result.Length; i++)
+            for (int i = 0; i < result.Length; i++)
             {
-                if (result[i] > max)
-                {
-                    max = result[i];
-                    index = i;
-                }
+                if (max > result[i])
+                    continue;
+                max = result[i];
+                index = i;
             }
 
-            return (Direction) index;
+            return (Direction)index;
         }
 
         private void Move(Action<int, int, MapCellStatus> callback, ref int movesSinceLastFood, List<int> list)
@@ -150,10 +150,10 @@ namespace Simulation
                 }
                 else
                 {
-                    if(movePrognosis == MovePrognosis.OutOfBounds)
-                        Console.Beep(1000,10);
-                        else 
-                        Console.Beep(5000,10);
+                    if (movePrognosis == MovePrognosis.OutOfBounds)
+                        Console.Beep(1000, 10);
+                    else
+                        Console.Beep(5000, 10);
                     break;
                 }
 
@@ -165,12 +165,12 @@ namespace Simulation
 
         private void ResetMap(Action<int, int, MapCellStatus> callback)
         {
-            for(int x = 0; x < _mapSize; x++)
+            for (int x = 0; x < _mapSize; x++)
             {
-                for(int y = 0; y < _mapSize; y++)
+                for (int y = 0; y < _mapSize; y++)
                 {
-                    if(_map[x,y].CellStatus != MapCellStatus.Empty)
-                        callback?.Invoke(x,y, MapCellStatus.Empty);
+                    if (_map[x, y].CellStatus != MapCellStatus.Empty)
+                        callback?.Invoke(x, y, MapCellStatus.Empty);
                 }
             }
         }
