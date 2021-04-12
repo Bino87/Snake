@@ -1,6 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using ILGPU;
+using ILGPU.IR.Transformations;
+using ILGPU.Runtime;
+using ILGPU.Runtime.Cuda;
 using Network.ActivationFunctions;
 
 namespace Network
@@ -25,6 +28,7 @@ namespace Network
 
         internal NetworkInfo ToNetworkData() => new(_activationFunction, _weights, _biases);
 
+        
         public double[] Evaluate(double[] input)
         {
             if (input.Length != _inputCount) throw new Exception();

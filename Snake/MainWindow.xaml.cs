@@ -72,7 +72,7 @@ namespace Snake
                     mvm.SnakeMapViewModel.RectArr[x, y].CellStatus = newStatus;
                 }
             });
-            Thread.Sleep(10);
+            Thread.Sleep(100);
         }
     }
 }
