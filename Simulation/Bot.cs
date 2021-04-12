@@ -73,7 +73,7 @@ namespace Simulation
 
         private void CalculateSnakeDirection()
         {
-            double[] results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize);
+            double[] results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize, _food.X, _food.Y);
             Head.Direction = PickBest(results);
         }
 

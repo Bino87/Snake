@@ -44,12 +44,18 @@ namespace Network
                                  for (int inputIndex = 0; inputIndex < input.Length; inputIndex++)
                                  {
                                      int weightIndex = outputIndex * input.Length + inputIndex;
-                                     value += input[inputIndex] * _weights[layerIndex][weightIndex];
+                                     double  result = input[inputIndex] * _weights[layerIndex][weightIndex];
+                                     if (double.IsNaN(result) || double.IsInfinity(result) )
+                                     {
+                                         continue;
+                                     }
+
+                                     value += result;
                                  }
 
                                  double res = _activationFunction[layerIndex].Evaluate(value + _biases[layerIndex][outputIndex]);
-                                 res = double.IsInfinity(res) ? 0 : res;
-                                 output[outputIndex] = double.IsNaN(res) ? 0 : res;
+                                 if (double.IsInfinity(res) || double.IsNaN(res)) res = 0;
+                                 output[outputIndex] = res;
                              }
                     );
 

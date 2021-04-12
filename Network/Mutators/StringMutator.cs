@@ -64,8 +64,8 @@ namespace Network.Mutators
                     dt.Rows.Add(
                         fBytes[i],
                         mBytes[i],
-                        first[i],
-                        second[i]
+                        firstBytes[i],
+                        secondBytes[i]
                     );
                 }
             }
@@ -100,8 +100,9 @@ namespace Network.Mutators
                 for(int i = 0; i < amount; i++)
                 {
                     int index = _rand.Next(str.Length);
-
-                    sb[index] = _rand.Next() % 2 == 0 ? '1' : '0';
+                    if (sb[index] == '1')
+                        sb[index] = '0';
+                    else sb[index] = '1';
                 }
 
                 return sb.ToString();

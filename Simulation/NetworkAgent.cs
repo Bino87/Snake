@@ -22,26 +22,27 @@ namespace Simulation
         }
 
         public NeuralNetwork GetNeuralNetwork() => _neuralNetwork;
-
-        public double[] Calculate(SnakePart head, Direction tailDirection, int mapSize)
+        public double[] Calculate(SnakePart head, Direction tailDirection, int mapSize, int foodX, int foodY)
         {
-            double[] input = GetInputValues(head, tailDirection, mapSize);
+            double[] input = GetInputValues(head, tailDirection, mapSize, foodX, foodY);
 
             _result = _neuralNetwork.Evaluate(input);
 
             return _result;
         }
 
-        private double[] GetInputValues(SnakePart head, Direction tailDirection, int mapSize)
+        private double[] GetInputValues(SnakePart head, Direction tailDirection, int mapSize, int foodX, int foodY)
         {
             double[] res = new double[_inputCount];
             int index = 0;
 
             ////Previous Results
-            //res[index] = _result[index++];
-            //res[index] = _result[index++];
-            //res[index] = _result[index++];
-            //res[index] = _result[index++];
+            res[index++] = foodX > head.X ? 1 : 0;
+            res[index++] = foodX == head.X ? 1 : 0;
+            res[index++] = foodX < head.X ? 1 : 0;
+            res[index++] = foodY > head.Y ? 1 : 0;
+            res[index++] = foodY == head.Y ? 1 : 0;
+            res[index++] = foodY < head.Y ? 1 : 0;
 
             //Head Direction
             res[index++] = head.Direction == Direction.North ? 1 : 0;
@@ -65,9 +66,9 @@ namespace Simulation
 
                     (double value, double seesSelf, double seesFood) = GetValue(x, y, mapSize, head.X, head.Y, mapSize);
 
-                    res[index++] = value;
-                    res[index++] = seesSelf;
-                    res[index++] = seesFood;
+                    res[index++] = 1d - value;
+                    res[index++] = 1d - seesSelf;
+                    res[index++] = 1d - seesFood;
                 }
             }
 
@@ -90,12 +91,12 @@ namespace Simulation
                 switch (cell.CellStatus)
                 {
                     case MapCellStatus.Food:
-                        if (seesFood != 0)
-                            seesFood = value / divideBy;
+                        if (seesFood == 0)
+                            seesFood = 1;
                         break;
                     case MapCellStatus.Snake:
-                        if (seesSelf != 0)
-                            seesSelf = value / divideBy;
+                        if (seesSelf == 0)
+                            seesSelf = 1;
                         break;
                     case MapCellStatus.Empty:
                         break;
@@ -110,5 +111,7 @@ namespace Simulation
 
             return (value / divideBy, seesSelf, seesFood);
         }
+
+
     }
 }

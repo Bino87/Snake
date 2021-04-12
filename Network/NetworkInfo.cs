@@ -6,8 +6,8 @@ namespace Network
 {
     public class NetworkInfo
     {
-        private const double cBiasRange = 5;
-        private const double cWeightRange = 1;
+        private const double cBiasRange = 50;
+        private const double cWeightRange = 100;
 
         internal double[][] Weights { get; }
         internal double[][] Bias { get; }

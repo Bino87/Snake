@@ -24,7 +24,9 @@ namespace Simulation.SimResults
         {
             double steps = Moves.Sum();
             double d = (SelfCollision ? -1d : 0d);
-            return steps + (Math.Pow(2, Points) + Math.Pow(Points, 2.1) * 500) - Math.Pow(Points, 1.2) * Math.Pow(steps * .25, 1.3) + d;
+            double a = (Math.Pow(2, Points) + Math.Pow(Points, 2.1) * 500);
+            double b = Math.Pow(Points, 1.2) * Math.Pow(steps * .25, 1.3);
+            return steps + a - b + d;
 
 
             //double avg = Moves.Average() * fitnessParameters.AvgFactor;

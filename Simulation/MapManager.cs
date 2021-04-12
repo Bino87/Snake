@@ -29,8 +29,8 @@ namespace Simulation
             {
                 _agents[i] = new Bot(map, mapSize, maxMovesWithoutFood,
                     new NetworkInfo(
-                                     new LayerInfo(new Identity(), 2 * 4 + 8 * 3),
-                                     //new LayerInfo(new ReLu(), 20),
+                                     new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 6),
+                                     new LayerInfo(new ReLu(), 20),
                                      new LayerInfo(new ReLu(), 12),
                                      new LayerInfo(new Sigmoid(), 4))
                     );
@@ -89,7 +89,7 @@ namespace Simulation
 
         private Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, Bot[] agents)
         {
-            Bot[] res = new Bot[agents.Length];
+            Bot[] res = new Bot[agents.Length / 2];
 
             int len = agents.Length / 2;
 
@@ -98,26 +98,43 @@ namespace Simulation
                 res[i] = agents[fitnessResults[i].AgentIndex];
             }
 
-            IMutator mutator = new StringMutator(.05, .005, 4, 17);
+            IMutator mutator = new BitMutator(1, .005);
 
+            List<Bot> list = new List<Bot>(res);
+            Random rand = new Random();
 
-            Parallel.For(0, len / 2,
-                         (i) => {
+            List<Bot> ret = new List<Bot>();
 
-                             i *= 2;
+            while(list.Count > 0)
+            {
+                int f = rand.Next(list.Count);
+                Bot father = list[f];
+                if (father == null)
+                {
 
-                             Bot father = res[i];
-                             Bot mother = res[i + 1];
+                }
+                list.RemoveAt(f);
 
-                             (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father.GetNeuralNetwork(), mother.GetNeuralNetwork());
+                int m = rand.Next(list.Count);
+                Bot mother = list[m];
 
-                             res[i + len] = new Bot(_map, _mapSize, _maxMovesWithoutFood, first);
-                             res[i + len + 1] = new Bot(_map, _mapSize, _maxMovesWithoutFood, second);
+                if (mother == null)
+                {
 
-                         }
-            );
+                }
 
-            return res;
+                list.RemoveAt(m);
+
+                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father.GetNeuralNetwork(), mother.GetNeuralNetwork());
+
+                ret.Add(father);
+                ret.Add(mother);
+                ret.Add(new Bot(_map, _mapSize, _maxMovesWithoutFood, first));
+                ret.Add(new Bot(_map, _mapSize, _maxMovesWithoutFood, second));
+
+            }
+
+            return ret.ToArray();
         }
     }
 }

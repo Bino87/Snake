@@ -41,8 +41,7 @@ namespace Network.Mutators
             byte[] fBytes = fNetworkInfo.ToByteArr();
             byte[] mBytes = mNetworkInfo.ToByteArr();
 
-            byte[] first = MixBytes(fBytes, mBytes);
-            byte[] second = MixBytes(fBytes, mBytes);
+            (byte[] first, byte[] second) = MixBytes(fBytes, mBytes);
 
             first = Mutate(first);
             second = Mutate(second);
@@ -61,17 +60,35 @@ namespace Network.Mutators
 
                 for (int i = 0; i < fBytes.Length; i++)
                 {
-                    dt.Rows.Add(
-                        fBytes[i],
-                        mBytes[i],
-                        first[i],
-                        second[i]
-                    );
+
+                    if (Check(fBytes[i], mBytes[i], first[i], second[i]))
+                        dt.Rows.Add(
+                            fBytes[i],
+                            mBytes[i],
+                            first[i],
+                            second[i]
+                        );
                 }
             }
 
 
             return (fNetworkInfo, mNetworkInfo);
+        }
+
+        bool Check(params byte[] arr)
+        {
+            for (int x = 0; x < arr.Length; x++)
+            {
+                for (int z = 0; z < arr.Length; z++)
+                {
+                    if (x == z)
+                        continue;
+                    if (arr[x] != arr[z])
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         private byte[] Mutate(byte[] arr)
@@ -146,10 +163,11 @@ namespace Network.Mutators
             }
         }
 
-        private byte[] MixBytes(byte[] fBytes, byte[] mBytes)
+        private (byte[] first, byte[] sec) MixBytes(byte[] fBytes, byte[] mBytes)
         {
 
-            byte[] bytes = new byte[fBytes.Length];
+            byte[] bytes1 = new byte[fBytes.Length];
+            byte[] bytes2 = new byte[fBytes.Length];
 
             (int fLen, int mLen) = (fBytes.Length / 2, mBytes.Length / 2);
 
@@ -161,17 +179,19 @@ namespace Network.Mutators
 
                 if (a < fLen)
                 {
-                    bytes[i] = mBytes[i];
+                    bytes1[i] = mBytes[i];
+                    bytes2[i] = fBytes[i];
                     fLen--;
                 }
                 else
                 {
-                    bytes[i] = fBytes[i];
+                    bytes1[i] = fBytes[i];
+                    bytes2[i] = mBytes[i];
                     mLen--;
                 }
             }
 
-            return bytes;
+            return (bytes1, bytes2);
         }
     }
 }
