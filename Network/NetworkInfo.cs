@@ -11,7 +11,8 @@ namespace Network
 
         internal double[][] Weights { get; }
         internal double[][] Bias { get; }
-        internal int InputCount { get; }
+        public int InputCount { get; }
+        public int OutputCount { get; }
         internal int Layers { get; }
         internal int[] WeightsCount { get; }
         internal int[] BiasCount { get; }
@@ -24,6 +25,7 @@ namespace Network
                 throw new Exception();
 
             InputCount = layerInfos[0].NodeCount;
+            OutputCount = layerInfos[^1].NodeCount;
             Layers = layerInfos.Length - 1;
             Bias = new double[Layers][];
             Weights = new double[Layers][];
@@ -48,7 +50,7 @@ namespace Network
             CreateWeightsAndBiases();
         }
 
-        public NetworkInfo(IActivationFunction[] activationFunction, double[][] weights, double[][] bias)
+        public NetworkInfo(IActivationFunction[] activationFunction, double[][] weights, double[][] bias, int inputCount, int outputCount)
         {
             Weights = weights;
             Bias = bias;
@@ -56,6 +58,9 @@ namespace Network
             WeightsCount = new int[Layers];
             BiasCount = new int[Layers];
             ActivationFunction = activationFunction;
+
+            InputCount = inputCount;
+            OutputCount = outputCount;
 
             for (int i = 0; i < Layers; i++)
             {

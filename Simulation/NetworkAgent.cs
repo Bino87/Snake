@@ -12,15 +12,16 @@ namespace Simulation
         private readonly IMapCell[,] _map;
         private readonly NeuralNetwork _neuralNetwork;
         private double[] _result;
-        internal NetworkAgent(IMapCell[,] map, params LayerInfo[] layerInfos)
+        internal NetworkAgent(IMapCell[,] map, NetworkInfo networkInfo)
         {
             _map = map;
-            _inputCount = layerInfos[0].NodeCount;
-
-            _result = new double[layerInfos[^1].NodeCount];
-
-            _neuralNetwork = new NeuralNetwork(new NetworkInfo(layerInfos));
+            _inputCount = networkInfo.InputCount;
+            _result = new double[networkInfo.OutputCount];
+            _neuralNetwork = new NeuralNetwork(networkInfo);
+            
         }
+
+        public NeuralNetwork GetNeuralNetwork() => _neuralNetwork;
 
         public double[] Calculate(SnakePart head, Direction tailDirection, int mapSize)
         {
@@ -30,7 +31,6 @@ namespace Simulation
 
             return _result;
         }
-
 
         private double[] GetInputValues(SnakePart head, Direction tailDirection, int mapSize)
         {

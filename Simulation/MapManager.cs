@@ -1,199 +1,120 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Network;
 using Network.ActivationFunctions;
-using Simulation.Core;
+using Network.Mutators;
 using Simulation.Enums;
 using Simulation.Interfaces;
+using Simulation.SimResults;
 
 namespace Simulation
 {
-
-
     public class MapManager
     {
-        private readonly int _mapSize;
-        private readonly List<SnakePart> _snake;
-        private Food _food;
-        private readonly int _maxMovesWithoutFood;
-        private readonly Random _rand;
-        private readonly IMapCell[,] _map;
-        private SnakePart Head => _snake[0];
-        private SnakePart Tail => _snake[^1];
-
-        private readonly NetworkAgent _networkAgent;
-
-        public MapManager(IMapCell[,] map, int mapSize, int maxMovesWithoutFood)
+        private readonly Action<int, int, MapCellStatus> _callback;
+        private Bot[] _agents;
+        private IMapCell[,] _map;
+        private int _mapSize;
+        private int _maxMovesWithoutFood;
+        public MapManager(Action<int, int, MapCellStatus> callback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood)
         {
-            _mapSize = mapSize;
             _map = map;
+            _mapSize = mapSize;
             _maxMovesWithoutFood = maxMovesWithoutFood;
-            _rand = new Random();
-            _snake = new List<SnakePart>();
-            _networkAgent = new NetworkAgent(map,
-                                             new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 4),
-                                             new LayerInfo(new Sigmoid(), 300),
-                                             new LayerInfo(new Tanh(), 300),
-                                             new LayerInfo(new ReLu(), 4));
-        }
 
-        void SpawnSnake(int snakeSize, Action<int, int, MapCellStatus> callback)
-        {
-            _snake.Clear();
-            int x = _mapSize / 2;
-
-            for (int i = 0; i < snakeSize && i < _mapSize; i++)
+            _agents = new Bot[numberOfPairs * 2];
+            for (int i = 0; i < _agents.Length; i++)
             {
-                int y = x + i;
-                _snake.Add(new SnakePart(x, y, Direction.North));
-                callback?.Invoke(x, y, MapCellStatus.Snake);
+                _agents[i] = new Bot(map, mapSize, maxMovesWithoutFood,
+                    new NetworkInfo(
+                                     new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 4),
+                                     new LayerInfo(new ReLu(), 24),
+                                     new LayerInfo(new LeakyRelu(), 12),
+                                     new LayerInfo(new Sigmoid(), 4))
+                    );
             }
+            _callback = callback;
         }
 
-        private void SpawnNewFood(Action<int, int, MapCellStatus> callback)
+        public void Run()
         {
-            int nextX = _rand.Next(0, _mapSize);
-            int nextY = _rand.Next(0, _mapSize);
+            FitnessParameters fp = new(-50, -10, .5, 1, -.01, .75, 500);
 
-            while (_map[nextX, nextY].CellStatus != MapCellStatus.Empty)
+            int generation = 0;
+
+            do
             {
-                nextX = _rand.Next(0, _mapSize);
-                nextY = _rand.Next(0, _mapSize);
-            }
 
-            _food = new Food(nextX, nextY);
-            callback?.Invoke(nextX, nextY, MapCellStatus.Food);
-        }
+                
+                // run simulation
+                SimulationResult[] res = new SimulationResult[_agents.Length];
 
-        private void CalculateSnakeDirection()
-        {
-            var results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize);
-            Head.Direction = PickBest(results);
-        }
+                List<FitnessResults> results = new(res.Length);
 
-        private static Direction PickBest(double[] result)
-        {
-            Debug.WriteLine(string.Join(" : ", result));
-            double max = double.MinValue;
-            int index = -1;
-
-            for (int i = 0; i < result.Length; i++)
-            {
-                if (max > result[i])
-                    continue;
-                max = result[i];
-                index = i;
-            }
-
-            return (Direction)index;
-        }
-
-        private void Move(Action<int, int, MapCellStatus> callback, ref int movesSinceLastFood, List<int> list)
-        {
-            (int x, int y) = Head.GetMove();
-            x = Head.X + x;
-            y = Head.Y + y;
-            if (x == _food.X && y == _food.Y)
-            {
-                list.Add(movesSinceLastFood);
-                EatFood(callback);
-                movesSinceLastFood = 0;
-                Console.Beep();
-            }
-            else
-            {
-                Direction dir = Head.Direction;
-                Head.Move();
-                callback(Head.X, Head.Y, MapCellStatus.Snake);
-                (x, y) = (Tail.X, Tail.Y);
-                callback(x, y, MapCellStatus.Empty);
-
-                for (int i = 1; i < _snake.Count; i++)
+                for (int i = 0; i < res.Length; i++)
                 {
-                    Direction tDir = _snake[i].Direction;
-                    _snake[i].Move();
-                    _snake[i].Direction = dir; //sets the direction to that of an previous element, head is getting it's own direction.
-                    dir = tDir;
+                    res[i] = _agents[i].Run(_callback);
+
+                    results.Add(new FitnessResults(i, res[i].CalculateFitness(fp), _agents[i].ID));
                 }
-            }
+                //sort based on results
+                results.Sort();
+
+                FitnessResults rr = results[0];
+
+                Debug.WriteLine(generation++ + " : "  + rr.AgentIndex + " : "  + rr.Result ) ;
+                //generate children
+                _agents = PropagateNewGeneration(results, _agents);
+                ShuffleAgents();
+
+
+            } while (true);
         }
 
-        private void EatFood(Action<int, int, MapCellStatus> callback)
+        private void ShuffleAgents()
         {
-            _snake.Insert(0, new SnakePart(_food.X, _food.Y, Head.Direction));
-            callback?.Invoke(Head.X, Head.Y, MapCellStatus.Snake);
+            Random rand = new();
 
-            SpawnNewFood(callback);
-        }
-
-        public SimulationResult Run([NotNull] Action<int, int, MapCellStatus> callback)
-        {
-            ResetMap(callback);
-            SpawnSnake(4, callback);
-            SpawnNewFood(callback);
-            MovePrognosis movePrognosis = MovePrognosis.Ok;
-
-            int movesSinceLastFood = 0;
-            List<int> list = new();
-
-            while (movesSinceLastFood < _maxMovesWithoutFood)
+            for(int i = 0; i < _agents.Length; i++)
             {
-                CalculateSnakeDirection();
+                int r = rand.Next(0, _agents.Length);
 
-                movePrognosis = GetMoveResults();
-
-                if (movePrognosis == MovePrognosis.Ok)
-                {
-                    Move(callback, ref movesSinceLastFood, list);
-                }
-                else
-                {
-                    if (movePrognosis == MovePrognosis.OutOfBounds)
-                        Console.Beep(1000, 10);
-                    else
-                        Console.Beep(5000, 10);
-                    break;
-                }
-
-                movesSinceLastFood++;
+                Bot temp = _agents[i];
+                _agents[i] = _agents[r];
+                _agents[r] = temp;
             }
-
-            return new SimulationResult(_snake.Count, list, movePrognosis == MovePrognosis.SelfCollision, movePrognosis == MovePrognosis.OutOfBounds);
         }
 
-        private void ResetMap(Action<int, int, MapCellStatus> callback)
+        private  Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, Bot[] agents)
         {
-            for (int x = 0; x < _mapSize; x++)
+            Bot[] res = new Bot[agents.Length];
+
+            int len = agents.Length / 2;
+
+            for (int i = 0; i < len; i++)
             {
-                for (int y = 0; y < _mapSize; y++)
-                {
-                    if (_map[x, y].CellStatus != MapCellStatus.Empty)
-                        callback?.Invoke(x, y, MapCellStatus.Empty);
-                }
+                res[i] = agents[fitnessResults[i].AgentIndex];
             }
-        }
 
-        private MovePrognosis GetMoveResults()
-        {
-            if (!Head.IsValidMove(_map))//checks if it leaves the bounds of map
-                return MovePrognosis.OutOfBounds;
+            IMutator mutator = new BitMutator(.2, .002);
 
-            //calculate this shit after you move you cunt
-            (int x, int y) = GetPositionAfterMove();
 
-            if (_map[x, y].CellStatus == MapCellStatus.Snake)
-                return MovePrognosis.SelfCollision;
+            for (int i = 0; i < len; i += 2)
+            {
+                Bot father = agents[i];
+                Bot mother = agents[i + 1];
 
-            return MovePrognosis.Ok;
-        }
+                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father.GetNeuralNetwork(), mother.GetNeuralNetwork());
 
-        (int X, int Y) GetPositionAfterMove()
-        {
-            (int x, int y) = Head.GetMove();
+                res[i] = father;
+                res[i + 1] = mother;
+                res[i + len] = new Bot(_map, _mapSize, _maxMovesWithoutFood, first);
+                res[i + len + 1] = new Bot(_map, _mapSize, _maxMovesWithoutFood, second);
+            }
 
-            return (x + Head.X, y + Head.Y);
+
+            return res;
         }
     }
 }

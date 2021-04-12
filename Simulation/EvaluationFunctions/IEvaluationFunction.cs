@@ -1,4 +1,6 @@
-﻿namespace Simulation.EvaluationFunctions
+﻿using Simulation.SimResults;
+
+namespace Simulation.EvaluationFunctions
 {
     interface IEvaluationFunction
     {

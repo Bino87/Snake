@@ -31,10 +31,10 @@ namespace Network.Mutators
             _rand = new Random();
         }
 
-        public (NeuralNetwork First, NeuralNetwork Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
+        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
         {
-            NetworkInfo fNetworkInfo = father.ToNetworkData();
-            NetworkInfo mNetworkInfo = mother.ToNetworkData();
+            NetworkInfo fNetworkInfo = father.ToNetworkInfo();
+            NetworkInfo mNetworkInfo = mother.ToNetworkInfo();
 
             byte[] fBytes = fNetworkInfo.ToByteArr();
             byte[] mBytes = mNetworkInfo.ToByteArr();
@@ -48,9 +48,8 @@ namespace Network.Mutators
             fNetworkInfo.FromByteArray(first);
             mNetworkInfo.FromByteArray(second);
 
-            
 
-            return (new NeuralNetwork(fNetworkInfo), new NeuralNetwork(mNetworkInfo));
+            return (fNetworkInfo, mNetworkInfo);
         }
 
         private void Mutate(byte[] arr)
@@ -75,14 +74,13 @@ namespace Network.Mutators
 
             switch(current)
             {
-
                 case MutationType.DuplicateNext:
                     if (index + 1 < arr.Length)
                     {
                         arr[index] = arr[index + 1];
                     }
                     break;
-                case MutationType.DuplicatePrevious: 
+                case MutationType.DuplicatePrevious:
                     if (index - 1 >= 0)
                     {
                         arr[index] = arr[index - 1];
@@ -96,7 +94,7 @@ namespace Network.Mutators
                         arr[index + 1] = temp;
                     }
                     break;
-                case MutationType.SwapWithPrevious: 
+                case MutationType.SwapWithPrevious:
                     if (index - 1 >= 0)
                     {
                         byte temp = arr[index];
@@ -106,7 +104,7 @@ namespace Network.Mutators
                     break;
                 case MutationType.Randomize:
 
-                    arr[index] = (byte) _rand.Next(0, byte.MaxValue + 1);
+                    arr[index] = (byte)_rand.Next(0, byte.MaxValue + 1);
                     break;
                 case MutationType.Increment:
                     arr[index]++;
@@ -114,7 +112,8 @@ namespace Network.Mutators
                 case MutationType.Decrement:
                     arr[index]--;
                     break;
-                default: throw new ArgumentOutOfRangeException();
+                default: 
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

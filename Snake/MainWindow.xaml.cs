@@ -38,13 +38,13 @@ namespace Snake
                 this.DataContext = mvm;
 
 
-                mm = new MapManager(mvm.SnakeMapViewModel.RectArr, mvm.SnakeMapViewModel._numberOfTiles, 200);
+                mm = new MapManager(Callback, 4, mvm.SnakeMapViewModel.RectArr, mvm.SnakeMapViewModel._numberOfTiles, 200);
 
                 Task.Run(() =>
                 {
                     //try
                     //{
-                        SimulationResult a = mm.Run(Callback);
+                    mm.Run();
 
                     //}
                     //catch (Exception e)
@@ -72,7 +72,7 @@ namespace Snake
                     mvm.SnakeMapViewModel.RectArr[x, y].CellStatus = newStatus;
                 }
             });
-            Thread.Sleep(100);
+            Thread.Sleep(10);
         }
     }
 }
