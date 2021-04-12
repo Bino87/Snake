@@ -18,7 +18,7 @@ namespace Simulation
             _inputCount = networkInfo.InputCount;
             _result = new double[networkInfo.OutputCount];
             _neuralNetwork = new NeuralNetwork(networkInfo);
-            
+
         }
 
         public NeuralNetwork GetNeuralNetwork() => _neuralNetwork;
@@ -37,11 +37,11 @@ namespace Simulation
             double[] res = new double[_inputCount];
             int index = 0;
 
-            //Previous Results
-            res[index] = _result[index++];
-            res[index] = _result[index++];
-            res[index] = _result[index++];
-            res[index] = _result[index++];
+            ////Previous Results
+            //res[index] = _result[index++];
+            //res[index] = _result[index++];
+            //res[index] = _result[index++];
+            //res[index] = _result[index++];
 
             //Head Direction
             res[index++] = head.Direction == Direction.North ? 1 : 0;
@@ -63,21 +63,21 @@ namespace Simulation
                     if (x == 0 && y == 0)
                         continue;
 
-                    (double value, bool seesSelf, bool seesFood) = GetValue(x, y, mapSize, head.X, head.Y, mapSize);
+                    (double value, double seesSelf, double seesFood) = GetValue(x, y, mapSize, head.X, head.Y, mapSize);
 
                     res[index++] = value;
-                    res[index++] = seesSelf ? 1 : 0;
-                    res[index++] = seesFood ? 1 : 0;
+                    res[index++] = seesSelf;
+                    res[index++] = seesFood;
                 }
             }
 
             return res;
         }
 
-        private (double value, bool seesSelf, bool seesFood) GetValue(int incX, int incY, double divideBy, int headX, int headY, int mapSize)
+        private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, double divideBy, int headX, int headY, int mapSize)
         {
-            bool seesFood = false;
-            bool seesSelf = false;
+            double seesFood = 0;
+            double seesSelf = 0;
 
             int x = headX + incX;
             int y = headY + incY;
@@ -87,18 +87,25 @@ namespace Simulation
             {
                 IMapCell cell = _map[x, y];
 
-                x += incX;
-                y += incY;
-
                 switch (cell.CellStatus)
                 {
-                    case MapCellStatus.Empty: value++; continue;
-                    case MapCellStatus.Food: seesFood = true; break;
-                    case MapCellStatus.Snake: seesSelf = true; break;
+                    case MapCellStatus.Food:
+                        if (seesFood != 0)
+                            seesFood = value / divideBy;
+                        break;
+                    case MapCellStatus.Snake:
+                        if (seesSelf != 0)
+                            seesSelf = value / divideBy;
+                        break;
+                    case MapCellStatus.Empty:
+                        break;
                     default: throw new ArgumentOutOfRangeException();
                 }
 
-                break;
+                value++;
+                x += incX;
+                y += incY;
+
             }
 
             return (value / divideBy, seesSelf, seesFood);

@@ -8,6 +8,8 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance models:MainViewModel}">
     <StackPanel Orientation="Vertical">
-       <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
+        <TextBox Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+        <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
     </StackPanel>
 </UserControl>

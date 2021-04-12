@@ -38,7 +38,7 @@ namespace Snake
                 this.DataContext = mvm;
 
 
-                mm = new MapManager(Callback, 4, mvm.SnakeMapViewModel.RectArr, mvm.SnakeMapViewModel._numberOfTiles, 200);
+                mm = new MapManager(Callback, 250, mvm.SnakeMapViewModel.RectArr, mvm.SnakeMapViewModel._numberOfTiles, 200);
 
                 Task.Run(() =>
                 {
@@ -72,7 +72,7 @@ namespace Snake
                     mvm.SnakeMapViewModel.RectArr[x, y].CellStatus = newStatus;
                 }
             });
-            Thread.Sleep(10);
+            Thread.Sleep(mvm.Deley);
         }
     }
 }

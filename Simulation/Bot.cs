@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using System.Threading;
 using Network;
 using Network.ActivationFunctions;
 using Simulation.Core;
@@ -65,6 +68,7 @@ namespace Simulation
 
             _food = new Food(nextX, nextY);
             callback?.Invoke(nextX, nextY, MapCellStatus.Food);
+
         }
 
         private void CalculateSnakeDirection()
@@ -73,20 +77,31 @@ namespace Simulation
             Head.Direction = PickBest(results);
         }
 
-        private static Direction PickBest(double[] result)
+        private Direction PickBest(double[] result)
         {
             double max = double.MinValue;
-            int index = -1;
+            int index = 0;
 
             for (int i = 0; i < result.Length; i++)
             {
+                if (result[i] == 0)
+                    continue;
                 if (max > result[i])
                     continue;
-                max = result[i];
-                index = i;
+
+                if (max < result[i])
+                {
+                    index = i;
+                    max = result[i];
+                }
+
+                if (max == result[i])
+                    index = i;
             }
 
-            return (Direction)index;
+
+
+            return (Direction) index;
         }
 
         private void Move(Action<int, int, MapCellStatus> callback, ref int movesSinceLastFood, List<int> list)
@@ -99,7 +114,6 @@ namespace Simulation
                 list.Add(movesSinceLastFood);
                 EatFood(callback);
                 movesSinceLastFood = 0;
-                Console.Beep();
             }
             else
             {
@@ -149,14 +163,14 @@ namespace Simulation
                 }
                 else
                 {
-                   break;
+                    break;
                 }
 
                 movesSinceLastFood++;
             }
 
             list.Add(movesSinceLastFood);
-            return new SimulationResult(_snake.Count -4, list, movePrognosis == MovePrognosis.SelfCollision, movePrognosis == MovePrognosis.OutOfBounds);
+            return new SimulationResult(_snake.Count - 4, list, movePrognosis == MovePrognosis.SelfCollision, movePrognosis == MovePrognosis.OutOfBounds);
         }
 
         private void ResetMap(Action<int, int, MapCellStatus> callback)

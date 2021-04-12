@@ -47,7 +47,9 @@ namespace Network
                                      value += input[inputIndex] * _weights[layerIndex][weightIndex];
                                  }
 
-                                 output[outputIndex] = _activationFunction[layerIndex].Evaluate(value + _biases[layerIndex][outputIndex]);
+                                 double res = _activationFunction[layerIndex].Evaluate(value + _biases[layerIndex][outputIndex]);
+                                 res = double.IsInfinity(res) ? 0 : res;
+                                 output[outputIndex] = double.IsNaN(res) ? 0 : res;
                              }
                     );
 

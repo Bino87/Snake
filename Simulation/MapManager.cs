@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Network;
 using Network.ActivationFunctions;
 using Network.Mutators;
@@ -28,9 +29,9 @@ namespace Simulation
             {
                 _agents[i] = new Bot(map, mapSize, maxMovesWithoutFood,
                     new NetworkInfo(
-                                     new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 4),
-                                     new LayerInfo(new ReLu(), 24),
-                                     new LayerInfo(new LeakyRelu(), 12),
+                                     new LayerInfo(new Identity(), 2 * 4 + 8 * 3),
+                                     //new LayerInfo(new ReLu(), 20),
+                                     new LayerInfo(new ReLu(), 12),
                                      new LayerInfo(new Sigmoid(), 4))
                     );
             }
@@ -39,14 +40,14 @@ namespace Simulation
 
         public void Run()
         {
-            FitnessParameters fp = new(-50, -10, .5, 1, -.01, .75, 500);
+            FitnessParameters fp = new(-500, -100, .5, .1, 1, .75, 500);
 
             int generation = 0;
 
             do
             {
 
-                
+
                 // run simulation
                 SimulationResult[] res = new SimulationResult[_agents.Length];
 
@@ -63,10 +64,10 @@ namespace Simulation
 
                 FitnessResults rr = results[0];
 
-                Debug.WriteLine(generation++ + " : "  + rr.AgentIndex + " : "  + rr.Result ) ;
+                Debug.WriteLine(generation++ + " : " + rr.AgentID + " : " + rr.Result);
                 //generate children
                 _agents = PropagateNewGeneration(results, _agents);
-                ShuffleAgents();
+                //ShuffleAgents();
 
 
             } while (true);
@@ -76,7 +77,7 @@ namespace Simulation
         {
             Random rand = new();
 
-            for(int i = 0; i < _agents.Length; i++)
+            for (int i = 0; i < _agents.Length; i++)
             {
                 int r = rand.Next(0, _agents.Length);
 
@@ -86,7 +87,7 @@ namespace Simulation
             }
         }
 
-        private  Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, Bot[] agents)
+        private Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, Bot[] agents)
         {
             Bot[] res = new Bot[agents.Length];
 
@@ -97,22 +98,24 @@ namespace Simulation
                 res[i] = agents[fitnessResults[i].AgentIndex];
             }
 
-            IMutator mutator = new BitMutator(.2, .002);
+            IMutator mutator = new StringMutator(.05, .005, 4, 17);
 
 
-            for (int i = 0; i < len; i += 2)
-            {
-                Bot father = agents[i];
-                Bot mother = agents[i + 1];
+            Parallel.For(0, len / 2,
+                         (i) => {
 
-                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father.GetNeuralNetwork(), mother.GetNeuralNetwork());
+                             i *= 2;
 
-                res[i] = father;
-                res[i + 1] = mother;
-                res[i + len] = new Bot(_map, _mapSize, _maxMovesWithoutFood, first);
-                res[i + len + 1] = new Bot(_map, _mapSize, _maxMovesWithoutFood, second);
-            }
+                             Bot father = res[i];
+                             Bot mother = res[i + 1];
 
+                             (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father.GetNeuralNetwork(), mother.GetNeuralNetwork());
+
+                             res[i + len] = new Bot(_map, _mapSize, _maxMovesWithoutFood, first);
+                             res[i + len + 1] = new Bot(_map, _mapSize, _maxMovesWithoutFood, second);
+
+                         }
+            );
 
             return res;
         }
