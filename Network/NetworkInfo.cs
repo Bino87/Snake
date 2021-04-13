@@ -9,13 +9,14 @@ namespace Network
         private const double cBiasRange = 1;
         private const double cWeightRange = 1;
 
-        public double[][] Weights { get; }
-        public double[][] Bias { get; }
+        //public double[][] Weights { get; }
+        //public double[][] Bias { get; }
         public int InputCount { get; }
         public int OutputCount { get; }
         public int Layers { get; }
         internal int[] WeightsCount { get; }
         internal int[] BiasCount { get; }
+        public int[] LayerSetup { get; }
         internal IActivationFunction[] ActivationFunction { get; }
 
 
@@ -23,6 +24,13 @@ namespace Network
         {
             if (layerInfos.Length < 2)
                 throw new Exception();
+
+            LayerSetup = new int[layerInfos.Length];
+
+            for(int i = 0; i < layerInfos.Length; i++)
+            {
+                LayerSetup[i] = layerInfos[i].NodeCount;
+            }
 
             InputCount = layerInfos[0].NodeCount;
             OutputCount = layerInfos[^1].NodeCount;

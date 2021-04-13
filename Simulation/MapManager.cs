@@ -36,7 +36,7 @@ namespace Simulation
             this.netCallback = netCallback;
         }
 
-        public void Run()
+        public void Run(Action<double[][]> onUpdateWeights)
         {
             FitnessParameters fp = new(-500, -100, .5, .1, 1, .75, 500);
 
@@ -50,6 +50,7 @@ namespace Simulation
 
                 for (int i = 0; i < res.Length; i++)
                 {
+                    onUpdateWeights?.Invoke(_agents[i].GetNeuralNetwork().ToNetworkInfo().Weights);
                     res[i] = _agents[i].Run(_callback, netCallback);
 
                     results.Add(new FitnessResults(i, res[i].CalculateFitness(fp), _agents[i].ID));

@@ -4,8 +4,11 @@
     {
         public const double cMapSize = 500;
         public const double cNetHeight = 500;
-        public const double cNetWidth = 250;
+        public const double cNetHeightPadding = 25;
+        public const double cNetWidth = 300;
+        public const double cNetWidthPadding = 25;
         public const int cNumberOfTiles = 20;
+
 
         public const string cShapeCircleDataTemplate = "cShapeCircleDataTemplate";
         public const string cShapeLineDataTemplate = "cShapeLineDataTemplate";

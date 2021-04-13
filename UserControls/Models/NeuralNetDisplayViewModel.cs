@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 using Network;
 using UserControls.Constants;
@@ -18,65 +19,92 @@ namespace UserControls.Models
         public NeuralNetDisplayViewModel(NetworkInfo networkInfo)
         {
             DisplayItems = new ObservableCollection<PrimitiveShape>();
-            _lineValueProviders = new PrimitiveShapeValueProvider[networkInfo.Layers + 1][];
+            _lineValueProviders = new PrimitiveShapeValueProvider[networkInfo.Layers][];
             _circleValueProviders = new PrimitiveShapeValueProvider[networkInfo.Layers + 1][];
 
 
 
-            Random rand = new();
-            int offset = (int)((Cons.cNetWidth - 10) / 4);
-            double w = Cons.cNetHeight / 32 - 1;
-            double w2 = Cons.cNetHeight / 20 - 1;
-            int start = 20;
-            int end = start + 70;
-            CreateNeurons(rand, start, w, 38, 15, 0);
-            CreateNeurons(rand, start = start + offset, w, 20, 15, 1);
-            CreateNeurons(rand, start = start + offset, w, 12, 15, 2);
-            CreateNeurons(rand, start = start + offset, w2, 4, 15, 3);
-            return;
-            CreateConnections(rand, start, end, w, w2, 32, 20, 10, 15);
 
-            CreateConnections(rand, start, end, w, w2, 20, 12, 15, 15);
+            double offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / networkInfo.Layers;
+            double start = Cons.cNetWidthPadding;
 
-            CreateConnections(rand, start, end, w, w2, 12, 4, 15, 15);
+            for (int i = 1; i < networkInfo.LayerSetup.Length; i++)
+            {
+                CreateConnections(start, start + offset, networkInfo.LayerSetup[i - 1], networkInfo.LayerSetup[i], i - 1);
+                start += offset;
+            }
+
+            offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / networkInfo.Layers;
+            start = Cons.cNetWidthPadding;
 
 
+            for (int i = 0; i < networkInfo.LayerSetup.Length; i++)
+            {
+                CreateNeuronLayer(start, networkInfo.LayerSetup[i], i);
+                start += offset;
+            }
         }
 
-        private void CreateConnections(Random rand, int start, int end, double w, double w2, int upper, int lower, double wOffset, double w2Offset)
+        private void CreateConnections(double start, double end, int upper, int lower, int layerIndex)
         {
+            double availible = Cons.cNetHeight - (2 * Cons.cNetHeightPadding);
+            double verticalSpacingA = availible / (upper - 1);
+            double verticalSpacingB = availible / (lower - 1);
+            double wOffset = Cons.cNetHeightPadding;
+            _lineValueProviders[layerIndex] = new PrimitiveShapeValueProvider[lower * upper];
             for (int j = 0; j < upper; j++)
             {
                 for (int i = 0; i < lower; i++)
                 {
-                    PrimitiveShapeValueProvider provider = new(rand.NextDouble(-10, 10));
-                    //_lineValueProviders.Add(provider);
-                    DisplayItems.Add(new PrimitiveLine(provider, start, end, j * w + wOffset, i * w2 + w2Offset));
+                    PrimitiveShapeValueProvider provider = new();
+                    _lineValueProviders[layerIndex][j * lower + i] = provider;
+                    DisplayItems.Add(new PrimitiveLine(provider, start, end, j * verticalSpacingA + wOffset, i * verticalSpacingB + Cons.cNetHeightPadding));
                 }
             }
         }
 
-        private void CreateNeurons(Random rand, int x, double spaceing, int count, double wOffset, int layerIndex)
+        private void CreateNeuronLayer(double x, int count, int layerIndex)
         {
             double offset = radius / 2;
-            spaceing = (Cons.cNetHeight - 50) / count;
+            double availible = Cons.cNetHeight - (2 * Cons.cNetHeightPadding);
+            double verticalSpacing = availible / (count - 1);
+            double wOffset = Cons.cNetHeightPadding;
+
             _circleValueProviders[layerIndex] = new PrimitiveShapeValueProvider[count];
 
             for (int i = 0; i < count; i++)
             {
-                PrimitiveShapeValueProvider provider = new(rand.NextDouble() * 2 - 1);
+                PrimitiveShapeValueProvider provider = new();
+
                 _circleValueProviders[layerIndex][i] = provider;
-                DisplayItems.Add(new PrimitiveCircle(provider, x - offset, i * spaceing - offset + wOffset, radius));
+                DisplayItems.Add(new PrimitiveCircle(provider, x - offset, i * verticalSpacing - offset + wOffset, radius));
             }
+        }
+
+        public void OnUpdateWeights(double[][] weights)
+        {
+            Application.Current.Dispatcher.Invoke(
+                () =>
+                {
+                    int count = 0;
+                    for (int i = 0; i < weights.Length; i++)
+                    {
+                        for (int j = 0; j < weights[i].Length; j++)
+                        {
+                            double d = weights[i][j];
+
+                            _lineValueProviders[i][j].Value = d;
+                        }
+                    }
+                }
+                );
         }
 
         public void OnResultsCalculated(double[][] results)
         {
-
             Application.Current.Dispatcher.Invoke(
                 () =>
                     {
-
                         for (int i = 0; i < results.Length; i++)
                         {
                             for (int j = 0; j < results[i].Length; j++)
@@ -85,7 +113,6 @@ namespace UserControls.Models
 
                             }
                         }
-
                     }
                 );
         }

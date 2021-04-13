@@ -47,7 +47,7 @@ namespace UserControls.Models
                                                   {
                                                       await Task.Run(() =>
                                                                      {
-                                                                         mm.Run();
+                                                                         mm.Run(NeuralNetDisplay.OnUpdateWeights);
                                                                      });
 
                                                   });
