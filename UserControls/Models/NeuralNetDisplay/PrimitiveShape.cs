@@ -5,18 +5,17 @@ namespace UserControls.Models.NeuralNetDisplay
 {
     public class PrimitiveShapeValueProvider : Observable
     {
-        private double _val;
+        private double _value;
 
-        public PrimitiveShapeValueProvider(double val)
+        public PrimitiveShapeValueProvider(double value) // indexes? :O
         {
-            _val = val;
+            _value = value;
         }
-
-        public double Value => _val;
-
-        public void Update()
+            
+        public double Value
         {
-            OnPropertyChanged(nameof(Value));
+            get => _value;
+            set => SetField(ref _value, value);
         }
     }
 
@@ -39,9 +38,9 @@ namespace UserControls.Models.NeuralNetDisplay
             set => SetField(ref _y, value);
         }
 
-        protected PrimitiveShape(PrimitiveShapeValueProvider valueProviderProvider, double x, double y)
+        protected PrimitiveShape(PrimitiveShapeValueProvider valueProvider, double x, double y)
         {
-            ValueProvider = valueProviderProvider;
+            ValueProvider = valueProvider;
             _x = x;
             _y = y;
         }

@@ -6,8 +6,8 @@ namespace Network
 {
     public class NetworkInfo
     {
-        private const double cBiasRange = 50;
-        private const double cWeightRange = 100;
+        private const double cBiasRange = 1;
+        private const double cWeightRange = 1;
 
         public double[][] Weights { get; }
         public double[][] Bias { get; }
@@ -44,7 +44,6 @@ namespace Network
                 int count = layerInfos[i].NodeCount * layerInfos[i - 1].NodeCount;
                 Weights[i - 1] = new double[count];
                 Bias[i - 1] = new double[layerInfos[i].NodeCount];
-
             }
 
             CreateWeightsAndBiases();
@@ -80,12 +79,12 @@ namespace Network
 
                 for (int x = 0; x < Bias[i].Length; x++)
                 {
-                    Bias[i][x] = rand.NextDouble(-cBiasRange, cBiasRange);
+                    Bias[i][x] = rand.NextDouble(-cBiasRange *10, cBiasRange);
                 }
 
                 for (int x = 0; x < Weights[i].Length; x++)
                 {
-                    Weights[i][x] = rand.NextDouble(-cWeightRange, cWeightRange);
+                    Weights[i][x] = rand.NextDouble(-cWeightRange , cWeightRange);
                 }
             }
         }

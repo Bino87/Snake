@@ -22,25 +22,33 @@
                 <SolidColorBrush x:Key="Positive" Color="LawnGreen"/>
                 <converters:NeuralnetDisplayColorConvertor x:Key="LineColorConvertor" Negative="{StaticResource Negative}" Positive="{StaticResource Positive}"/>
                 <SolidColorBrush x:Key="Active" Color="GreenYellow"/>
-                <SolidColorBrush x:Key="NotActive" Color="White"/>
+                <SolidColorBrush x:Key="NotActive" Color="Red"/>
                 <converters:NeuralnetDisplayColorConvertor x:Key="CircleColorConvertor" Negative="{StaticResource NotActive}" Positive="{StaticResource Active}"/>
+                <converters:NeuralnetDisplayLineThicknessConvertor x:Key="NeuralnetDisplayLineThicknessConvertor" Limit="1"/>
 
                 <DataTemplate x:Key="{x:Static constants:Cons.cShapeCircleDataTemplate}" DataType="neuralNetDisplay:PrimitiveCircle">
-                    <Ellipse Width="{Binding Path=Radius}" 
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="{Binding Path=Radius}" 
                              Height="{Binding Path=Radius}"
                              Fill="{Binding Path=ValueProvider.Value, Converter={StaticResource CircleColorConvertor }}">
-                        <Ellipse.RenderTransform>
-                            <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
-                        </Ellipse.RenderTransform>
-                    </Ellipse>
+                            <Ellipse.RenderTransform>
+                                <TranslateTransform X="{Binding Path = X}" Y="{Binding Y}"/>
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                        <TextBlock  Text="{Binding StringFormat=N2, Path=ValueProvider.Value}" FontSize="8" Foreground="White">
+                            <TextBlock.RenderTransform>
+                                <TranslateTransform X="{Binding Path = X}" Y="{Binding Y}"/>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </StackPanel>
                 </DataTemplate>
                 <DataTemplate x:Key="{x:Static constants:Cons.cShapeLineDataTemplate}" DataType="neuralNetDisplay:PrimitiveLine" >
-                    <Line X1="{Binding X}"
-                          X2="{Binding X2}" 
-                          Y1="{Binding Y}" 
+                    <Line X1="{Binding Path=X}"
+                          X2="{Binding Path=X2}" 
+                          Y1="{Binding Path=Y}" 
                           Y2="{Binding Path=Y2}" 
                           Stroke="{Binding Path=ValueProvider.Value, Converter={StaticResource LineColorConvertor}}"
-                          StrokeThickness=".1"/>
+                          StrokeThickness="{Binding Path=ValueProvider.Value, Converter={StaticResource NeuralnetDisplayLineThicknessConvertor}}"/>
                 </DataTemplate>
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>

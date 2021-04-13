@@ -24,50 +24,55 @@ namespace Network
 
         public NetworkInfo ToNetworkInfo() => new(_activationFunction, _weights, _biases, _inputCount, _biases[^1].Length);
 
-        public double[] Evaluate(double[] input)
+        public double[][] Evaluate(double[] input)
         {
             if (input.Length != _inputCount) throw new Exception();
 
-            double[] output;
+            double[][] output = new double[1 + _numLayers][];
+            output[0] = input;
             int layerIndex = 0;
 
             do
             {
-                output = new double[_biases[layerIndex].Length];
-
-                double[] input1 = input;
-                int index = layerIndex;
-                double[] output1 = output;
-                Parallel.For(0, output.Length,
-                             (outputIndex) =>
-                             {
-                                 double value = 0;
+                output[layerIndex + 1] = new double[_biases[layerIndex].Length];
 
 
-                                 for (int inputIndex = 0; inputIndex < input1.Length; inputIndex++)
-                                 {
-                                     int weightIndex = outputIndex * input1.Length + inputIndex;
-                                     double result = input1[inputIndex] * _weights[index][weightIndex];
-                                     if (double.IsNaN(result) || double.IsInfinity(result))
-                                     {
-                                         continue;
-                                     }
+                for (int outputIndex = 0; outputIndex < output[layerIndex + 1].Length; outputIndex++)
+                {
+                    double value = CalculateValue(input, outputIndex, layerIndex);
 
-                                     value += result;
-                                 }
+                    double vBias = value + _biases[layerIndex][outputIndex];
+                    double res = _activationFunction[layerIndex].Evaluate(vBias);
+                    if (double.IsInfinity(res) || double.IsNaN(res)) res = 0;
+                    output[layerIndex + 1][outputIndex] = res;
+                }
 
-                                 double res = _activationFunction[index].Evaluate(value + _biases[index][outputIndex]);
-                                 if (double.IsInfinity(res) || double.IsNaN(res)) res = 0;
-                                 output1[outputIndex] = res;
-                             }
-                    );
 
-                input = output;
+                input = output[layerIndex + 1];
                 layerIndex++;
 
             } while (layerIndex < _numLayers);
 
             return output;
+        }
+
+        private double CalculateValue(double[] input, int outputIndex, int index)
+        {
+
+            double value = 0;
+            for(int inputIndex = 0; inputIndex < input.Length; inputIndex++)
+            {
+                int weightIndex = outputIndex * input.Length + inputIndex;
+                double result = input[inputIndex] * _weights[index][weightIndex];
+                if (double.IsNaN(result) || double.IsInfinity(result))
+                {
+                    continue;
+                }
+
+                value += result;
+            }
+
+            return value;
         }
     }
 }

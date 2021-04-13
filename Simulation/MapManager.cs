@@ -18,10 +18,10 @@ namespace Simulation
         private readonly IMapCell[,] _map;
         private readonly int _mapSize;
         private readonly int _maxMovesWithoutFood;
-
+        private Action<double[][]> netCallback;
         public Bot[] Agents => _agents;
 
-        public MapManager(Action<int, int, MapCellStatus> callback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo)
+        public MapManager(Action<int, int, MapCellStatus> callback, Action<double[][]> netCallback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo)
         {
             _map = map;
             _mapSize = mapSize;
@@ -33,6 +33,7 @@ namespace Simulation
                 _agents[i] = new Bot(map, mapSize, maxMovesWithoutFood, networkInfo);
             }
             _callback = callback;
+            this.netCallback = netCallback;
         }
 
         public void Run()
@@ -49,7 +50,7 @@ namespace Simulation
 
                 for (int i = 0; i < res.Length; i++)
                 {
-                    res[i] = _agents[i].Run(_callback);
+                    res[i] = _agents[i].Run(_callback, netCallback);
 
                     results.Add(new FitnessResults(i, res[i].CalculateFitness(fp), _agents[i].ID));
                 }

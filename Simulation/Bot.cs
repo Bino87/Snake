@@ -71,10 +71,11 @@ namespace Simulation
 
         }
 
-        private void CalculateSnakeDirection()
+        private void CalculateSnakeDirection(Action<double[][]> netCallback)
         {
-            double[] results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize, _food.X, _food.Y);
-            Head.Direction = PickBest(results);
+            double[][] results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize, _food.X, _food.Y);
+            Head.Direction = PickBest(results[^1]);
+            netCallback?.Invoke(results);
         }
 
         private Direction PickBest(double[] result)
@@ -141,7 +142,7 @@ namespace Simulation
             SpawnNewFood(callback);
         }
 
-        public SimulationResult Run([NotNull] Action<int, int, MapCellStatus> callback)
+        public SimulationResult Run([NotNull] Action<int, int, MapCellStatus> callback, Action<double[][]> netCallback)
         {
             ResetMap(callback);
             SpawnSnake(4, callback);
@@ -153,7 +154,7 @@ namespace Simulation
 
             while (movesSinceLastFood < _maxMovesWithoutFood)
             {
-                CalculateSnakeDirection();
+                CalculateSnakeDirection(netCallback);
 
                 movePrognosis = GetMoveResults();
 
