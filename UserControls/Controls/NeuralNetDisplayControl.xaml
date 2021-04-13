@@ -7,6 +7,7 @@
              xmlns:constants="clr-namespace:UserControls.Constants"
              xmlns:templateSelectors="clr-namespace:UserControls.TemplateSelectors"
              xmlns:neuralNetDisplay="clr-namespace:UserControls.Models.NeuralNetDisplay"
+             xmlns:converters="clr-namespace:UserControls.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance models:NeuralNetDisplayViewModel}">
@@ -17,10 +18,17 @@
         <ItemsControl ItemsSource="{Binding Path=DisplayItems }"
                         ItemTemplateSelector="{StaticResource NetDisplayShapeTemplateSelector}">
             <ItemsControl.Resources>
+                <SolidColorBrush x:Key="Negative" Color="Red"/>
+                <SolidColorBrush x:Key="Positive" Color="LawnGreen"/>
+                <converters:NeuralnetDisplayColorConvertor x:Key="LineColorConvertor" Negative="{StaticResource Negative}" Positive="{StaticResource Positive}"/>
+                <SolidColorBrush x:Key="Active" Color="GreenYellow"/>
+                <SolidColorBrush x:Key="NotActive" Color="White"/>
+                <converters:NeuralnetDisplayColorConvertor x:Key="CircleColorConvertor" Negative="{StaticResource NotActive}" Positive="{StaticResource Active}"/>
+
                 <DataTemplate x:Key="{x:Static constants:Cons.cShapeCircleDataTemplate}" DataType="neuralNetDisplay:PrimitiveCircle">
-                    <Ellipse Width="{Binding Path=Width}" 
-                             Height="{Binding Path=Height}"
-                             Fill="Blue">
+                    <Ellipse Width="{Binding Path=Radius}" 
+                             Height="{Binding Path=Radius}"
+                             Fill="{Binding Path=ValueProvider.Value, Converter={StaticResource CircleColorConvertor }}">
                         <Ellipse.RenderTransform>
                             <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
                         </Ellipse.RenderTransform>
@@ -31,13 +39,13 @@
                           X2="{Binding X2}" 
                           Y1="{Binding Y}" 
                           Y2="{Binding Path=Y2}" 
-                          Stroke="Black"
-                          StrokeThickness="1"/>
+                          Stroke="{Binding Path=ValueProvider.Value, Converter={StaticResource LineColorConvertor}}"
+                          StrokeThickness=".1"/>
                 </DataTemplate>
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Background="LightGray" Width="{x:Static constants:Cons.cNetWidth}" Height="{x:Static constants:Cons.cNetHeight}"/>
+                    <Canvas Background="Black" Width="{x:Static constants:Cons.cNetWidth}" Height="{x:Static constants:Cons.cNetHeight}"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

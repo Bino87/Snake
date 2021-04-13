@@ -19,10 +19,10 @@ namespace UserControls.Models.NeuralNetDisplay
             set => SetField(ref _y2, value);
         }
 
-        public PrimitiveLine(double x, double x2, double y, double y2) : base(x, y)
+        public PrimitiveLine(PrimitiveShapeValueProvider valueProvider, double x, double x2, double y, double y2) : base(valueProvider,x, y)
         {
             _x2 = x2;
-            _y2 = y2;
+            _y2 = y2 ;
         }
     }
 }

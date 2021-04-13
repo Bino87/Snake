@@ -9,11 +9,11 @@ namespace Network
         private const double cBiasRange = 50;
         private const double cWeightRange = 100;
 
-        internal double[][] Weights { get; }
-        internal double[][] Bias { get; }
+        public double[][] Weights { get; }
+        public double[][] Bias { get; }
         public int InputCount { get; }
         public int OutputCount { get; }
-        internal int Layers { get; }
+        public int Layers { get; }
         internal int[] WeightsCount { get; }
         internal int[] BiasCount { get; }
         internal IActivationFunction[] ActivationFunction { get; }

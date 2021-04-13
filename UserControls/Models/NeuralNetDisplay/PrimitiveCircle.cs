@@ -6,25 +6,18 @@ namespace UserControls.Models.NeuralNetDisplay
     {
         public override ShapeType ShapeType => ShapeType.Circle;
 
-        private double _width, _height;
+        private double _radius;
 
-        public double Width
+        public double Radius
         {
-            get => _width;
-            set => SetField(ref _width, value);
+            get => _radius;
+            set => SetField(ref _radius, value);
         }
 
-        public double Height
-        {
-            get => _height;
-            set => SetField(ref _height, value);
-        }
 
-       
-        public PrimitiveCircle(double x, double y, double width, double height) : base(x,y)
+        public PrimitiveCircle(PrimitiveShapeValueProvider valueProvider, double x, double y, double radius) : base(valueProvider, x, y)
         {
-            _width = width;
-            _height = height;
+            _radius = radius;
         }
     }
 }

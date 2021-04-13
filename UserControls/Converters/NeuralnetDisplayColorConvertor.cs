@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace UserControls.Converters
 {
-    public class NeuralnetDisplayLineColorConvertor : MarkupExtension, IValueConverter
+    public class NeuralnetDisplayColorConvertor : MarkupExtension, IValueConverter
     {
         public SolidColorBrush Positive{ get; set; }
         public SolidColorBrush Negative{ get; set; }
@@ -21,10 +21,10 @@ namespace UserControls.Converters
 
             if (value is double d)
             {
-                return d >= 0 ? Positive : Negative;
+                return d > 0 ? Positive : Negative;
             }
 
-            return null;
+            return Positive;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

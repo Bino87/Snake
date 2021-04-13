@@ -15,10 +15,13 @@ namespace Simulation
     {
         private readonly Action<int, int, MapCellStatus> _callback;
         private Bot[] _agents;
-        private IMapCell[,] _map;
-        private int _mapSize;
-        private int _maxMovesWithoutFood;
-        public MapManager(Action<int, int, MapCellStatus> callback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood)
+        private readonly IMapCell[,] _map;
+        private readonly int _mapSize;
+        private readonly int _maxMovesWithoutFood;
+
+        public Bot[] Agents => _agents;
+
+        public MapManager(Action<int, int, MapCellStatus> callback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo)
         {
             _map = map;
             _mapSize = mapSize;
@@ -27,13 +30,7 @@ namespace Simulation
             _agents = new Bot[numberOfPairs * 2];
             for (int i = 0; i < _agents.Length; i++)
             {
-                _agents[i] = new Bot(map, mapSize, maxMovesWithoutFood,
-                    new NetworkInfo(
-                                     new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 6),
-                                     new LayerInfo(new ReLu(), 20),
-                                     new LayerInfo(new ReLu(), 12),
-                                     new LayerInfo(new Sigmoid(), 4))
-                    );
+                _agents[i] = new Bot(map, mapSize, maxMovesWithoutFood, networkInfo);
             }
             _callback = callback;
         }
@@ -69,7 +66,7 @@ namespace Simulation
 
 
             } while (true);
-            
+
         }
 
         private Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, IReadOnlyList<Bot> agents)
