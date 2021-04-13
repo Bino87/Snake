@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Network.Mutators
 {
+
     public class StringMutator : IMutator
     {
         private readonly double _mutationChancePercentage;
@@ -38,15 +39,9 @@ namespace Network.Mutators
             string fStr = ToBinaryString(fBytes);
             string mStr = ToBinaryString(mBytes);
 
-            string first = Mix(fStr, mStr);
-            string second = Mix(mStr, fStr);
+            byte[] firstBytes = CreateArray(Mutate(Mix(fStr, mStr)), fBytes.Length);
+            byte[] secondBytes = CreateArray(Mutate(Mix(mStr, fStr)), fBytes.Length);
 
-            first = Mutate(first);
-            second = Mutate(second);
-
-            byte[] firstBytes= CreateArray(first, fBytes.Length);
-            byte[] secondBytes = CreateArray(second, fBytes.Length);
-            
             fNetworkInfo.FromByteArray(firstBytes);
             fNetworkInfo.FromByteArray(secondBytes);
 
@@ -80,7 +75,7 @@ namespace Network.Mutators
         {
             byte[] arr = new byte[arrLen];
 
-            for(int i = 0; i < arrLen; i++)
+            for (int i = 0; i < arrLen; i++)
             {
                 var subString = str.Substring(i * 8, 8);
                 arr[i] = Convert.ToByte(subString, 2);
@@ -97,7 +92,7 @@ namespace Network.Mutators
 
                 StringBuilder sb = new(str);
 
-                for(int i = 0; i < amount; i++)
+                for (int i = 0; i < amount; i++)
                 {
                     int index = _rand.Next(str.Length);
                     if (sb[index] == '1')
@@ -120,7 +115,7 @@ namespace Network.Mutators
             int mCount = mStr.Length;
 
 
-            for(int i = 0; i < fStr.Length; )
+            for (int i = 0; i < fStr.Length;)
             {
                 int amount = _rand.Next(_minCopyLen, _maxCopyLen);
 
@@ -152,9 +147,9 @@ namespace Network.Mutators
         {
             StringBuilder sb = new();
 
-            for(int i = 0; i < arr.Length; i++)
+            for (int i = 0; i < arr.Length; i++)
             {
-                string str = Convert.ToString(arr[i], 2).PadLeft(8,'0');
+                string str = Convert.ToString(arr[i], 2).PadLeft(8, '0');
 
                 sb.Append(str);
             }

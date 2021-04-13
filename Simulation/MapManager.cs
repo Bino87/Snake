@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Linq;
 using Network;
 using Network.ActivationFunctions;
 using Network.Mutators;
@@ -46,9 +46,6 @@ namespace Simulation
 
             do
             {
-
-
-                // run simulation
                 SimulationResult[] res = new SimulationResult[_agents.Length];
 
                 List<FitnessResults> results = new(res.Length);
@@ -62,67 +59,46 @@ namespace Simulation
                 //sort based on results
                 results.Sort();
 
-                FitnessResults rr = results[0];
+                double total = results.Sum(t => t.Result) / results.Count;
 
-                Debug.WriteLine(generation++ + " : " + rr.AgentID + " : " + rr.Result);
+
+                Debug.WriteLine(generation++ + " : " + total );
                 //generate children
                 _agents = PropagateNewGeneration(results, _agents);
                 //ShuffleAgents();
 
 
             } while (true);
+            
         }
 
-        private void ShuffleAgents()
+        private Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, IReadOnlyList<Bot> agents)
+
         {
-            Random rand = new();
+            Bot[] res = new Bot[agents.Count / 2];
 
-            for (int i = 0; i < _agents.Length; i++)
-            {
-                int r = rand.Next(0, _agents.Length);
-
-                Bot temp = _agents[i];
-                _agents[i] = _agents[r];
-                _agents[r] = temp;
-            }
-        }
-
-        private Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, Bot[] agents)
-        {
-            Bot[] res = new Bot[agents.Length / 2];
-
-            int len = agents.Length / 2;
+            int len = agents.Count / 2;
 
             for (int i = 0; i < len; i++)
             {
                 res[i] = agents[fitnessResults[i].AgentIndex];
             }
 
-            IMutator mutator = new BitMutator(1, .005);
+            IMutator mutator = new BitMutator(1, .0005/*,1,3*/);
 
-            List<Bot> list = new List<Bot>(res);
-            Random rand = new Random();
+            List<Bot> list = new(res);
+            Random rand = new();
 
-            List<Bot> ret = new List<Bot>();
+            List<Bot> ret = new();
 
             while(list.Count > 0)
             {
                 int f = rand.Next(list.Count);
                 Bot father = list[f];
-                if (father == null)
-                {
-
-                }
                 list.RemoveAt(f);
 
                 int m = rand.Next(list.Count);
                 Bot mother = list[m];
-
-                if (mother == null)
-                {
-
-                }
-
                 list.RemoveAt(m);
 
                 (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father.GetNeuralNetwork(), mother.GetNeuralNetwork());

@@ -38,7 +38,7 @@ namespace Snake
                 this.DataContext = mvm;
 
 
-                mm = new MapManager(Callback, 50, mvm.SnakeMapViewModel.RectArr, mvm.SnakeMapViewModel._numberOfTiles, 200);
+                mm = new MapManager(Callback, 250, mvm.SnakeMapViewModel.RectArr, mvm.SnakeMapViewModel._numberOfTiles, 200);
 
                 Task.Run(() =>
                 {
@@ -59,6 +59,9 @@ namespace Snake
 
         private void Callback(int x, int y, MapCellStatus newStatus)
         {
+            if(Application.Current?.Dispatcher is null)
+                return;
+
             Application.Current.Dispatcher.Invoke(() =>
             {
 

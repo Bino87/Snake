@@ -26,7 +26,7 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>
-                <Style>
+                <Style >
                     <Setter Property="Canvas.Left" Value="{Binding Path=X}"/>
                     <Setter Property="Canvas.Top" Value="{Binding Path=Y}"/>
                 </Style>

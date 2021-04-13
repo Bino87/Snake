@@ -7,8 +7,11 @@
              xmlns:controls="clr-namespace:UserControls.Controls"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance models:MainViewModel}">
-    <StackPanel Orientation="Vertical">
-        <TextBox Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+    <StackPanel Orientation="Horizontal">
+
+        <controls:NeuralNetDisplayControl DataContext="{Binding Path=.NeuralNetDisplay}" />
+
+        <TextBox Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
     </StackPanel>

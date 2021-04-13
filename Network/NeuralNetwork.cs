@@ -35,17 +35,20 @@ namespace Network
             {
                 output = new double[_biases[layerIndex].Length];
 
+                double[] input1 = input;
+                int index = layerIndex;
+                double[] output1 = output;
                 Parallel.For(0, output.Length,
                              (outputIndex) =>
                              {
                                  double value = 0;
 
 
-                                 for (int inputIndex = 0; inputIndex < input.Length; inputIndex++)
+                                 for (int inputIndex = 0; inputIndex < input1.Length; inputIndex++)
                                  {
-                                     int weightIndex = outputIndex * input.Length + inputIndex;
-                                     double  result = input[inputIndex] * _weights[layerIndex][weightIndex];
-                                     if (double.IsNaN(result) || double.IsInfinity(result) )
+                                     int weightIndex = outputIndex * input1.Length + inputIndex;
+                                     double result = input1[inputIndex] * _weights[index][weightIndex];
+                                     if (double.IsNaN(result) || double.IsInfinity(result))
                                      {
                                          continue;
                                      }
@@ -53,9 +56,9 @@ namespace Network
                                      value += result;
                                  }
 
-                                 double res = _activationFunction[layerIndex].Evaluate(value + _biases[layerIndex][outputIndex]);
+                                 double res = _activationFunction[index].Evaluate(value + _biases[index][outputIndex]);
                                  if (double.IsInfinity(res) || double.IsNaN(res)) res = 0;
-                                 output[outputIndex] = res;
+                                 output1[outputIndex] = res;
                              }
                     );
 

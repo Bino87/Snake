@@ -6,6 +6,7 @@ namespace UserControls.Models
     public class MainViewModel : Observable
     {
         public SnakeMapViewModel SnakeMapViewModel {get; set; }
+        public NeuralNetDisplayViewModel NeuralNetDisplay { get; set; }
         private int _delay;
 
         public int Deley
@@ -18,6 +19,7 @@ namespace UserControls.Models
         public MainViewModel()
         {
             SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
+            NeuralNetDisplay = new NeuralNetDisplayViewModel();
         }
     }
 }

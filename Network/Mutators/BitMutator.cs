@@ -32,7 +32,7 @@ namespace Network.Mutators
         }
 
 
-        private bool doStuff = false;
+        private bool debug = false;
         public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
         {
             NetworkInfo fNetworkInfo = father.ToNetworkInfo();
@@ -49,7 +49,7 @@ namespace Network.Mutators
             fNetworkInfo.FromByteArray(first);
             mNetworkInfo.FromByteArray(second);
 
-            if (doStuff)
+            if (debug)
             {
                 DataTable dt = new DataTable();
 

@@ -22,7 +22,9 @@ namespace Simulation.SimResults
 
         public double CalculateFitness(FitnessParameters fitnessParameters)
         {
+            
             double steps = Moves.Sum();
+            return steps;
             double d = (SelfCollision ? -1d : 0d);
             double a = (Math.Pow(2, Points) + Math.Pow(Points, 2.1) * 500);
             double b = Math.Pow(Points, 1.2) * Math.Pow(steps * .25, 1.3);
