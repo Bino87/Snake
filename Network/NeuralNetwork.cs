@@ -13,10 +13,13 @@ namespace Network
         readonly double[][] _weights;
         readonly IActivationFunction[] _activationFunction;
 
+        public double[][] Weights => _weights;
+
         public NeuralNetwork(NetworkInfo networkInfo)
         {
-            _biases = networkInfo.Bias;
-            _weights = networkInfo.Weights;
+            (double[][] weights, double[][] biass) = networkInfo.CreateWeightsAndBiases();
+            _biases = biass;
+            _weights = weights;
             _numLayers = networkInfo.Layers;
             _inputCount = networkInfo.InputCount;
             _activationFunction = networkInfo.ActivationFunction;

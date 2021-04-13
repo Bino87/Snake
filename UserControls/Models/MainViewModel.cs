@@ -35,7 +35,7 @@ namespace UserControls.Models
                 new LayerInfo(new LeakyRelu(), 12),
                 new LayerInfo(new Sigmoid(), 4));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(Callback, NeuralNetDisplay.OnResultsCalculated, 10, SnakeMapViewModel.RectArr, SnakeMapViewModel._numberOfTiles, 200, ni);
+            mm = new MapManager(Callback, NeuralNetDisplay.OnResultsCalculated, 50, SnakeMapViewModel.RectArr, SnakeMapViewModel._numberOfTiles, 200, ni);
 
 
             Dudd();

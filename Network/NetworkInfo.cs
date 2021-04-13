@@ -9,8 +9,8 @@ namespace Network
         private const double cBiasRange = 1;
         private const double cWeightRange = 1;
 
-        //public double[][] Weights { get; }
-        //public double[][] Bias { get; }
+        public double[][] Weights { get; }
+        public double[][] Bias { get; }
         public int InputCount { get; }
         public int OutputCount { get; }
         public int Layers { get; }
@@ -35,8 +35,6 @@ namespace Network
             InputCount = layerInfos[0].NodeCount;
             OutputCount = layerInfos[^1].NodeCount;
             Layers = layerInfos.Length - 1;
-            Bias = new double[Layers][];
-            Weights = new double[Layers][];
             ActivationFunction = new IActivationFunction[Layers];
 
             WeightsCount = new int[Layers];
@@ -44,17 +42,10 @@ namespace Network
 
             for (int i = 1; i < layerInfos.Length; i++)
             {
+                BiasCount[i-1] = layerInfos[i].NodeCount;
+                WeightsCount[i - 1] = layerInfos[i - 1].NodeCount * layerInfos[i].NodeCount;
                 ActivationFunction[i - 1] = layerInfos[i].ActivationFunction;
             }
-
-            for (int i = 1; i < layerInfos.Length; i++)
-            {
-                int count = layerInfos[i].NodeCount * layerInfos[i - 1].NodeCount;
-                Weights[i - 1] = new double[count];
-                Bias[i - 1] = new double[layerInfos[i].NodeCount];
-            }
-
-            CreateWeightsAndBiases();
         }
 
         public NetworkInfo(IActivationFunction[] activationFunction, double[][] weights, double[][] bias, int inputCount, int outputCount)
@@ -76,25 +67,38 @@ namespace Network
             }
         }
 
-        private void CreateWeightsAndBiases()
+        
+        public (double[][] Weights, double[][] Biass) CreateWeightsAndBiases()
         {
+            double[][] bias = new double[Layers][];
+            double[][] weights = new double[Layers][];
+
+            for(int i = 0; i < BiasCount.Length; i++)
+            {
+                bias[i] = new double[BiasCount[i]];
+            }
+
+            for(int i = 0; i < WeightsCount.Length; i++)
+            {
+                weights[i] = new double[WeightsCount[i]];
+            }
+
             Random rand = new();
 
             for (int i = 0; i < Layers; i++)
             {
-                WeightsCount[i] = Weights[i].Length;
-                BiasCount[i] = Bias[i].Length;
-
-                for (int x = 0; x < Bias[i].Length; x++)
+                for (int x = 0; x < bias[i].Length; x++)
                 {
-                    Bias[i][x] = rand.NextDouble(-cBiasRange *10, cBiasRange);
+                    bias[i][x] = rand.NextDouble(-cBiasRange , cBiasRange);
                 }
 
-                for (int x = 0; x < Weights[i].Length; x++)
+                for (int x = 0; x < weights[i].Length; x++)
                 {
-                    Weights[i][x] = rand.NextDouble(-cWeightRange , cWeightRange);
+                    weights[i][x] = rand.NextDouble(-cWeightRange, cWeightRange);
                 }
             }
+
+            return (weights, bias);
         }
 
         internal byte[] ToByteArr()
@@ -110,7 +114,7 @@ namespace Network
         internal void FromByteArray(byte[] arr)
         {
             int index = 0;
-            Create2DArrayFromBytes(arr, ref index, WeightsCount, Weights);
+            //Create2DArrayFromBytes(arr, ref index, WeightsCount, Weights);
             Create2DArrayFromBytes(arr, ref index, BiasCount, Bias);
         }
 
@@ -142,5 +146,6 @@ namespace Network
                 }
             }
         }
+
     }
 }

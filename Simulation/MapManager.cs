@@ -50,7 +50,7 @@ namespace Simulation
 
                 for (int i = 0; i < res.Length; i++)
                 {
-                    onUpdateWeights?.Invoke(_agents[i].GetNeuralNetwork().ToNetworkInfo().Weights);
+                    onUpdateWeights?.Invoke(_agents[i].GetNeuralNetwork().Weights);
                     res[i] = _agents[i].Run(_callback, netCallback);
 
                     results.Add(new FitnessResults(i, res[i].CalculateFitness(fp), _agents[i].ID));
@@ -83,7 +83,7 @@ namespace Simulation
                 res[i] = agents[fitnessResults[i].AgentIndex];
             }
 
-            IMutator mutator = new BitMutator(1, .0005/*,1,3*/);
+            IMutator mutator = new BitMutator(1, .005/*,1,3*/);
 
             List<Bot> list = new(res);
             Random rand = new();
