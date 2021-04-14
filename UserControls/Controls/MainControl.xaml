@@ -11,8 +11,11 @@
 
         <controls:NeuralNetDisplayControl DataContext="{Binding Path=.NeuralNetDisplay}" />
 
-        <TextBox VerticalAlignment="Top" Width="100" Height="25" Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <StackPanel Orientation="Vertical">
+            <TextBox VerticalAlignment="Top" Width="100" Height="25" Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{Binding Path=Generation, StringFormat=Generation: {0}}"/>
 
+        </StackPanel>
         <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
     </StackPanel>
 </UserControl>

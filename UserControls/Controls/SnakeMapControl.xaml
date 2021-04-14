@@ -7,36 +7,61 @@
              xmlns:models="clr-namespace:UserControls.Models"
              xmlns:converters="clr-namespace:UserControls.Converters"
              xmlns:constants="clr-namespace:UserControls.Constants"
+             xmlns:templateSelectors="clr-namespace:UserControls.TemplateSelectors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance models:SnakeMapViewModel}">
     <StackPanel Orientation="Vertical">
-        <ItemsControl ItemsSource="{Binding Path=RectList}">
+        <StackPanel.Resources>
+            <!--<Style TargetType="Rectangle" x:Key="Style">
+                <Setter Property="Canvas.Left" Value="{Binding Path=X}"/>
+                <Setter Property="Canvas.Top" Value="{Binding Path=Y}"/>
+            </Style>-->
+            <templateSelectors:SnakeMapTemplateSelector  x:Key="SnakeMapTemplateSelector"/>
+        </StackPanel.Resources>
+        <ItemsControl ItemsSource="{Binding Path=MapItems}"
+                      ItemTemplateSelector="{StaticResource SnakeMapTemplateSelector}">
             <ItemsControl.Resources>
                 <ResourceDictionary>
-                    <SolidColorBrush x:Key="Snake" Color="Blue"/>
-                    <SolidColorBrush x:Key="Food" Color="Green"/>
-                    <SolidColorBrush x:Key="Empty" Color="Transparent"/>
-                    <converters:SnakeMapColorConverter x:Key="SnakeMapColorConverter" Transparent="{StaticResource Empty}" Food="{StaticResource Food}" Snake="{StaticResource Snake}"/>
+                    <SolidColorBrush x:Key="SnakeCell" Color="Blue"/>
+                    <SolidColorBrush x:Key="FoodCell" Color="Green"/>
+                    <SolidColorBrush x:Key="EmptyCell" Color="Transparent"/>
+                    <SolidColorBrush x:Key="NormalVision" Color="White"/>
+                    <SolidColorBrush x:Key="SelfVision" Color="Red"/>
+                    <SolidColorBrush x:Key="FoodVision" Color="Yellow"/>
+                    <converters:SnakeMapColorConverter x:Key="SnakeMapColorConverter" Transparent="{StaticResource EmptyCell}" Food="{StaticResource FoodCell}" Snake="{StaticResource SnakeCell}"/>
+                    <converters:MapVisionColorConverter x:Key="MapVisionColorConverter" Food="{StaticResource FoodVision}"  Normal="{StaticResource NormalVision}"  Self="{StaticResource SelfVision}" />
+
+                    <DataTemplate x:Key="{x:Static constants:Cons.cRectangleDataTemplate}" DataType="models:MapCell">
+                        <Rectangle Width="{Binding Width, Mode= OneWay}" Height="{Binding Height}"
+                                   Fill="{Binding Path=CellStatus, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}">
+                            <Rectangle.RenderTransform>
+                                <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+
+                    </DataTemplate>
+
+                    <DataTemplate x:Key="{x:Static constants:Cons.cVisionDataTemplate}" DataType="models:CellVision">
+                        <Line StrokeThickness="1" Stroke="{Binding Path=VisionCollisionType, Converter={StaticResource MapVisionColorConverter}, Mode=OneWay}" 
+                              X1="{Binding Path=X1}"
+                              X2="{Binding Path=X2}"
+                              Y1="{Binding Path=Y1}"
+                              Y2="{Binding Path=Y2}"
+                              />
+                    </DataTemplate>
+
+
                 </ResourceDictionary>
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="Black" Width="{x:Static constants:Cons.cMapSize}" Height="{x:Static constants:Cons.cMapSize}"/>
+
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemContainerStyle>
-                <Style >
-                    <Setter Property="Canvas.Left" Value="{Binding Path=X}"/>
-                    <Setter Property="Canvas.Top" Value="{Binding Path=Y}"/>
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Rectangle Width="{Binding Width, Mode= OneWay}" Height="{Binding Height}"
-                               Fill="{Binding Path=CellStatus, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+
+
         </ItemsControl>
     </StackPanel>
 </UserControl>

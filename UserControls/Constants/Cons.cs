@@ -7,12 +7,12 @@
         public const double cNetHeightPadding = 25;
         public const double cNetWidth = 300;
         public const double cNetWidthPadding = 25;
-        public const int cNumberOfTiles = 11;
+        public const int cNumberOfTiles = 10;
 
 
         public const string cShapeCircleDataTemplate = "cShapeCircleDataTemplate";
         public const string cShapeLineDataTemplate = "cShapeLineDataTemplate";
-        public const string cShapeCircleStyle = "ShapeCircleStyle";
-        public const string cShapeLineStyle = "ShapeLineStyle";
+        public const string cRectangleDataTemplate = "RectangleDataTemplate";
+        public const string cVisionDataTemplate = "VisionDataTemplate";
     }
 }

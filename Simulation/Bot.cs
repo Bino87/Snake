@@ -10,7 +10,7 @@ using Simulation.SimResults;
 
 namespace Simulation
 {
-    
+
     [DebuggerDisplay("{ID}")]
     public class Bot
     {
@@ -20,7 +20,7 @@ namespace Simulation
         private readonly List<SnakePart> _snake;
         private Food _food;
         private readonly int _maxMovesWithoutFood;
-        private  Random _rand;
+        private Random _rand;
         private readonly IMapCell[,] _map;
         private SnakePart Head => _snake[0];
         private SnakePart Tail => _snake[^1];
@@ -36,40 +36,43 @@ namespace Simulation
             _mapSize = mapSize;
             _map = map;
             _maxMovesWithoutFood = maxMovesWithoutFood;
-            
+
             _snake = new List<SnakePart>();
             _networkAgent = new NetworkAgent(map, networkInfo);
         }
 
-        public SimulationResult Run(Action<List<(int X, int Y, MapCellStatus Status)>, double[][]> onCellsUpdated)
+        public SimulationResult Run(Action<List<(int X, int Y, MapCellStatus Status)>, double[][],VisionData[]> onCellsUpdated)
         {
             _rand = new Random(1);
             List<(int X, int Y, MapCellStatus Status)> updateCellData = new();
+            List<VisionData> visionData = new();
             ResetMap(updateCellData);
-            SpawnSnake( updateCellData);
+            SpawnSnake(updateCellData);
             SpawnNewFood(updateCellData);
-            onCellsUpdated?.Invoke(updateCellData,null);
 
             int movesSinceLastFood = 0;
             List<int> list = new();
-
+            MovePrognosis movePrognosis;
             while (movesSinceLastFood < _maxMovesWithoutFood + _snake.Count)
             {
-                double[][] values = CalculateSnakeDirection();
+                double[][] values = CalculateSnakeDirection(visionData);
 
-                MovePrognosis movePrognosis = GetMoveResults();
+                visionData.Sort();
+
+                onCellsUpdated?.Invoke(updateCellData, values, visionData.ToArray());
+                visionData.Clear();
+
+                movePrognosis = GetMoveResults();
 
                 if (movePrognosis == MovePrognosis.Ok)
                 {
                     Move(ref movesSinceLastFood, list, updateCellData);
                 }
                 else
-                {
                     break;
-                }
 
                 movesSinceLastFood++;
-                onCellsUpdated?.Invoke(updateCellData, values);
+               
             }
 
             list.Add(movesSinceLastFood);
@@ -78,14 +81,15 @@ namespace Simulation
 
         public NeuralNetwork GetNeuralNetwork() => _networkAgent.GetNeuralNetwork();
 
-        private void SpawnSnake( List<(int X, int Y, MapCellStatus Status)> updateCellDatas)
+        private void SpawnSnake(ICollection<(int X, int Y, MapCellStatus Status)> updateCellDatas)
         {
             _snake.Clear();
             int x = _mapSize / 2;
+            int y = 0;
 
-            for (int i = 0; i < cInitialSnakeSize && i < _mapSize; i++)
+            for (int i = 0; i < cInitialSnakeSize && i < _mapSize && x + i < _mapSize; i++)
             {
-                int y = x + i;
+                y = x + i;
                 _snake.Add(new SnakePart(x, y, Direction.Up));
                 updateCellDatas.Add((x, y, MapCellStatus.Snake));
             }
@@ -107,9 +111,9 @@ namespace Simulation
 
         }
 
-        private double[][] CalculateSnakeDirection()
+        private double[][] CalculateSnakeDirection(List<VisionData> visionData)
         {
-            double[][] results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize, _food.X, _food.Y);
+            double[][] results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize, _food.X, _food.Y, visionData);
             Head.Direction = PickBest(results[^1]);
             return results;
         }
@@ -136,7 +140,7 @@ namespace Simulation
                     index = i;
             }
 
-            TurnDirection td = (TurnDirection) index;
+            TurnDirection td = (TurnDirection)index;
 
             return Head.Direction.Turn(td);
         }
@@ -156,9 +160,9 @@ namespace Simulation
             {
                 Direction dir = Head.Direction;
                 Head.Move();
-                updateCellData.Add( (Head.X, Head.Y, MapCellStatus.Snake));
+                updateCellData.Add((Head.X, Head.Y, MapCellStatus.Snake));
                 (x, y) = (Tail.X, Tail.Y);
-                updateCellData.Add( (x, y, MapCellStatus.Empty));
+                updateCellData.Add((x, y, MapCellStatus.Empty));
 
                 for (int i = 1; i < _snake.Count; i++)
                 {
@@ -173,7 +177,7 @@ namespace Simulation
         private void EatFood(List<(int X, int Y, MapCellStatus Status)> updateCellData)
         {
             _snake.Insert(0, new SnakePart(_food.X, _food.Y, Head.Direction));
-            updateCellData.Add( (Head.X, Head.Y, MapCellStatus.Snake));
+            updateCellData.Add((Head.X, Head.Y, MapCellStatus.Snake));
 
             SpawnNewFood(updateCellData);
         }
@@ -185,7 +189,7 @@ namespace Simulation
                 for (int y = 0; y < _mapSize; y++)
                 {
                     if (_map[x, y].CellStatus != MapCellStatus.Empty)
-                        updateCellData.Add( (x, y, MapCellStatus.Empty));
+                        updateCellData.Add((x, y, MapCellStatus.Empty));
                 }
             }
         }

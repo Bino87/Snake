@@ -5,7 +5,7 @@ using Simulation.Interfaces;
 
 namespace Simulation.Core
 {
-    [DebuggerDisplay("X:{X} Y:{Y} D:{Direction}")]
+    [DebuggerDisplay("X1:{X} Y1:{Y} D:{Direction}")]
     public class SnakePart : SimObject
     {
         public override MapCellStatus Status => MapCellStatus.Snake;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Simulation.Core;
 using Simulation.Interfaces;
 using UserControls.Constants;
 using UserControls.Core.Base;
@@ -9,38 +10,59 @@ namespace UserControls.Models
     {
         public readonly int _numberOfTiles;
 
-        public ObservableCollection<MapCell> RectList { get; set; }
+        public ObservableCollection<IMapItem> MapItems { get; set; }
         public IMapCell[,] RectArr { get; }
 
         public SnakeMapViewModel(int numTiles)
         {
             _numberOfTiles = numTiles;
-            RectArr = new MapCell[numTiles, numTiles];
+            RectArr = new IMapCell[numTiles, numTiles];
             CreateMap();
         }
 
-        public void CreateMap()
+
+        public void CreateVisionLines(VisionData[] visionData)
         {
-            CreateMap(_numberOfTiles);
+            ClearVision();
+
+            double cellSize = Cons.cMapSize / _numberOfTiles;   // size of each tile;
+            double midPoint = cellSize /2 ;                     //midpoint offset.
+
+            for(int i = 0; i < visionData.Length; i++)
+            {
+                CellVision cv = new(visionData[i], cellSize, midPoint);
+                MapItems.Add(cv);
+            }
+            
         }
 
-        private void  CreateMap(int numTiles)
+        private void ClearVision()
         {
-            ObservableCollection<MapCell> res = new();
+            int count = _numberOfTiles * _numberOfTiles;
 
-            double size = Cons.cMapSize / numTiles - 1;
-            for (int y = 0; y < numTiles; y++)
+            while (MapItems.Count > count)
             {
-                for (int x = 0; x < numTiles; x++)
+                MapItems.RemoveAt(count);
+            }
+        }
+
+        private void CreateMap()
+        {
+            ObservableCollection<IMapItem> res = new();
+
+            double size = Cons.cMapSize / _numberOfTiles ;
+            for (int y = 0; y < _numberOfTiles; y++)
+            {
+                for (int x = 0; x < _numberOfTiles; x++)
                 {
-                    MapCell mc = new(x * size + x, y * size + y, size, size);
+                    MapCell mc = new(x * size , y * size, size, size);
                     RectArr[x, y] = mc;
 
                     res.Add(mc);
                 }
             }
 
-            RectList = res;
+            MapItems = res;
         }
     }
 }

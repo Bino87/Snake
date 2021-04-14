@@ -77,34 +77,28 @@ namespace UserControls.Models
             }
         }
 
-        public void OnUpdateWeights(double[][] weights)
+        public void UpdateWeights(double[][] weights)
         {
-            Application.Current?.Dispatcher.Invoke(
-                () =>
-                {
-                    for (int i = 0; i < weights.Length; i++)
-                    {
-                        for (int j = 0; j < weights[i].Length; j++)
-                        {
-                            double d = weights[i][j];
-
-                            _lineValueProviders[i][j].Value = d;
-                        }
-                    }
-                }
-                );
-
-        }
-
-        public void OnResultsCalculated(double[][] results)
-        {
-            for (int i = 0; i < results.Length; i++)
+            for (int i = 0; i < weights.Length; i++)
             {
-                for (int j = 0; j < results[i].Length; j++)
+                for (int j = 0; j < weights[i].Length; j++)
                 {
-                    _circleValueProviders[i][j].Value = results[i][j];
+                    double d = weights[i][j];
+
+                    _lineValueProviders[i][j].Value = d;
                 }
             }
         }
+
+    public void OnResultsCalculated(double[][] results)
+    {
+        for (int i = 0; i < results.Length; i++)
+        {
+            for (int j = 0; j < results[i].Length; j++)
+            {
+                _circleValueProviders[i][j].Value = results[i][j];
+            }
+        }
     }
+}
 }

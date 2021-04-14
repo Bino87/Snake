@@ -5,13 +5,14 @@ using Simulation.Interfaces;
 
 namespace UserControls.Models
 {
-    [DebuggerDisplay("X:{X} Y:{Y} {CellStatus}")]
+    [DebuggerDisplay("X1:{X} Y1:{Y} {CellStatus}")]
     public class MapCell : Observable, IMapCell
     {
         private double _x;
         private double _y;
         private MapCellStatus _cellStatus;
 
+        public MapItemType ItemType => MapItemType.Cell;
         public MapCellStatus CellStatus
         {
             get => _cellStatus;

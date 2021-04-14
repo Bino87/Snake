@@ -4,4 +4,11 @@
     {
         Empty,Snake, Food
     }
+
+    public enum VisionCollisionType
+    {
+        Normal,
+        Self,
+        Food
+    }
 }

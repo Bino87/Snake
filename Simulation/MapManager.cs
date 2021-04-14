@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using Network;
 using Network.Mutators;
+using Simulation.Core;
 using Simulation.Enums;
 using Simulation.Interfaces;
 using Simulation.SimResults;
@@ -13,7 +14,7 @@ namespace Simulation
 {
     public class MapManager
     {
-        private readonly Action<List<(int X, int Y, MapCellStatus Status)>, double[][]> _updateCallback;
+        private readonly Action<List<(int X, int Y, MapCellStatus Status)>, double[][], VisionData[]> _updateCallback;
         private Bot[] _agents;
         private readonly IMapCell[,] _map;
         private readonly int _mapSize;
@@ -21,7 +22,7 @@ namespace Simulation
         private double _mutationRate;
         private double _mutationChance;
 
-        public MapManager(Action<List<(int X, int Y, MapCellStatus Status)>, double[][]> updateCallback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, double mutationRate, double mutationChance)
+        public MapManager(Action<List<(int X, int Y, MapCellStatus Status)>, double[][], VisionData[]> updateCallback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, double mutationRate, double mutationChance)
         {
             _map = map;
             _mapSize = mapSize;
@@ -38,7 +39,7 @@ namespace Simulation
             _updateCallback = updateCallback;
         }
 
-        public void Run(Action<double[][]> onUpdateWeights, CancellationToken token)
+        public void Run(Action<double[][], int> onSimulationStart, CancellationToken token)
         {
             int generation = 0;
 
@@ -51,7 +52,7 @@ namespace Simulation
                     if (token.IsCancellationRequested)
                         return;
 
-                    onUpdateWeights?.Invoke(_agents[i].GetNeuralNetwork().Weights);
+                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights,generation);
                     SimulationResult res = _agents[i].Run(_updateCallback);
 
                     results.Add(new FitnessResults(i, res, _agents[i].ID));

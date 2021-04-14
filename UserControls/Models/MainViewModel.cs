@@ -6,6 +6,7 @@ using System.Windows;
 using Network;
 using Network.ActivationFunctions;
 using Simulation;
+using Simulation.Core;
 using Simulation.Enums;
 using UserControls.Constants;
 using UserControls.Core.Base;
@@ -18,7 +19,13 @@ namespace UserControls.Models
         public NeuralNetDisplayViewModel NeuralNetDisplay { get; set; }
         private int _delay;
         private MapManager mm;
+        private int _generation;
 
+        public int Generation
+        {
+            get => _generation;
+            set => SetField(ref _generation, value);
+        }
 
         public int Deley
         {
@@ -29,23 +36,21 @@ namespace UserControls.Models
 
         public MainViewModel()
         {
-
-
             SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
-            Deley = 1;
+            Deley = 500;
             NetworkInfo ni = new NetworkInfo(
-                new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 6 ),
+                new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 6),
                 new LayerInfo(new ReLu(), 20),
                 new LayerInfo(new ReLu(), 12),
                 new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(OnUpdate, 50, SnakeMapViewModel.RectArr, SnakeMapViewModel._numberOfTiles, 50, ni, .05,1);
+            mm = new MapManager(OnUpdate, 50, SnakeMapViewModel.RectArr, SnakeMapViewModel._numberOfTiles, 50, ni, .05, 1);
 
 
             StartSimulation();
         }
 
-        private void OnUpdate(List<(int X, int Y, MapCellStatus Status)> cellUpdateList, double[][] values)
+        private void OnUpdate(List<(int X, int Y, MapCellStatus Status)> cellUpdateList, double[][] values, VisionData[] visionData)
         {
 
             Application.Current?.Dispatcher.Invoke(() =>
@@ -60,8 +65,15 @@ namespace UserControls.Models
 
                                                       if (values is not null)
                                                           NeuralNetDisplay.OnResultsCalculated(values);
+                                                      if(visionData is not null)
+                                                          SnakeMapViewModel.CreateVisionLines(visionData);
 
                                                   });
+            DeleySim();
+        }
+
+        void DeleySim()
+        {
             Thread.Sleep(Deley);
         }
 
@@ -69,18 +81,28 @@ namespace UserControls.Models
         {
             CancellationTokenSource source = new();
             CancellationToken tok = source.Token;
-            Task t = Task.Run(() =>
-                         {
-                             try
-                             {
-                                 mm.Run(NeuralNetDisplay.OnUpdateWeights, tok);
-                             }
-                             catch (Exception)
-                             {
-                                 source.Cancel();
-                             }
-                         }, tok);
+            _ = Task.Run(() =>
+                                {
+                                    try
+                                    {
+                                        mm.Run(OnSimulationStart, tok);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        source.Cancel();
+                                    }
+                                }, tok);
         }
 
+        private void OnSimulationStart(double[][] obj, int generation)
+        {
+            Application.Current?.Dispatcher.Invoke(() =>
+            {
+                NeuralNetDisplay.UpdateWeights(obj);
+                Generation = generation;
+            }
+            );
+            DeleySim();
+        }
     }
 }
