@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Network;
 using Simulation.Core;
 using Simulation.Enums;
@@ -22,44 +21,62 @@ namespace Simulation
         }
 
         public NeuralNetwork GetNeuralNetwork() => _neuralNetwork;
-        public double[][] Calculate(SnakePart head, Direction tailDirection, int mapSize, int foodX, int foodY, List<VisionData> visionData)
+        public double[][] Calculate(Direction headDirection, Direction tailDirection, int mapSize, int foodX, int foodY, List<VisionData> visionData)
         {
-            double[] input = GetInputValues(head, tailDirection, mapSize, foodX, foodY, visionData);
+            double[] input = GetInputValues(headDirection,tailDirection, mapSize, foodX, foodY, visionData);
 
             _result = _neuralNetwork.Evaluate(input);
 
             return _result;
         }
 
-        private double[] GetInputValues(SnakePart head, Direction tailDirection, int mapSize, int foodX, int foodY, List<VisionData> visionData)
+        (int HeadX, int HeadY) GetHead()
+        {
+            for(int x = 0; x < _map.GetLength(0); x++)
+            {
+                for(int y = 0; y < _map.GetLength(1); y++)
+                {
+                    if (_map[x, y].CellStatus == MapCellStatus.Head)
+                        return (x, y);
+                }
+            }
+
+            return (-1,-1);
+        }
+
+        private double[] GetInputValues(Direction headDirection, Direction tailDirection, int mapSize, int foodX, int foodY, List<VisionData> visionData)
         {
             double[] res = new double[_inputCount];
             int index = 0;
 
+            (int headX, int headY) = GetHead();
 
-            void DUDD(int x, int y)
+            if (headX == -1 && headY == -1)
+                return res;
+
+            void GetValueAndSetInput(int x, int y)
             {
-                (double value, double seesSelf, double seesFood) = GetValue(x, y, mapSize, head.X, head.Y, mapSize, visionData);
+                (double value, double seesSelf, double seesFood) = GetValue(x, y, mapSize, mapSize,headX, headY, visionData);
 
                 res[index++] = 1d - value;
                 res[index++] = seesSelf;
                 res[index++] = seesFood;
             }
 
-            DUDD(-1, 0);
-            DUDD(1, 0);
-            DUDD(0, -1);
-            DUDD(0, 1);
-            DUDD(1, 1);
-            DUDD(-1, 1);
-            DUDD(1, -1);
-            DUDD(-1, -1);
+            GetValueAndSetInput(-1, 0);
+            GetValueAndSetInput(1, 0);
+            GetValueAndSetInput(0, -1);
+            GetValueAndSetInput(0, 1);
+            GetValueAndSetInput(1, 1);
+            GetValueAndSetInput(-1, 1);
+            GetValueAndSetInput(1, -1);
+            GetValueAndSetInput(-1, -1);
 
             //Head Direction
-            res[index++] = head.Direction == Direction.Up ? 1 : 0;
-            res[index++] = head.Direction == Direction.Left ? 1 : 0;
-            res[index++] = head.Direction == Direction.Down ? 1 : 0;
-            res[index++] = head.Direction == Direction.Right ? 1 : 0;
+            res[index++] = headDirection == Direction.Up ? 1 : 0;
+            res[index++] = headDirection == Direction.Left ? 1 : 0;
+            res[index++] = headDirection == Direction.Down ? 1 : 0;
+            res[index++] = headDirection == Direction.Right ? 1 : 0;
 
             //Tail Direction
             res[index++] = tailDirection == Direction.Up ? 1 : 0;
@@ -67,24 +84,27 @@ namespace Simulation
             res[index++] = tailDirection == Direction.Down ? 1 : 0;
             res[index++] = tailDirection == Direction.Right ? 1 : 0;
 
-            res[index++] = foodX > head.X ? 1 : 0;
-            res[index++] = foodX == head.X ? 1 : 0;
-            res[index++] = foodX < head.X ? 1 : 0;
-            res[index++] = foodY > head.Y ? 1 : 0;
-            res[index++] = foodY == head.Y ? 1 : 0;
-            res[index++] = foodY < head.Y ? 1 : 0;
+            res[index++] = foodX > headX ? 1 : 0;
+            res[index++] = foodX == headX ? 1 : 0;
+            res[index++] = foodX < headX ? 1 : 0;
+            res[index++] = foodY > headY ? 1 : 0;
+            res[index++] = foodY == headY ? 1 : 0;
+            res[index++] = foodY < headY ? 1 : 0;
 
             return res;
         }
 
-        private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, double divideBy, int headX, int headY, int mapSize, List<VisionData> visionData)
+        private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, double divideBy, int mapSize, int headX, int headY, List<VisionData> visionData)
         {
             double seesFood = 0;
             double seesSelf = 0;
 
+            
+            double value = 0;
+
             int x = headX;
             int y = headY;
-            double value = 0;
+           
 
             void Increment()
             {
@@ -114,6 +134,7 @@ namespace Simulation
                             visionData.Add(new VisionData(VisionCollisionType.Self, headX, x, headY, y));
                         }
                         break;
+                    case MapCellStatus.Head:
                     case MapCellStatus.Empty:
                         break;
                     default: throw new ArgumentOutOfRangeException();

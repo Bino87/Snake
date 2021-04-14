@@ -1,6 +1,6 @@
 ﻿using UserControls.Enums;
 
-namespace UserControls.Models.NeuralNetDisplay
+namespace UserControls.Objects.NeuralNetDisplay
 {
     public class PrimitiveCircle : PrimitiveShape
     {

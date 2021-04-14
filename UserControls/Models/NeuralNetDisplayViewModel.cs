@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Windows;
+﻿using System.Collections.ObjectModel;
 using Network;
 using UserControls.Constants;
 using UserControls.Core.Base;
-using UserControls.Models.NeuralNetDisplay;
+using UserControls.Objects.NeuralNetDisplay;
 
 namespace UserControls.Models
 {

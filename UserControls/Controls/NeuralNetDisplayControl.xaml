@@ -6,8 +6,8 @@
              xmlns:models="clr-namespace:UserControls.Models"
              xmlns:constants="clr-namespace:UserControls.Constants"
              xmlns:templateSelectors="clr-namespace:UserControls.TemplateSelectors"
-             xmlns:neuralNetDisplay="clr-namespace:UserControls.Models.NeuralNetDisplay"
              xmlns:converters="clr-namespace:UserControls.Converters"
+             xmlns:neuralNetDisplay1="clr-namespace:UserControls.Objects.NeuralNetDisplay"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance models:NeuralNetDisplayViewModel}">
@@ -26,7 +26,7 @@
                 <converters:NeuralnetDisplayColorConvertor x:Key="CircleColorConvertor" Negative="{StaticResource NotActive}" Positive="{StaticResource Active}"/>
                 <converters:NeuralnetDisplayLineThicknessConvertor x:Key="NeuralnetDisplayLineThicknessConvertor" Limit="1"/>
 
-                <DataTemplate x:Key="{x:Static constants:Cons.cShapeCircleDataTemplate}" DataType="neuralNetDisplay:PrimitiveCircle">
+                <DataTemplate x:Key="{x:Static constants:Cons.cShapeCircleDataTemplate}" DataType="neuralNetDisplay1:PrimitiveCircle">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="{Binding Path=Radius}" 
                              Height="{Binding Path=Radius}"
@@ -42,7 +42,7 @@
                         </TextBlock>
                     </StackPanel>
                 </DataTemplate>
-                <DataTemplate x:Key="{x:Static constants:Cons.cShapeLineDataTemplate}" DataType="neuralNetDisplay:PrimitiveLine" >
+                <DataTemplate x:Key="{x:Static constants:Cons.cShapeLineDataTemplate}" DataType="neuralNetDisplay1:PrimitiveLine" >
                     <Line X1="{Binding Path=X}"
                           X2="{Binding Path=X2}" 
                           Y1="{Binding Path=Y}" 

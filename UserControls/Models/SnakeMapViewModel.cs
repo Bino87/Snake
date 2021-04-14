@@ -3,6 +3,7 @@ using Simulation.Core;
 using Simulation.Interfaces;
 using UserControls.Constants;
 using UserControls.Core.Base;
+using UserControls.Objects;
 
 namespace UserControls.Models
 {

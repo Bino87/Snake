@@ -2,7 +2,7 @@
 {
     public enum MapCellStatus
     {
-        Empty,Snake, Food
+        Empty,Snake, Food, Head
     }
 
     public enum VisionCollisionType

@@ -4,7 +4,7 @@ using Simulation.Enums;
 using Simulation.Interfaces;
 using UserControls.Core.Base;
 
-namespace UserControls.Models
+namespace UserControls.Objects
 {
     [DebuggerDisplay("X1:{X1} X1:{X2} Y1:{Y1} Y1:{Y2}")]
     public class CellVision : Observable, IMapItem

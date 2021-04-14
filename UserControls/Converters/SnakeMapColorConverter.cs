@@ -12,6 +12,7 @@ namespace UserControls.Converters
         public SolidColorBrush Transparent { get; set; }
         public SolidColorBrush Snake{ get; set; }
         public SolidColorBrush Food { get; set; }
+        public SolidColorBrush Head { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -22,6 +23,7 @@ namespace UserControls.Converters
                         MapCellStatus.Snake => Snake,
                         MapCellStatus.Food => Food,
                         MapCellStatus.Empty => Transparent,
+                        MapCellStatus.Head => Head,
                         _ => throw new ArgumentOutOfRangeException()
                     };
             }

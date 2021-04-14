@@ -3,7 +3,7 @@ using UserControls.Core.Base;
 using Simulation.Enums;
 using Simulation.Interfaces;
 
-namespace UserControls.Models
+namespace UserControls.Objects
 {
     [DebuggerDisplay("X1:{X} Y1:{Y} {CellStatus}")]
     public class MapCell : Observable, IMapCell

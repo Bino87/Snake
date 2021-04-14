@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using UserControls.Constants;
 using UserControls.Enums;
-using UserControls.Models.NeuralNetDisplay;
+using UserControls.Objects.NeuralNetDisplay;
 
 namespace UserControls.TemplateSelectors
 {

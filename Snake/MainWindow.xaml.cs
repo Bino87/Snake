@@ -1,14 +1,4 @@
-﻿using Network;
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using Network.ActivationFunctions;
-using Network.Mutators;
-using Simulation;
-using Simulation.Enums;
+﻿using System.Windows;
 using UserControls.Models;
 
 namespace Snake

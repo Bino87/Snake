@@ -58,11 +58,11 @@ namespace Simulation
                 double[][] values = CalculateSnakeDirection(visionData);
 
                 visionData.Sort();
-
+                movePrognosis = GetMoveResults();
                 onCellsUpdated?.Invoke(updateCellData, values, visionData.ToArray());
                 visionData.Clear();
 
-                movePrognosis = GetMoveResults();
+                
 
                 if (movePrognosis == MovePrognosis.Ok)
                 {
@@ -91,7 +91,7 @@ namespace Simulation
             {
                 y = x + i;
                 _snake.Add(new SnakePart(x, y, Direction.Up));
-                updateCellDatas.Add((x, y, MapCellStatus.Snake));
+                updateCellDatas.Add((x, y, i == 0 ? MapCellStatus.Head : MapCellStatus.Snake));
             }
         }
 
@@ -113,7 +113,7 @@ namespace Simulation
 
         private double[][] CalculateSnakeDirection(List<VisionData> visionData)
         {
-            double[][] results = _networkAgent.Calculate(Head, Tail.Direction, _mapSize, _food.X, _food.Y, visionData);
+            double[][] results = _networkAgent.Calculate(Head.Direction, Tail.Direction, _mapSize, _food.X, _food.Y, visionData);
             Head.Direction = PickBest(results[^1]);
             return results;
         }
@@ -160,7 +160,8 @@ namespace Simulation
             {
                 Direction dir = Head.Direction;
                 Head.Move();
-                updateCellData.Add((Head.X, Head.Y, MapCellStatus.Snake));
+                updateCellData.Add((Head.X, Head.Y, MapCellStatus.Head));
+                
                 (x, y) = (Tail.X, Tail.Y);
                 updateCellData.Add((x, y, MapCellStatus.Empty));
 

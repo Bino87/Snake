@@ -87,7 +87,7 @@ namespace UserControls.Models
                                     {
                                         mm.Run(OnSimulationStart, tok);
                                     }
-                                    catch (Exception)
+                                    catch (Exception e)
                                     {
                                         source.Cancel();
                                     }
