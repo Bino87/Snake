@@ -63,12 +63,12 @@ namespace Simulation
             res[index++] = tailDirection == Direction.Down ? 1 : 0;
             res[index++] = tailDirection == Direction.Right ? 1 : 0;
 
-            //res[index++] = foodX > head.X ? 1 : 0;
-            //res[index++] = foodX == head.X ? 1 : 0;
-            //res[index++] = foodX < head.X ? 1 : 0;
-            //res[index++] = foodY > head.Y ? 1 : 0;
-            //res[index++] = foodY == head.Y ? 1 : 0;
-            //res[index++] = foodY < head.Y ? 1 : 0;
+            res[index++] = foodX > head.X ? 1 : 0;
+            res[index++] = foodX == head.X ? 1 : 0;
+            res[index++] = foodX < head.X ? 1 : 0;
+            res[index++] = foodY > head.Y ? 1 : 0;
+            res[index++] = foodY == head.Y ? 1 : 0;
+            res[index++] = foodY < head.Y ? 1 : 0;
 
             return res;
         }

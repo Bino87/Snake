@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using Network;
 using UserControls.Constants;
@@ -15,7 +14,7 @@ namespace UserControls.Models
         public ObservableCollection<PrimitiveShape> DisplayItems { get; set; }
         private readonly PrimitiveShapeValueProvider[][] _lineValueProviders;
         private readonly PrimitiveShapeValueProvider[][] _circleValueProviders;
-        const double radius = 10;
+        private const double cRadius = 10;
         public NeuralNetDisplayViewModel(NetworkInfo networkInfo)
         {
             DisplayItems = new ObservableCollection<PrimitiveShape>();
@@ -62,7 +61,7 @@ namespace UserControls.Models
 
         private void CreateNeuronLayer(double x, int count, int layerIndex)
         {
-            double offset = radius / 2;
+            double offset = cRadius / 2;
             double availible = Cons.cNetHeight - (2 * Cons.cNetHeightPadding);
             double verticalSpacing = availible / (count - 1);
             double wOffset = Cons.cNetHeightPadding;
@@ -74,16 +73,15 @@ namespace UserControls.Models
                 PrimitiveShapeValueProvider provider = new();
 
                 _circleValueProviders[layerIndex][i] = provider;
-                DisplayItems.Add(new PrimitiveCircle(provider, x - offset, i * verticalSpacing - offset + wOffset, radius));
+                DisplayItems.Add(new PrimitiveCircle(provider, x - offset, i * verticalSpacing - offset + wOffset, cRadius));
             }
         }
 
         public void OnUpdateWeights(double[][] weights)
         {
-            Application.Current.Dispatcher.Invoke(
+            Application.Current?.Dispatcher.Invoke(
                 () =>
                 {
-                    int count = 0;
                     for (int i = 0; i < weights.Length; i++)
                     {
                         for (int j = 0; j < weights[i].Length; j++)
@@ -95,23 +93,18 @@ namespace UserControls.Models
                     }
                 }
                 );
+
         }
 
         public void OnResultsCalculated(double[][] results)
         {
-            Application.Current.Dispatcher.Invoke(
-                () =>
-                    {
-                        for (int i = 0; i < results.Length; i++)
-                        {
-                            for (int j = 0; j < results[i].Length; j++)
-                            {
-                                _circleValueProviders[i][j].Value = results[i][j];
-
-                            }
-                        }
-                    }
-                );
+            for (int i = 0; i < results.Length; i++)
+            {
+                for (int j = 0; j < results[i].Length; j++)
+                {
+                    _circleValueProviders[i][j].Value = results[i][j];
+                }
+            }
         }
     }
 }

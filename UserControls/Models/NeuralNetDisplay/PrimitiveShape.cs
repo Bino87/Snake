@@ -1,26 +1,8 @@
-﻿using System;
-using UserControls.Core.Base;
+﻿using UserControls.Core.Base;
 using UserControls.Enums;
 
 namespace UserControls.Models.NeuralNetDisplay
 {
-    public class PrimitiveShapeValueProvider : Observable
-    {
-        private double _value ;
-
-        public PrimitiveShapeValueProvider() // indexes? :O
-        {
-            
-
-        }
-            
-        public double Value
-        {
-            get => _value;
-            set => SetField(ref _value, value);
-        }
-    }
-
     public abstract class PrimitiveShape : Observable
     {
         private double _x;

@@ -149,7 +149,9 @@ namespace Network
             {
                 for (int w = 0; w < lookUp[i]; w++)
                 {
-                    item[i][w] = clamp ? Clamp(BitConverter.ToDouble(arr, index)) : BitConverter.ToDouble(arr, index);
+                    double d = clamp ? Clamp(BitConverter.ToDouble(arr, index)) : BitConverter.ToDouble(arr, index);
+
+                    item[i][w] = d;
 
                     index += 8;
                 }

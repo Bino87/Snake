@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,7 @@ namespace UserControls.Models
         private int _delay;
         private MapManager mm;
 
+
         public int Deley
         {
             get => _delay;
@@ -27,51 +29,58 @@ namespace UserControls.Models
 
         public MainViewModel()
         {
+
+
             SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
             Deley = 1;
             NetworkInfo ni = new NetworkInfo(
-                new LayerInfo(new Identity(), 2 * 4 + 8 * 3 /*+ 6*/ ),
-                //new LayerInfo(new ReLu(), 20),
+                new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 6 ),
+                new LayerInfo(new ReLu(), 20),
                 new LayerInfo(new ReLu(), 12),
-                new LayerInfo(new ReLu(), 3));
+                new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(Callback, NeuralNetDisplay.OnResultsCalculated, 50, SnakeMapViewModel.RectArr, SnakeMapViewModel._numberOfTiles, 100, ni);
+            mm = new MapManager(OnUpdate, 50, SnakeMapViewModel.RectArr, SnakeMapViewModel._numberOfTiles, 50, ni, .05,1);
 
 
-            Dudd();
+            StartSimulation();
         }
 
-        private void Dudd()
+        private void OnUpdate(List<(int X, int Y, MapCellStatus Status)> cellUpdateList, double[][] values)
         {
-            Application.Current.Dispatcher.Invoke(async () =>
+
+            Application.Current?.Dispatcher.Invoke(() =>
                                                   {
-                                                      await Task.Run(() =>
-                                                                     {
-                                                                         mm.Run(NeuralNetDisplay.OnUpdateWeights);
-                                                                     });
-
-                                                  });
-        }
-
-        private void Callback(int x, int y, MapCellStatus newStatus)
-        {
-            if (Application.Current?.Dispatcher is null)
-                return;
-
-            Application.Current.Dispatcher.Invoke(() =>
-                                                  {
-
-                                                      if (x < 0 || x > SnakeMapViewModel._numberOfTiles || y < 0 || y > SnakeMapViewModel._numberOfTiles)
+                                                      for (int i = 0; i < cellUpdateList.Count; i++)
                                                       {
-                                                          //error
-                                                          Console.Beep();
+                                                          (int x, int y, MapCellStatus status) = cellUpdateList[i];
+                                                          SnakeMapViewModel.RectArr[x, y].CellStatus = status;
                                                       }
-                                                      else
-                                                      {
-                                                          SnakeMapViewModel.RectArr[x, y].CellStatus = newStatus;
-                                                      }
+
+                                                      cellUpdateList.Clear();
+
+                                                      if (values is not null)
+                                                          NeuralNetDisplay.OnResultsCalculated(values);
+
                                                   });
             Thread.Sleep(Deley);
         }
+
+        private void StartSimulation()
+        {
+            CancellationTokenSource source = new();
+            CancellationToken tok = source.Token;
+            Task t = Task.Run(() =>
+                         {
+                             try
+                             {
+                                 mm.Run(NeuralNetDisplay.OnUpdateWeights, tok);
+                             }
+                             catch (Exception)
+                             {
+                                 source.Cancel();
+                             }
+                         }, tok);
+        }
+
     }
 }

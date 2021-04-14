@@ -98,7 +98,7 @@ namespace Network.Mutators
         {
             if (_rand.NextDouble() < _mutationChancePercentage)
             {
-                int mutationAmount = (int)(_mutationPercentage * arr.Length);
+                int mutationAmount = _rand.Next(1, (int) (_mutationPercentage * arr.Length + 1));
 
                 for (int i = 0; i < mutationAmount; i++)
                 {
