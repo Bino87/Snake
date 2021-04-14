@@ -9,8 +9,10 @@ namespace Network
         private const double cBiasRange = 1;
         private const double cWeightRange = 1;
 
-        public double[][] Weights { get; }
-        public double[][] Bias { get; }
+        public double[][] Weights { get; private set; }
+        public double[][] Bias { get; private set; }
+
+        public bool HasValues => Weights is not null && Bias is not null;
         public int InputCount { get; }
         public int OutputCount { get; }
         public int Layers { get; }
@@ -27,7 +29,7 @@ namespace Network
 
             LayerSetup = new int[layerInfos.Length];
 
-            for(int i = 0; i < layerInfos.Length; i++)
+            for (int i = 0; i < layerInfos.Length; i++)
             {
                 LayerSetup[i] = layerInfos[i].NodeCount;
             }
@@ -42,7 +44,7 @@ namespace Network
 
             for (int i = 1; i < layerInfos.Length; i++)
             {
-                BiasCount[i-1] = layerInfos[i].NodeCount;
+                BiasCount[i - 1] = layerInfos[i].NodeCount;
                 WeightsCount[i - 1] = layerInfos[i - 1].NodeCount * layerInfos[i].NodeCount;
                 ActivationFunction[i - 1] = layerInfos[i].ActivationFunction;
             }
@@ -67,18 +69,34 @@ namespace Network
             }
         }
 
-        
+        protected NetworkInfo(int[] biasCount,int[] weightCount, IActivationFunction[] activationFunction, int inputCount, int outputCount, int layers)
+        {
+            Layers = layers;
+            WeightsCount = weightCount;
+            BiasCount = biasCount;
+            ActivationFunction = activationFunction;
+
+            InputCount = inputCount;
+            OutputCount = outputCount;
+        }
+
+        public NetworkInfo Copy()
+        {
+            return new(BiasCount, WeightsCount,ActivationFunction, InputCount, OutputCount, Layers);
+        }
+
+
         public (double[][] Weights, double[][] Biass) CreateWeightsAndBiases()
         {
             double[][] bias = new double[Layers][];
             double[][] weights = new double[Layers][];
 
-            for(int i = 0; i < BiasCount.Length; i++)
+            for (int i = 0; i < BiasCount.Length; i++)
             {
                 bias[i] = new double[BiasCount[i]];
             }
 
-            for(int i = 0; i < WeightsCount.Length; i++)
+            for (int i = 0; i < WeightsCount.Length; i++)
             {
                 weights[i] = new double[WeightsCount[i]];
             }
@@ -89,7 +107,7 @@ namespace Network
             {
                 for (int x = 0; x < bias[i].Length; x++)
                 {
-                    bias[i][x] = rand.NextDouble(-cBiasRange , cBiasRange);
+                    bias[i][x] = rand.NextDouble(-cBiasRange, cBiasRange);
                 }
 
                 for (int x = 0; x < weights[i].Length; x++)
@@ -114,21 +132,40 @@ namespace Network
         internal void FromByteArray(byte[] arr)
         {
             int index = 0;
-            //Create2DArrayFromBytes(arr, ref index, WeightsCount, Weights);
-            Create2DArrayFromBytes(arr, ref index, BiasCount, Bias);
+            Weights = Create2DArrayFromBytes(arr, ref index, WeightsCount, true);
+            Bias = Create2DArrayFromBytes(arr, ref index, BiasCount,  false);
         }
 
-        void Create2DArrayFromBytes(byte[] arr, ref int index, int[] lookUp, double[][] item)
+        double[][] Create2DArrayFromBytes(byte[] arr, ref int index, int[] lookUp,  bool clamp)
         {
+            double[][] item = new double[lookUp.Length][];
+
+            for(int i = 0; i < lookUp.Length; i++)
+            {
+                item[i] = new double[lookUp[i]];
+            }
 
             for (int i = 0; i < Layers; i++)
             {
                 for (int w = 0; w < lookUp[i]; w++)
                 {
-                    item[i][w] = BitConverter.ToDouble(arr, index);
+                    item[i][w] = clamp ? Clamp(BitConverter.ToDouble(arr, index)) : BitConverter.ToDouble(arr, index);
+
                     index += 8;
                 }
             }
+
+            return item;
+        }
+
+        double Clamp(double d)
+        {
+            return d switch
+            {
+                > 1 => 1,
+                < -1 => -1,
+                _ => d
+            };
         }
 
         private void ConvertToBytes(ICollection<byte> bytes, IReadOnlyList<double[]> arr)

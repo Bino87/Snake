@@ -17,9 +17,18 @@ namespace Network
 
         public NeuralNetwork(NetworkInfo networkInfo)
         {
-            (double[][] weights, double[][] biass) = networkInfo.CreateWeightsAndBiases();
-            _biases = biass;
-            _weights = weights;
+            if (networkInfo.HasValues)
+            {
+                _biases = networkInfo.Bias;
+                _weights = networkInfo.Weights;
+            }
+            else
+            {
+                (double[][] weights, double[][] biass) = networkInfo.CreateWeightsAndBiases();
+                _biases = biass;
+                _weights = weights;
+            }
+            
             _numLayers = networkInfo.Layers;
             _inputCount = networkInfo.InputCount;
             _activationFunction = networkInfo.ActivationFunction;

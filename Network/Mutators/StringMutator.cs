@@ -19,12 +19,10 @@ namespace Network.Mutators
         /// </summary>
         /// <param name="mutationChancePercentage"> Set value from 0.0 to 1.0</param>
         /// <param name="mutationPercentage">Set value from 0.0 to 1.0</param>
-        public StringMutator(double mutationChancePercentage, double mutationPercentage, int minCopyLen, int maxCopyLen)
+        public StringMutator(double mutationChancePercentage, double mutationPercentage)
         {
             _mutationChancePercentage = mutationChancePercentage;
             _mutationPercentage = mutationPercentage;
-            _minCopyLen = minCopyLen;
-            _maxCopyLen = maxCopyLen;
             _rand = new Random();
         }
 
@@ -115,29 +113,23 @@ namespace Network.Mutators
             int mCount = mStr.Length;
 
 
-            for (int i = 0; i < fStr.Length;)
+            for (int i = 0; i < fStr.Length;i++)
             {
-                int amount = _rand.Next(_minCopyLen, _maxCopyLen);
-
-                if (i + amount >= fStr.Length)
-                    amount = fStr.Length - i;
-
                 int random = _rand.Next(2);
 
                 string substring;
                 if (random == 0)
                 {
-                    fCount -= amount;
-                    substring = fStr.Substring(i, amount);
+                    fCount --;
+                    substring = fStr.Substring(i, 1);
                 }
                 else
                 {
-                    mCount -= amount;
-                    substring = mStr.Substring(i, amount);
+                    mCount --;
+                    substring = mStr.Substring(i, 1);
                 }
 
                 sb.Append(substring);
-                i += amount;
             }
 
             return sb.ToString();

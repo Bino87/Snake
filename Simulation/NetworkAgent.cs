@@ -34,26 +34,7 @@ namespace Simulation
             double[] res = new double[_inputCount];
             int index = 0;
 
-            ////Previous Results
-            res[index++] = foodX > head.X ? 1 : 0;
-            res[index++] = foodX == head.X ? 1 : 0;
-            res[index++] = foodX < head.X ? 1 : 0;
-            res[index++] = foodY > head.Y ? 1 : 0;
-            res[index++] = foodY == head.Y ? 1 : 0;
-            res[index++] = foodY < head.Y ? 1 : 0;
-
-            //Head Direction
-            res[index++] = head.Direction == Direction.North ? 1 : 0;
-            res[index++] = head.Direction == Direction.West ? 1 : 0;
-            res[index++] = head.Direction == Direction.South ? 1 : 0;
-            res[index++] = head.Direction == Direction.East ? 1 : 0;
-
-            //Tail Direction
-            res[index++] = tailDirection == Direction.North ? 1 : 0;
-            res[index++] = tailDirection == Direction.West ? 1 : 0;
-            res[index++] = tailDirection == Direction.South ? 1 : 0;
-            res[index++] = tailDirection == Direction.East ? 1 : 0;
-
+           
 
             for (int x = -1; x <= 1; x++)
             {
@@ -64,11 +45,30 @@ namespace Simulation
 
                     (double value, double seesSelf, double seesFood) = GetValue(x, y, mapSize, head.X, head.Y, mapSize);
 
-                    res[index++] = value;
+                    res[index++] = 1d - value;
                     res[index++] = seesSelf;
                     res[index++] = seesFood;
                 }
             }
+
+            //Head Direction
+            res[index++] = head.Direction == Direction.Up ? 1 : 0;
+            res[index++] = head.Direction == Direction.Left ? 1 : 0;
+            res[index++] = head.Direction == Direction.Down ? 1 : 0;
+            res[index++] = head.Direction == Direction.Right ? 1 : 0;
+
+            //Tail Direction
+            res[index++] = tailDirection == Direction.Up ? 1 : 0;
+            res[index++] = tailDirection == Direction.Left ? 1 : 0;
+            res[index++] = tailDirection == Direction.Down ? 1 : 0;
+            res[index++] = tailDirection == Direction.Right ? 1 : 0;
+
+            //res[index++] = foodX > head.X ? 1 : 0;
+            //res[index++] = foodX == head.X ? 1 : 0;
+            //res[index++] = foodX < head.X ? 1 : 0;
+            //res[index++] = foodY > head.Y ? 1 : 0;
+            //res[index++] = foodY == head.Y ? 1 : 0;
+            //res[index++] = foodY < head.Y ? 1 : 0;
 
             return res;
         }

@@ -9,6 +9,7 @@ using Network;
 using Network.ActivationFunctions;
 using Simulation.Core;
 using Simulation.Enums;
+using Simulation.Extensions;
 using Simulation.Interfaces;
 using Simulation.SimResults;
 
@@ -50,7 +51,7 @@ namespace Simulation
             for (int i = 0; i < snakeSize && i < _mapSize; i++)
             {
                 int y = x + i;
-                _snake.Add(new SnakePart(x, y, Direction.North));
+                _snake.Add(new SnakePart(x, y, Direction.Up));
                 callback?.Invoke(x, y, MapCellStatus.Snake);
             }
         }
@@ -100,9 +101,9 @@ namespace Simulation
                     index = i;
             }
 
+            TurnDirection td = (TurnDirection) index;
 
-
-            return (Direction) index;
+            return Head.Direction.Turn(td);
         }
 
         private void Move(Action<int, int, MapCellStatus> callback, ref int movesSinceLastFood, List<int> list)

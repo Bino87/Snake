@@ -20,10 +20,10 @@ namespace Simulation.Core
         {
             return Direction switch
             {
-                Direction.North => (0, -1),
-                Direction.East => (-1, 0),
-                Direction.South => (0, 1),
-                Direction.West => (1, 0),
+                Direction.Up => (0, -1),
+                Direction.Right => (-1, 0),
+                Direction.Down => (0, 1),
+                Direction.Left => (1, 0),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

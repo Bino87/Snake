@@ -22,9 +22,6 @@ namespace UserControls.Models
             _lineValueProviders = new PrimitiveShapeValueProvider[networkInfo.Layers][];
             _circleValueProviders = new PrimitiveShapeValueProvider[networkInfo.Layers + 1][];
 
-
-
-
             double offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / networkInfo.Layers;
             double start = Cons.cNetWidthPadding;
 

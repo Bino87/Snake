@@ -7,7 +7,7 @@
         public const double cNetHeightPadding = 25;
         public const double cNetWidth = 300;
         public const double cNetWidthPadding = 25;
-        public const int cNumberOfTiles = 10;
+        public const int cNumberOfTiles = 11;
 
 
         public const string cShapeCircleDataTemplate = "cShapeCircleDataTemplate";

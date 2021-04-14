@@ -2,9 +2,16 @@
 {
     public enum Direction
     {
-        North = 0,
-        East = 1, 
-        South = 2, 
-        West = 3
+        Up = 0,
+        Right = 1, 
+        Down = 2, 
+        Left = 3
+    }
+
+    public enum TurnDirection
+    {
+        Left,
+        None,
+        Right
     }
 }

@@ -46,8 +46,11 @@ namespace Network.Mutators
             first = Mutate(first);
             second = Mutate(second);
 
-            fNetworkInfo.FromByteArray(first);
-            mNetworkInfo.FromByteArray(second);
+            NetworkInfo firstNetworkInfo = fNetworkInfo.Copy();
+            NetworkInfo secondNetworkInfo = fNetworkInfo.Copy();
+
+            firstNetworkInfo.FromByteArray(first);
+            secondNetworkInfo.FromByteArray(second);
 
             if (debug)
             {
@@ -113,7 +116,7 @@ namespace Network.Mutators
             //enums = new[] { MutationType.Decrement, MutationType.Increment, /*MutationType.SwapWithNext,MutationType.SwapWithPrevious*/};
 
             MutationType current = (MutationType)_rand.Next(enums.Length);
-            current = MutationType.Randomize;
+            //current = MutationType.Randomize;
             switch (current)
             {
                 case MutationType.DuplicateNext:

@@ -58,10 +58,16 @@ namespace Simulation
                 //sort based on results
                 results.Sort();
 
-                double total = results.Sum(t => t.Result) / results.Count;
+                double total = 0;
 
+                for(int i = 0; i < results.Count /2; i++)
+                {
+                    total += results[i].Result;
+                }
 
-                Debug.WriteLine(generation++ + " : " + total );
+                total /= results.Count / 2d;
+
+                Debug.WriteLine(generation++ + " : " + total.ToString("F4") + " : " + results.Max(x => x.Result).ToString("F4"));
                 //generate children
                 _agents = PropagateNewGeneration(results, _agents);
                 //ShuffleAgents();
@@ -74,7 +80,7 @@ namespace Simulation
         private Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, IReadOnlyList<Bot> agents)
 
         {
-            Bot[] res = new Bot[agents.Count / 2];
+            Bot[] res = new Bot[agents.Count];
 
             int len = agents.Count / 2;
 
@@ -83,33 +89,24 @@ namespace Simulation
                 res[i] = agents[fitnessResults[i].AgentIndex];
             }
 
-            IMutator mutator = new BitMutator(1, .005/*,1,3*/);
+            IMutator mutator = new BitMutator(1, .02);
+            Bot father = res[0];
 
-            List<Bot> list = new(res);
-            Random rand = new();
-
-            List<Bot> ret = new();
-
-            while(list.Count > 0)
+            for(int i = len - 1; i >= 0; i--)
             {
-                int f = rand.Next(list.Count);
-                Bot father = list[f];
-                list.RemoveAt(f);
+                if (i == 0)
+                    father = res[len - 1];
 
-                int m = rand.Next(list.Count);
-                Bot mother = list[m];
-                list.RemoveAt(m);
+                Bot mother = res[i];
 
                 (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father.GetNeuralNetwork(), mother.GetNeuralNetwork());
 
-                ret.Add(father);
-                ret.Add(mother);
-                ret.Add(new Bot(_map, _mapSize, _maxMovesWithoutFood, first));
-                ret.Add(new Bot(_map, _mapSize, _maxMovesWithoutFood, second));
-
+                res[i + len ] = new Bot(_map, _mapSize, _maxMovesWithoutFood, first);
+                //res[i + len + 1] = new Bot(_map, _mapSize, _maxMovesWithoutFood, second);
             }
 
-            return ret.ToArray();
+
+            return res;
         }
     }
 }
