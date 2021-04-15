@@ -22,6 +22,7 @@ namespace UserControls.Models
         private int _delay;
         private MapManager mm;
         private int _generation;
+        private int _individual;
 
         public int Generation
         {
@@ -36,18 +37,23 @@ namespace UserControls.Models
 
         }
 
+        public int Individual
+        {
+            get => _individual;
+            set => SetField(ref _individual, value);
+        }
+
         public MainViewModel()
         {
             SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
-            Deley = 100;
+            Deley = 1;
             NetworkInfo ni = new NetworkInfo(
-                new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 6),
-                new LayerInfo(new ReLu(), 12),
-                new LayerInfo(new ReLu(), 9),
-                new LayerInfo(new ReLu(), 6),
+                new LayerInfo(new Identity(), 2 * 4 + 8 * 3 ),
+                new LayerInfo(new ReLu(), 30),
+                new LayerInfo(new ReLu(), 15),
                 new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(OnUpdate, 250, SnakeMapViewModel._numberOfTiles, 100, ni, .05, .2);
+            mm = new MapManager(OnUpdate, 500, SnakeMapViewModel._numberOfTiles, 100, ni, .05, .2);
 
 
             StartSimulation();
@@ -88,12 +94,13 @@ namespace UserControls.Models
                                 }, tok);
         }
 
-        private void OnSimulationStart(double[][] obj, int generation)
+        private void OnSimulationStart(double[][] obj, int generation, int individual)
         {
             Application.Current?.Dispatcher.Invoke(() =>
             {
                 NeuralNetDisplay.UpdateWeights(obj);
                 Generation = generation;
+                Individual = individual;
             }
             );
             DeleySim();

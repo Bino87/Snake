@@ -14,6 +14,7 @@
         <StackPanel Orientation="Vertical">
             <TextBox VerticalAlignment="Top" Width="100" Height="25" Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="{Binding Path=Generation, StringFormat=Generation: {0}}"/>
+            <TextBlock Text="{Binding Path=Individual, StringFormat=Individual: {0}}"></TextBlock>
 
         </StackPanel>
         <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>

@@ -36,7 +36,7 @@ namespace Simulation
             _updateCallback = updateCallback;
         }
 
-        public void Run(Action<double[][], int> onSimulationStart, CancellationToken token)
+        public void Run(Action<double[][], int,int> onSimulationStart, CancellationToken token)
         {
             int generation = 0;
 
@@ -49,7 +49,7 @@ namespace Simulation
                     if (token.IsCancellationRequested)
                         return;
 
-                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights, generation);
+                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights, generation, i+1);
                     SimulationResult res = _agents[i].Run(_updateCallback);
 
                     results.Add(new FitnessResults(i, res, _agents[i].ID));
@@ -100,7 +100,7 @@ namespace Simulation
             Bot[] res = new Bot[agents.Count];
 
             int len = res.Length / 2;
-            IMutator mutator = new BitMutator(_mutationChance, _mutationRate);
+            IMutator mutator = new StringMutator(_mutationChance, _mutationRate);
 
             for (int i = 0; i < len ; i+= 2)
             {

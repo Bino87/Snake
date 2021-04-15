@@ -12,12 +12,10 @@ namespace Simulation.SimResults
 
         public SimulationResult(int points, int generation, List<HashSet<int>> uniqueCells)
         {
-
-
             int steps = uniqueCells.Sum(t => t.Count);
 
-            double a = (Math.Pow(2, points) + Math.Pow(points, 2.1) * 100);
-            double b = Math.Pow(points, 1.2) * Math.Pow(steps, 1.3) * .25;
+            double a = 0; // (Math.Pow(2, points) + Math.Pow(points, 2.1) * 10);
+            double b = 0; //Math.Pow(points, 1.2) * Math.Pow(steps, 1.3) * .25;
             Points = steps + a - b;
             Generation = generation;
 
@@ -27,15 +25,15 @@ namespace Simulation.SimResults
         {
             if (obj is SimulationResult sr)
             {
-                int genRes = Generation.CompareTo(sr.Generation);
+                //int genRes = Generation.CompareTo(sr.Generation);
 
-                if (genRes == 0)
-                {
+                //if (genRes == 0)
+                //{
                     int i = Points.CompareTo(sr.Points);
                     return i;
-                }
+                //}
 
-                return genRes;
+                //return genRes;
             }
 
             return 0;

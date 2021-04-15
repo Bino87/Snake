@@ -86,7 +86,7 @@ namespace Network.Mutators
         {
             if (_rand.NextDouble() < _mutationChancePercentage)
             {
-                int amount = (int)(str.Length * _mutationPercentage);
+                int amount = _rand.Next((int)(str.Length * _mutationPercentage));
 
                 StringBuilder sb = new(str);
 
@@ -109,24 +109,32 @@ namespace Network.Mutators
         {
             StringBuilder sb = new();
 
-            int fCount = fStr.Length;
-            int mCount = mStr.Length;
+            int a = 4;
+
+            int fCount = fStr.Length / (a / 2);
+            int mCount = mStr.Length / (a / 2);
 
 
-            for (int i = 0; i < fStr.Length;i++)
+            for (int i = 0; i < fStr.Length; i += a)
             {
-                int random = _rand.Next(2);
+                if (fCount + mCount <= 0)
+                {
+
+                }
+                int random = _rand.Next(fCount + mCount);
+
+
 
                 string substring;
-                if (random == 0)
+                if (random < fCount)
                 {
-                    fCount --;
-                    substring = fStr.Substring(i, 1);
+                    fCount -= a;
+                    substring = fStr.Substring(i, a);
                 }
                 else
                 {
-                    mCount --;
-                    substring = mStr.Substring(i, 1);
+                    mCount -= a;
+                    substring = mStr.Substring(i, a);
                 }
 
                 sb.Append(substring);

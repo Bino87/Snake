@@ -109,7 +109,7 @@ namespace Network
 
                 for (int x = 0; x < bias[i].Length; x++)
                 {
-                    bias[i][x] = rand.NextDouble(0,.01);
+                    bias[i][x] = rand.NextDouble(-.01,.01);
                 }
 
                 for (int x = 0; x < weights[i].Length; x++)

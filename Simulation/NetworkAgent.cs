@@ -36,11 +36,11 @@ namespace Simulation
 
             void GetValueAndSetInput(int x, int y)
             {
-                (double value, double seesSelf, double seesFood) = GetValue(x, y, parameters, visionData);
+                (double value, bool seesSelf, bool seesFood) = GetValue(x, y, parameters, visionData);
 
                 res[index++] = 1d - value;
-                res[index++] = seesSelf;
-                res[index++] = seesFood;
+                res[index++] = seesSelf ? 1 : 0;
+                res[index++] = seesFood ? 1 : 0;
             }
 
             GetValueAndSetInput(-1, 0);
@@ -64,21 +64,21 @@ namespace Simulation
             res[index++] = parameters.Tail.Direction == Direction.Down ? 1 : 0;
             res[index++] = parameters.Tail.Direction == Direction.Right ? 1 : 0;
 
-            res[index++] = parameters.Food.X > parameters.Head.X ? 1 : 0;
-            res[index++] = parameters.Food.X == parameters.Head.X ? 1 : 0;
-            res[index++] = parameters.Food.X < parameters.Head.X ? 1 : 0;
-            res[index++] = parameters.Food.Y > parameters.Head.Y ? 1 : 0;
-            res[index++] = parameters.Food.Y == parameters.Head.Y ? 1 : 0;
-            res[index++] = parameters.Food.Y < parameters.Head.Y ? 1 : 0;
+            //res[index++] = parameters.Food.X > parameters.Head.X ? 1 : 0;
+            //res[index++] = parameters.Food.X == parameters.Head.X ? 1 : 0;
+            //res[index++] = parameters.Food.X < parameters.Head.X ? 1 : 0;
+            //res[index++] = parameters.Food.Y > parameters.Head.Y ? 1 : 0;
+            //res[index++] = parameters.Food.Y == parameters.Head.Y ? 1 : 0;
+            //res[index++] = parameters.Food.Y < parameters.Head.Y ? 1 : 0;
 
             return res;
         }
 
         //private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, double divideBy, int mapSize, int headX, int headY, ICollection<VisionData> visionData, Dictionary<(int, int), MapCellType> mapCellTypes)
-        private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, NetworkAgentCalculationParameters parameters, List<VisionData> visionData)
+        private (double value, bool seesSelf, bool seesFood) GetValue(int incX, int incY, NetworkAgentCalculationParameters parameters, List<VisionData> visionData)
         {
-            double seesFood = 0;
-            double seesSelf = 0;
+            bool seesFood = false;
+            bool seesSelf = false;
 
 
             double value = 0;
@@ -102,18 +102,16 @@ namespace Simulation
                     switch (item)
                     {
                         case MapCellType.Food:
-                            if (seesFood == 0)
                             {
-                                seesFood = 1;
+                                seesFood = true;
                                 visionData.Add(new VisionData(VisionCollisionType.Food, headX, x, headY, y));
                             }
                             break;
                         case MapCellType.Snake:
                             if (x == headX && y == headY)
                                 break;
-                            if (seesSelf == 0)
                             {
-                                seesSelf = 1;
+                                seesSelf = true;
                                 visionData.Add(new VisionData(VisionCollisionType.Self, headX, x, headY, y));
                             }
                             break;
