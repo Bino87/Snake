@@ -26,5 +26,17 @@ namespace Simulation.Extensions
                 _ => throw new Exception()
             };
         }
+
+        public static (int X, int Y) GetMove(this Direction direction)
+        {
+            return direction switch
+                {
+                    Direction.Up => (0, -1),
+                    Direction.Right => (1, 0),
+                    Direction.Down => (0, 1),
+                    Direction.Left => (-1, 0),
+                    _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+                };
+        }
     }
 }
