@@ -10,13 +10,17 @@ namespace Simulation.SimResults
         public double Points { get; }
 
 
-        public SimulationResult(int points, List<int> moves, int generation)
+        public SimulationResult(int points, int generation, List<HashSet<int>> uniqueCells)
         {
-            double steps = moves.Sum();
+           
+
+            int steps = uniqueCells.Sum(t => t.Count);
+
             double a = (Math.Pow(2, points) + Math.Pow(points, 2.1) * 500);
             double b = Math.Pow(points, 1.2) * Math.Pow(steps  , 1.3) * .25;
             Points = steps + a - b;
             Generation = generation;
+
         }
 
         public int CompareTo(object? obj)

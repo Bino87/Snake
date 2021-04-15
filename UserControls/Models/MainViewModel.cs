@@ -39,7 +39,7 @@ namespace UserControls.Models
         public MainViewModel()
         {
             SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
-            Deley = 500;
+            Deley = 1;
             NetworkInfo ni = new NetworkInfo(
                 new LayerInfo(new Identity(), 2 * 4 + 8 * 3 + 6),
                 new LayerInfo(new ReLu(), 20),

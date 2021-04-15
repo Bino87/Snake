@@ -29,6 +29,7 @@ namespace Simulation
         public int Generation { get; }
         public int ID { get; }
         private static int idCounter;
+        private readonly List<HashSet<int>> _uniqueCells;
         public Bot(int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, int generation)
         {
             _takenCells = new Dictionary<(int, int), MapCellType>();
@@ -36,16 +37,21 @@ namespace Simulation
             ID = idCounter++;
             _mapSize = mapSize;
             _maxMovesWithoutFood = maxMovesWithoutFood;
-
+            _rand = new Random();
             _snake = new List<SnakePart>();
             _networkAgent = new NetworkAgent(networkInfo);
+            _uniqueCells = new List<HashSet<int>>();
         }
 
         public SimulationResult Run(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> onCellsUpdated)
         {
-            _rand = new Random(1);
+
             List<(int X, int Y, MapCellType Status)> updateCellData = new();
             List<VisionData> visionData = new();
+            _uniqueCells.Clear();
+            _uniqueCells.Add(new HashSet<int>());
+            _takenCells.Clear();
+
             SpawnSnake(updateCellData);
             SpawnNewFood(updateCellData);
 
@@ -72,10 +78,11 @@ namespace Simulation
                     break;
 
                 movesSinceLastFood++;
+                _uniqueCells[^1].Add(Head.Y * _mapSize + Head.X);
             }
 
             list.Add(movesSinceLastFood);
-            return new SimulationResult(_snake.Count - cInitialSnakeSize, list, Generation);
+            return new SimulationResult(_snake.Count - cInitialSnakeSize, Generation, _uniqueCells);
         }
 
         public NeuralNetwork GetNeuralNetwork() => _networkAgent.GetNeuralNetwork();
@@ -153,82 +160,32 @@ namespace Simulation
                 list.Add(movesSinceLastFood);
                 EatFood(updateCellData);
                 movesSinceLastFood = 0;
+                _uniqueCells.Add(new HashSet<int>());
             }
             else
             {
-                var before = NewFunction();
-
                 for (int i = 0; i < _snake.Count; i++)
                 {
                     SnakePart snakePart = _snake[i];
                     Direction previous = snakePart.Direction;           //save previous dir
                     _takenCells.Remove((snakePart.X, snakePart.Y));     //remove cell from register
 
-                    _takenCells.Add(snakePart.Move(direction), snakePart.Type);
+                    (int X, int Y) moveCoordinates = snakePart.Move(direction);
+                    if (_takenCells.ContainsKey(moveCoordinates))
+                        _takenCells.Remove(moveCoordinates);
+                    _takenCells.Add(moveCoordinates, snakePart.Type);
+
                     updateCellData.Add((snakePart.X, snakePart.Y, snakePart.Type));
 
                     direction = previous;
                 }
-
-                var after = NewFunction();
-
-                StringBuilder sb = new StringBuilder();
-
-                for(int i = 0; i < _mapSize; i++)
-                {
-                    for(int j = 0; j < before[i].Length; j++)
-                    {
-                        sb.Append(before[i][j]);
-                    }
-
-                    sb.Append(" | ");
-
-                    for(int j = 0; j < after[i].Length; j++)
-                    {
-                        sb.Append(after[i][j]);
-                    }
-
-                    sb.AppendLine();
-                }
-
-                Debug.WriteLine(sb.ToString());
-            }
-        }
-
-        string[] NewFunction()
-        {
-            string[] arr = new string[_mapSize];
-
-            for (int y = 0; y < _mapSize; y++)
-            {
-                for (int x = 0; x < _mapSize; x++)
-                {
-                    if (_takenCells.TryGetValue((x, y), out MapCellType item))
-                    {
-                        arr[y] += (item switch
-                            {
-                                MapCellType.Head => "H",
-                                MapCellType.Food => "F",
-                                MapCellType.Snake => "S",
-                            });
-                        continue;
-                    }
-
-                    arr[y] +=(" ");
-
-                }
-
-               
             }
 
-            return arr;
+
         }
 
         private void EatFood(List<(int X, int Y, MapCellType Status)> updateCellData)
         {
-           
-
-            var before = NewFunction();
 
             SnakePart[] arr = new SnakePart[_snake.Count + 1];
             arr[0] = new SnakeHead(_food.X, _food.Y, Head.Direction);       //spawn head where food is
@@ -251,10 +208,6 @@ namespace Simulation
             }
 
             SpawnNewFood(updateCellData);                                   //spawn food
-
-
-            var after = NewFunction();
-
         }
 
         private MovePrognosis GetMoveResults(Direction direction)
