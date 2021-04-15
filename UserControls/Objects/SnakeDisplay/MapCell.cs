@@ -3,20 +3,21 @@ using UserControls.Core.Base;
 using Simulation.Enums;
 using Simulation.Interfaces;
 
-namespace UserControls.Objects
+namespace UserControls.Objects.SnakeDisplay
 {
-    [DebuggerDisplay("X1:{X} Y1:{Y} {CellStatus}")]
+    [DebuggerDisplay("X1:{X} Y1:{Y} {CellType}")]
     public class MapCell : Observable, IMapCell
     {
         private double _x;
         private double _y;
-        private MapCellStatus _cellStatus;
+        private MapCellType _cellType;
+
 
         public MapItemType ItemType => MapItemType.Cell;
-        public MapCellStatus CellStatus
+        public MapCellType CellType
         {
-            get => _cellStatus;
-            set => SetField(ref _cellStatus, value);
+            get => _cellType;
+            set => SetField(ref _cellType, value);
         }
 
         public double Width { get; }
@@ -34,12 +35,13 @@ namespace UserControls.Objects
             set => SetField(ref _y, value);
         }
 
-        public MapCell(double x, double y, double width, double height)
+        public MapCell(double x, double y, double width, double height, MapCellType cellType)
         {
             X = x;
             Y = y;
             Width = width;
             Height = height;
+            CellType = cellType;
         }
     }
 }

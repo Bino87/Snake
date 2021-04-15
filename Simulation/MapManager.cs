@@ -7,24 +7,21 @@ using Network;
 using Network.Mutators;
 using Simulation.Core;
 using Simulation.Enums;
-using Simulation.Interfaces;
 using Simulation.SimResults;
 
 namespace Simulation
 {
     public class MapManager
     {
-        private readonly Action<List<(int X, int Y, MapCellStatus Status)>, double[][], VisionData[]> _updateCallback;
+        private readonly Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> _updateCallback;
         private Bot[] _agents;
-        private readonly IMapCell[,] _map;
         private readonly int _mapSize;
         private readonly int _maxMovesWithoutFood;
         private double _mutationRate;
         private double _mutationChance;
 
-        public MapManager(Action<List<(int X, int Y, MapCellStatus Status)>, double[][], VisionData[]> updateCallback, int numberOfPairs, IMapCell[,] map, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, double mutationRate, double mutationChance)
+        public MapManager(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> updateCallback, int numberOfPairs, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, double mutationRate, double mutationChance)
         {
-            _map = map;
             _mapSize = mapSize;
             _maxMovesWithoutFood = maxMovesWithoutFood;
             _mutationChance = mutationChance;
@@ -33,7 +30,7 @@ namespace Simulation
             _agents = new Bot[numberOfPairs * 2];
             for (int i = 0; i < _agents.Length; i++)
             {
-                _agents[i] = new Bot(map, mapSize, maxMovesWithoutFood, networkInfo, 1);
+                _agents[i] = new Bot( mapSize, maxMovesWithoutFood, networkInfo, 1);
             }
 
             _updateCallback = updateCallback;
@@ -122,8 +119,8 @@ namespace Simulation
             {
                 (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
 
-                res[i] = new Bot(_map, _mapSize, _maxMovesWithoutFood, first, generation + 1);
-                res[i + 1] = new Bot(_map, _mapSize, _maxMovesWithoutFood, second, generation + 1);
+                res[i] = new Bot(_mapSize, _maxMovesWithoutFood, first, generation + 1);
+                res[i + 1] = new Bot(_mapSize, _maxMovesWithoutFood, second, generation + 1);
             }
 
 

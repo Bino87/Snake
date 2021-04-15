@@ -8,15 +8,12 @@
              xmlns:constants="clr-namespace:UserControls.Constants"
              xmlns:templateSelectors="clr-namespace:UserControls.TemplateSelectors"
              xmlns:objects="clr-namespace:UserControls.Objects"
+             xmlns:snakeDisplay="clr-namespace:UserControls.Objects.SnakeDisplay"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance models:SnakeMapViewModel}">
     <StackPanel Orientation="Vertical">
         <StackPanel.Resources>
-            <!--<Style TargetType="Rectangle" x:Key="Style">
-                <Setter Property="Canvas.Left" Value="{Binding Path=X}"/>
-                <Setter Property="Canvas.Top" Value="{Binding Path=Y}"/>
-            </Style>-->
             <templateSelectors:SnakeMapTemplateSelector  x:Key="SnakeMapTemplateSelector"/>
         </StackPanel.Resources>
         <ItemsControl ItemsSource="{Binding Path=MapItems}"
@@ -26,16 +23,15 @@
                     <SolidColorBrush x:Key="SnakeCell" Color="Blue"/>
                     <SolidColorBrush x:Key="HeadCell" Color="DarkBlue"/>
                     <SolidColorBrush x:Key="FoodCell" Color="Green"/>
-                    <SolidColorBrush x:Key="EmptyCell" Color="Transparent"/>
                     <SolidColorBrush x:Key="NormalVision" Color="White"/>
                     <SolidColorBrush x:Key="SelfVision" Color="Red"/>
                     <SolidColorBrush x:Key="FoodVision" Color="Yellow"/>
-                    <converters:SnakeMapColorConverter x:Key="SnakeMapColorConverter" Head="{StaticResource HeadCell}" Transparent="{StaticResource EmptyCell}" Food="{StaticResource FoodCell}" Snake="{StaticResource SnakeCell}"/>
+                    <converters:SnakeMapColorConverter x:Key="SnakeMapColorConverter" Head="{StaticResource HeadCell}"  Food="{StaticResource FoodCell}" Snake="{StaticResource SnakeCell}"/>
                     <converters:MapVisionColorConverter x:Key="MapVisionColorConverter" Food="{StaticResource FoodVision}"  Normal="{StaticResource NormalVision}"  Self="{StaticResource SelfVision}" />
 
-                    <DataTemplate x:Key="{x:Static constants:Cons.cRectangleDataTemplate}" DataType="objects:MapCell">
+                    <DataTemplate x:Key="{x:Static constants:Cons.cRectangleDataTemplate}" DataType="snakeDisplay:MapCell">
                         <Rectangle Width="{Binding Width, Mode= OneWay}" Height="{Binding Height}"
-                                   Fill="{Binding Path=CellStatus, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}">
+                                   Fill="{Binding Path=CellType, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}">
                             <Rectangle.RenderTransform>
                                 <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
                             </Rectangle.RenderTransform>

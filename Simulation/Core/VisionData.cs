@@ -27,7 +27,6 @@ namespace Simulation.Core
                 return VisionCollisionType.CompareTo(vd.VisionCollisionType);
             }
 
-
             return 0;
         }
     }

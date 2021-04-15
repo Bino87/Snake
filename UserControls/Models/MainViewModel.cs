@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,6 +11,7 @@ using Simulation.Core;
 using Simulation.Enums;
 using UserControls.Constants;
 using UserControls.Core.Base;
+using UserControls.Objects.SnakeDisplay;
 
 namespace UserControls.Models
 {
@@ -44,31 +46,22 @@ namespace UserControls.Models
                 new LayerInfo(new ReLu(), 12),
                 new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(OnUpdate, 50, SnakeMapViewModel.RectArr, SnakeMapViewModel._numberOfTiles, 50, ni, .05, 1);
+            mm = new MapManager(OnUpdate, 50, SnakeMapViewModel._numberOfTiles, 50, ni, .05, 1);
 
 
             StartSimulation();
         }
 
-        private void OnUpdate(List<(int X, int Y, MapCellStatus Status)> cellUpdateList, double[][] values, VisionData[] visionData)
+        private void OnUpdate(List<(int X, int Y, MapCellType Status)> cellUpdateList, double[][] values, VisionData[] visionData)
         {
 
             Application.Current?.Dispatcher.Invoke(() =>
-                                                  {
-                                                      for (int i = 0; i < cellUpdateList.Count; i++)
-                                                      {
-                                                          (int x, int y, MapCellStatus status) = cellUpdateList[i];
-                                                          SnakeMapViewModel.RectArr[x, y].CellStatus = status;
-                                                      }
+            {
+                SnakeMapViewModel.SetCells(cellUpdateList, visionData);
 
-                                                      cellUpdateList.Clear();
-
-                                                      if (values is not null)
-                                                          NeuralNetDisplay.OnResultsCalculated(values);
-                                                      if(visionData is not null)
-                                                          SnakeMapViewModel.CreateVisionLines(visionData);
-
-                                                  });
+                if (values is not null)
+                    NeuralNetDisplay.OnResultsCalculated(values);
+            });
             DeleySim();
         }
 

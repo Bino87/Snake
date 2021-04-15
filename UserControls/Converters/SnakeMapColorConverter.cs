@@ -9,26 +9,24 @@ namespace UserControls.Converters
 {
     public class SnakeMapColorConverter : MarkupExtension, IValueConverter
     {
-        public SolidColorBrush Transparent { get; set; }
         public SolidColorBrush Snake{ get; set; }
         public SolidColorBrush Food { get; set; }
         public SolidColorBrush Head { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is MapCellStatus mcs)
+            if (value is MapCellType mcs)
             {
                 return mcs switch
                     {
-                        MapCellStatus.Snake => Snake,
-                        MapCellStatus.Food => Food,
-                        MapCellStatus.Empty => Transparent,
-                        MapCellStatus.Head => Head,
+                        MapCellType.Snake => Snake,
+                        MapCellType.Food => Food,
+                        MapCellType.Head => Head,
                         _ => throw new ArgumentOutOfRangeException()
                     };
             }
 
-            return Transparent;
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

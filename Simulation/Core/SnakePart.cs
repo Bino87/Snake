@@ -5,10 +5,18 @@ using Simulation.Interfaces;
 
 namespace Simulation.Core
 {
+
+    public class SnakeHead : SnakePart
+    {
+        public override MapCellType Type => MapCellType.Head;
+        public SnakeHead(int x, int y, Direction direction) : base(x, y, direction)
+        {
+        }
+    }
     [DebuggerDisplay("X1:{X} Y1:{Y} D:{Direction}")]
     public class SnakePart : SimObject
     {
-        public override MapCellStatus Status => MapCellStatus.Snake;
+        public override MapCellType Type => MapCellType.Snake;
 
         public Direction Direction { get; set; }
         public SnakePart(int x, int y, Direction direction) : base(x, y)
@@ -16,32 +24,34 @@ namespace Simulation.Core
             Direction = direction;
         }
 
-        public (int X, int Y) GetMove()
+        private (int X, int Y) GetMove(Direction direction)
         {
-            return Direction switch
+            return direction switch
             {
+
                 Direction.Up => (0, -1),
-                Direction.Right => (-1, 0),
+                Direction.Right => (1, 0),
                 Direction.Down => (0, 1),
-                Direction.Left => (1, 0),
-                _ => throw new ArgumentOutOfRangeException()
+                Direction.Left => (-1, 0),
+                _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
             };
         }
-
-        public void Move()
+        public (int X, int Y) GetPositionAfterMove(Direction direction)
         {
-            (int x, int y) = GetMove();
-            X += x;
-            Y += y;
+            (int x, int y) = GetMove(direction);
+            return (X + x, Y + y);
         }
 
-        public bool IsValidMove(IMapCell[,] map)
+        public (int X, int Y) Move(Direction direction)
         {
-            (int x, int y) = GetMove();
+            Direction = direction;
+            (int x, int y) = GetPositionAfterMove(Direction);
 
-            return X + x >= 0 && X + x < map.GetLength(0) &&
-                   Y + y >= 0 && Y + y < map.GetLength(1);
+          
 
+            X = x;
+            Y = y;
+            return (X, Y);
         }
     }
 }

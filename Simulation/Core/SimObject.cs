@@ -11,7 +11,7 @@ namespace Simulation.Core
         }
 
         
-        public abstract MapCellStatus Status { get; }
+        public abstract MapCellType Type { get; }
         public int X { get;  set; }
         public int Y { get; set; }
     }
