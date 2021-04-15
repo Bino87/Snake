@@ -47,7 +47,6 @@ namespace Network
             {
                 output[layerIndex + 1] = new double[_biases[layerIndex].Length];
 
-
                 for (int outputIndex = 0; outputIndex < output[layerIndex + 1].Length; outputIndex++)
                 {
                     double value = CalculateValue(input, outputIndex, layerIndex);

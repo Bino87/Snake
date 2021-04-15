@@ -5,7 +5,7 @@ using Simulation.Extensions;
 
 namespace Simulation.Core
 {
-    [DebuggerDisplay("X1:{X} Y1:{Y} D:{Direction}")]
+    [DebuggerDisplay("X1:{X} Y1:{Y} T:{Type} D:{Direction}")]
     public class SnakePart : SimObject
     {
         public override MapCellType Type => MapCellType.Snake;

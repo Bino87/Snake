@@ -14,7 +14,7 @@ namespace Simulation
     [DebuggerDisplay("{ID}")]
     public class Bot
     {
-        private const int cInitialSnakeSize = 3;
+        private const int cInitialSnakeSize = 4;
 
         private readonly int _mapSize;
         private readonly List<SnakePart> _snake;
@@ -54,9 +54,8 @@ namespace Simulation
 
             SpawnSnake(updateCellData);
             SpawnNewFood(updateCellData);
-
+            onCellsUpdated?.Invoke(updateCellData, null, visionData.ToArray());
             int movesSinceLastFood = 0;
-            List<int> list = new();
             MovePrognosis movePrognosis;
             while (movesSinceLastFood < _maxMovesWithoutFood + _snake.Count)
             {
@@ -72,16 +71,14 @@ namespace Simulation
 
                 if (movePrognosis == MovePrognosis.Ok)
                 {
-                    Move(ref movesSinceLastFood, list, updateCellData, direction);
+                    movesSinceLastFood = Move(movesSinceLastFood, updateCellData, direction);
                 }
                 else
                     break;
-
-                movesSinceLastFood++;
+                
                 _uniqueCells[^1].Add(Head.Y * _mapSize + Head.X);
             }
 
-            list.Add(movesSinceLastFood);
             return new SimulationResult(_snake.Count - cInitialSnakeSize, Generation, _uniqueCells);
         }
 
@@ -151,63 +148,108 @@ namespace Simulation
             return Head.Direction.Turn(td);
         }
 
-        private void Move(ref int movesSinceLastFood, ICollection<int> list, List<(int X, int Y, MapCellType Status)> updateCellData, Direction direction)
+        private int Move(int movesSinceLastFood, List<(int X, int Y, MapCellType Status)> updateCellData, Direction direction)
         {
             (int x, int y) = Head.GetPositionAfterMove(direction);
 
             if (x == _food.X && y == _food.Y)
             {
-                list.Add(movesSinceLastFood);
-                EatFood(updateCellData);
-                movesSinceLastFood = 0;
-                _uniqueCells.Add(new HashSet<int>());
+                EatFood(updateCellData, direction);
+                return 0;
             }
             else
             {
-                for (int i = 0; i < _snake.Count; i++)
+                Move(updateCellData, direction);
+                return movesSinceLastFood + 1;
+            }
+        }
+
+        private void Move(List<(int X, int Y, MapCellType Status)> updateCellData, Direction direction)
+        {
+
+            for (int i = 0; i < _snake.Count; i++)
+            {
+                SnakePart snakePart = _snake[i];
+                Direction previous = snakePart.Direction; //save previous dir
+                _takenCells.Remove((snakePart.X, snakePart.Y)); //remove cell from register
+
+                (int X, int Y) moveCoordinates = snakePart.Move(direction);
+                if (_takenCells.ContainsKey(moveCoordinates))
+                    _takenCells.Remove(moveCoordinates); //seams like there is a bug here somewhere
+                _takenCells.Add(moveCoordinates, snakePart.Type);
+
+                updateCellData.Add((snakePart.X, snakePart.Y, snakePart.Type));
+
+                direction = previous;
+            }
+        }
+
+
+        string D(string[] before, string[] after)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for(int i = 0; i < _mapSize; i++)
+            {
+                sb.Append(before[i]);
+                
+                sb.Append(" | ");
+                sb.AppendLine(after[i]);
+            }
+
+            return sb.ToString();
+        }
+
+        string[] D()
+        {
+            StringBuilder[] arr = new StringBuilder[_mapSize];
+
+            for(int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = new StringBuilder();
+
+                for(int j = 0; j < _mapSize; j++)
                 {
-                    SnakePart snakePart = _snake[i];
-                    Direction previous = snakePart.Direction;           //save previous dir
-                    _takenCells.Remove((snakePart.X, snakePart.Y));     //remove cell from register
-
-                    (int X, int Y) moveCoordinates = snakePart.Move(direction);
-                    if (_takenCells.ContainsKey(moveCoordinates))
-                        _takenCells.Remove(moveCoordinates);
-                    _takenCells.Add(moveCoordinates, snakePart.Type);
-
-                    updateCellData.Add((snakePart.X, snakePart.Y, snakePart.Type));
-
-                    direction = previous;
+                    arr[i].Append(" ");
                 }
             }
 
+            foreach(KeyValuePair<(int x, int y), MapCellType> k in _takenCells)
+            {
+                arr[k.Key.y][k.Key.x] = k.Value switch
+                    {
 
+                        MapCellType.Snake => 'S',
+                        MapCellType.Food => 'F',
+                        MapCellType.Head => 'H',
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+            }
+
+            string[] ret = new string[arr.Length];
+
+
+            for(int i = 0; i < ret.Length; i++)
+            {
+                ret[i] = arr[i].ToString();
+            }
+
+            return ret;
         }
 
-        private void EatFood(List<(int X, int Y, MapCellType Status)> updateCellData)
+        private void EatFood(List<(int X, int Y, MapCellType Status)> updateCellData, Direction direction)
         {
+            int x = Tail.X;
+            int y = Tail.Y;
+            Direction d = Tail.Direction;
 
-            SnakePart[] arr = new SnakePart[_snake.Count + 1];
-            arr[0] = new SnakeHead(_food.X, _food.Y, Head.Direction);       //spawn head where food is
+            _takenCells.Remove((_food.X, _food.Y));
+            Move(updateCellData, direction);
+            _snake.Add(new SnakePart(x, y, d));
+            _takenCells.Add((x, y), MapCellType.Snake);
 
-            for (int i = 1; i < arr.Length; i++)
-            {
-                SnakePart temp = _snake[i - 1];
-                arr[i] = new SnakePart(temp.X, temp.Y, temp.Direction);     //cache snake
-            }
-
-            _snake.Clear();                                                 //clear snake
-            updateCellData.Clear();                                         //clear cell data
-            _takenCells.Clear();                                            //clear taken cells
-
-            for (int i = 0; i < arr.Length; i++)                            //rebuild snake
-            {
-                _snake.Add(arr[i]);
-                updateCellData.Add((arr[i].X, arr[i].Y, arr[i].Type));       //rebuild cell data
-                _takenCells.Add((arr[i].X, arr[i].Y), arr[i].Type);           //rebuild taken cells
-            }
-
-            SpawnNewFood(updateCellData);                                   //spawn food
+            _uniqueCells.Add(new HashSet<int>());
+            SpawnNewFood(updateCellData);
         }
 
         private MovePrognosis GetMoveResults(Direction direction)

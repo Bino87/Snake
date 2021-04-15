@@ -30,13 +30,12 @@
                     <converters:MapVisionColorConverter x:Key="MapVisionColorConverter" Food="{StaticResource FoodVision}"  Normal="{StaticResource NormalVision}"  Self="{StaticResource SelfVision}" />
 
                     <DataTemplate x:Key="{x:Static constants:Cons.cRectangleDataTemplate}" DataType="snakeDisplay:MapCell">
-                        <Rectangle Width="{Binding Width, Mode= OneWay}" Height="{Binding Height}"
-                                   Fill="{Binding Path=CellType, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}">
-                            <Rectangle.RenderTransform>
-                                <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
-                            </Rectangle.RenderTransform>
-                        </Rectangle>
-
+                            <Rectangle Width="{Binding Width, Mode= OneWay}" Height="{Binding Height}"
+                                       Fill="{Binding Path=CellType, Converter={StaticResource SnakeMapColorConverter}, Mode=OneWay}">
+                                <Rectangle.RenderTransform>
+                                    <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                                </Rectangle.RenderTransform>
+                            </Rectangle>
                     </DataTemplate>
 
                     <DataTemplate x:Key="{x:Static constants:Cons.cVisionDataTemplate}" DataType="objects:CellVision">

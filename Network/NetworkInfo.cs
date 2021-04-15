@@ -105,14 +105,16 @@ namespace Network
 
             for (int i = 0; i < Layers; i++)
             {
+                double bRange = i == 0 ? InputCount : BiasCount[i - 1];
+
                 for (int x = 0; x < bias[i].Length; x++)
                 {
-                    bias[i][x] = rand.NextDouble(-cBiasRange, cBiasRange);
+                    bias[i][x] = rand.NextDouble(0,.01);
                 }
 
                 for (int x = 0; x < weights[i].Length; x++)
                 {
-                    weights[i][x] = rand.NextDouble(-cWeightRange, cWeightRange);
+                    weights[i][x] = rand.NextDouble(-1d, 1d);
                 }
             }
 

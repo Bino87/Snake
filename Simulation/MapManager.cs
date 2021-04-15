@@ -30,7 +30,7 @@ namespace Simulation
             _agents = new Bot[numberOfPairs * 2];
             for (int i = 0; i < _agents.Length; i++)
             {
-                _agents[i] = new Bot( mapSize, maxMovesWithoutFood, networkInfo, 1);
+                _agents[i] = new Bot(mapSize, maxMovesWithoutFood, networkInfo, 1);
             }
 
             _updateCallback = updateCallback;
@@ -49,7 +49,7 @@ namespace Simulation
                     if (token.IsCancellationRequested)
                         return;
 
-                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights,generation);
+                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights, generation);
                     SimulationResult res = _agents[i].Run(_updateCallback);
 
                     results.Add(new FitnessResults(i, res, _agents[i].ID));
@@ -82,7 +82,7 @@ namespace Simulation
 
         private static double CalculateAverage(List<FitnessResults> results)
         {
-            int len = (int)(results.Count * .02);
+            int len = (int)(results.Count * .5);
             double total = 0;
 
             for (int i = 0; i < len; i++)
@@ -99,30 +99,24 @@ namespace Simulation
         {
             Bot[] res = new Bot[agents.Count];
 
-            int len = (int)(agents.Count * .02);
-            if (len < 2)
-                len = 2;
-
-            for (int i = 0; i < len; i++)
-            {
-                res[i] = agents[fitnessResults[i].AgentIndex];
-            }
-
+            int len = res.Length / 2;
             IMutator mutator = new BitMutator(_mutationChance, _mutationRate);
 
-            int generation = Math.Max(res[0].Generation, res[1].Generation);
-
-            NeuralNetwork father = res[0].GetNeuralNetwork();
-            NeuralNetwork mother = res[1].GetNeuralNetwork();
-
-            for (int i = 2; i < agents.Count; i += 2)
+            for (int i = 0; i < len ; i+= 2)
             {
+                res[i] = agents[fitnessResults[i].AgentIndex];
+                res[i + 1] = agents[fitnessResults[i + 1].AgentIndex];
+
+                NeuralNetwork father = res[i].GetNeuralNetwork();
+                NeuralNetwork mother = res[i + 1].GetNeuralNetwork();
+
+                int generation = Math.Max(res[0].Generation, res[1].Generation);
+
                 (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
 
-                res[i] = new Bot(_mapSize, _maxMovesWithoutFood, first, generation + 1);
-                res[i + 1] = new Bot(_mapSize, _maxMovesWithoutFood, second, generation + 1);
+                res[i + len] = new Bot(_mapSize, _maxMovesWithoutFood, first, generation + 1);
+                res[i + len + 1] = new Bot(_mapSize, _maxMovesWithoutFood, second, generation + 1);
             }
-
 
             return res;
         }
