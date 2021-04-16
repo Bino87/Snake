@@ -9,7 +9,6 @@ using Network.ActivationFunctions;
 using Simulation;
 using Simulation.Core;
 using Simulation.Enums;
-using UserControls.Constants;
 using UserControls.Core.Base;
 using UserControls.Objects.SnakeDisplay;
 
@@ -18,56 +17,24 @@ namespace UserControls.Models
     public class MainViewModel : Observable
     {
         public SnakeMapViewModel SnakeMapViewModel { get; set; }
+        public SimulationGuiViewModel SimulationGuiViewModel { get; set; }
         public NeuralNetDisplayViewModel NeuralNetDisplay { get; set; }
-        private int _delay;
         private MapManager mm;
-        private int _generation;
-        private int _individual;
-        private bool _parallel;
-        public int Generation
-        {
-            get => _generation;
-            set => SetField(ref _generation, value);
-        }
-
-        public int Deley
-        {
-            get => _delay;
-            set => SetField(ref _delay, value);
-
-        }
-
-        public int Individual
-        {
-            get => _individual;
-            set => SetField(ref _individual, value);
-        }
-
-        public bool Parallel
-        {
-            get => _parallel;
-            set
-            {
-                if (SetField(ref _parallel, value))
-                    mm.RunParallel = value;
-            }
-        }
+        
 
         public MainViewModel()
         {
-            SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
-            Deley = 1;
+            SnakeMapViewModel = new SnakeMapViewModel();
+            SimulationGuiViewModel = new(StartSimulation);
             
-            NetworkInfo ni = new NetworkInfo(
+            NetworkInfo ni = new(
                 new LayerInfo(new Identity(), 2 * 4 + 8 * 5 + 6),
                 new LayerInfo(new ReLu(), 20),
                 new LayerInfo(new ReLu(), 12),
                 new LayerInfo(new Sigmoid(), 5));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(OnUpdate, 500, SnakeMapViewModel._numberOfTiles, 200, ni, .05, 1);
-            Parallel = true;
+            mm = new MapManager(OnUpdate, SimulationGuiViewModel, ni);
 
-            StartSimulation();
         }
 
         private void OnUpdate(List<(int X, int Y, MapCellType Status)> cellUpdateList, double[][] values, VisionData[] visionData)
@@ -75,7 +42,7 @@ namespace UserControls.Models
 
             Application.Current?.Dispatcher.Invoke(() =>
             {
-                SnakeMapViewModel.SetCells(cellUpdateList, visionData);
+                SnakeMapViewModel.SetCells(cellUpdateList, visionData, SimulationGuiViewModel.MapSize);
 
                 if (values is not null)
                     NeuralNetDisplay.OnResultsCalculated(values);
@@ -85,7 +52,7 @@ namespace UserControls.Models
 
         void DeleySim()
         {
-            Thread.Sleep(Deley);
+            Thread.Sleep(SimulationGuiViewModel.UpdateDelay);
         }
 
         private void StartSimulation()
@@ -96,9 +63,9 @@ namespace UserControls.Models
                                 {
                                     try
                                     {
-                                        mm.Run(OnSimulationStart, tok);
+                                        mm.Run(OnSimulationStart);
                                     }
-                                    catch (Exception e)
+                                    catch (Exception exception)
                                     {
                                         source.Cancel();
                                     }
@@ -110,8 +77,7 @@ namespace UserControls.Models
             Application.Current?.Dispatcher.Invoke(() =>
             {
                 NeuralNetDisplay.UpdateWeights(obj);
-                Generation = generation;
-                Individual = individual;
+                SimulationGuiViewModel.Generation = generation;
             }
             );
             DeleySim();

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Network;
 using Network.Mutators;
 using Simulation.Core;
 using Simulation.Enums;
+using Simulation.Interfaces;
 using Simulation.SimResults;
 
 namespace Simulation
@@ -16,36 +16,32 @@ namespace Simulation
     {
         private readonly Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> _updateCallback;
         private Bot[] _agents;
-        private readonly int _mapSize;
-        private readonly int _maxMovesWithoutFood;
-        private double _mutationRate;
-        private double _mutationChance;
+        private ISimulationInitParameters _simInitParameters;
+        private NetworkInfo _networkInfo;
 
-        public bool RunParallel { get; set; }
-
-        public MapManager(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> updateCallback, int numberOfPairs, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, double mutationRate, double mutationChance)
+        public MapManager(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> updateCallback, ISimulationInitParameters simInitParameters, NetworkInfo networkInfo)
         {
-            _mapSize = mapSize;
-            _maxMovesWithoutFood = maxMovesWithoutFood;
-            _mutationChance = mutationChance;
-            _mutationRate = mutationRate;
-
-            _agents = new Bot[numberOfPairs * 2];
-            for (int i = 0; i < _agents.Length; i++)
-            {
-                _agents[i] = new Bot(mapSize, maxMovesWithoutFood, networkInfo, 1);
-            }
-
+            _simInitParameters = simInitParameters;
+            _networkInfo = networkInfo;
             _updateCallback = updateCallback;
         }
 
-        public void Run(Action<double[][], int, int> onSimulationStart, CancellationToken token)
+        private void InitializeAgents()
+        {
+            _agents = new Bot[_simInitParameters.NumberOfPairs * 2];
+            for (int i = 0; i < _agents.Length; i++)
+            {
+                _agents[i] = new Bot(_simInitParameters.MapSize, _simInitParameters.MaxMoves, _networkInfo, 1);
+            }
+        }
+
+        public void Run(Action<double[][], int, int> onSimulationStart)
         {
             int generation = 0;
-
+            InitializeAgents();
             do
             {
-                List<FitnessResults> results = new(GetFitnessResults(onSimulationStart, generation, RunParallel));
+                List<FitnessResults> results = new(GetFitnessResults(onSimulationStart, generation, _simInitParameters.RunInBackground));
 
                 //sort based on results
                 results.Sort();
@@ -60,10 +56,10 @@ namespace Simulation
             } while (true);
         }
 
-        private FitnessResults[] GetFitnessResults(Action<double[][], int, int> onSimulationStart, int generation, bool parallel)
+        private IEnumerable<FitnessResults> GetFitnessResults(Action<double[][], int, int> onSimulationStart, int generation, bool parallel)
         {
             FitnessResults[] results = new FitnessResults[_agents.Length];
-            void Run(int i)
+            void RunLocal(int i)
             {
                 if (!parallel)
                     onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights, generation, i + 1);
@@ -72,26 +68,26 @@ namespace Simulation
                 results[i] = new FitnessResults(i, res, _agents[i].ID);
             }
 
-            void RunItPerallel(int i)
+            void RunItParallel(int i)
             {
-                Parallel.For(i, _agents.Length, Run);
+                Parallel.For(i, _agents.Length, RunLocal);
             }
 
-            int i = 0;
+
             if (parallel)
             {
-                RunItPerallel(i);
+                RunItParallel(0);
             }
             else
             {
-                for (; i < _agents.Length; i++)
+                for (int i = 0; i < _agents.Length; i++)
                 {
-                    Run(i);
+                    RunLocal(i);
 
-                    if (RunParallel)
+                    if (_simInitParameters.RunInBackground)
                     {
-                        parallel = RunParallel;
-                        RunItPerallel(i+1);
+                        parallel = _simInitParameters.RunInBackground;
+                        RunItParallel(i + 1);
                         break;
                     }
                 }
@@ -101,7 +97,7 @@ namespace Simulation
             return results;
         }
 
-        private static double CalculateAverage(List<FitnessResults> results)
+        private static double CalculateAverage(IReadOnlyList<FitnessResults> results)
         {
             int len = (int)(results.Count * .5);
             double total = 0;
@@ -121,7 +117,7 @@ namespace Simulation
             Bot[] res = new Bot[agents.Count];
 
             int len = res.Length / 2;
-            IMutator mutator = new StringMutator(_mutationChance, _mutationRate);
+            IMutator mutator = new StringMutator(_simInitParameters.MutationChance, _simInitParameters.MutationRate);
 
             for (int i = 0; i < len; i += 2)
             {
@@ -135,8 +131,8 @@ namespace Simulation
 
                 (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
 
-                res[i + len] = new Bot(_mapSize, _maxMovesWithoutFood, first, generation + 1);
-                res[i + len + 1] = new Bot(_mapSize, _maxMovesWithoutFood, second, generation + 1);
+                res[i + len] = new Bot(_simInitParameters.MapSize, _simInitParameters.MaxMoves, first, generation + 1);
+                res[i + len + 1] = new Bot(_simInitParameters.MapSize, _simInitParameters.MaxMoves, second, generation + 1);
             }
 
             return res;

@@ -7,11 +7,4 @@
         Down = 2, 
         Left = 3
     }
-
-    public enum TurnDirection
-    {
-        Left,
-        Right,
-        None,
-    }
 }

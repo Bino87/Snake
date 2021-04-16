@@ -6,5 +6,4 @@ namespace Simulation.Interfaces
     {
         MapCellType CellType { get; set; }
     }
-
 }

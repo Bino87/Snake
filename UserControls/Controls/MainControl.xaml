@@ -11,13 +11,8 @@
 
         <controls:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
 
-        <StackPanel Orientation="Vertical">
-            <TextBox VerticalAlignment="Top" Width="100" Height="25" Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="{Binding Path=Generation, StringFormat=Generation: {0}}"/>
-            <TextBlock Text="{Binding Path=Individual, StringFormat=Individual: {0}}"/>
-            <CheckBox IsChecked="{Binding Path=Parallel}"></CheckBox>
+        <controls:SimulationGuiControl  DataContext="{Binding Path=SimulationGuiViewModel}" ></controls:SimulationGuiControl>
 
-        </StackPanel>
         <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
     </StackPanel>
 </UserControl>

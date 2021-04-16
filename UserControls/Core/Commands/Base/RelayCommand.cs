@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace UserControls.Core.Commands
+namespace UserControls.Core.Commands.Base
 {
     public class RelayCommand : ICommand
     {

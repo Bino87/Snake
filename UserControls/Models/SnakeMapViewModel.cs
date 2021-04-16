@@ -12,51 +12,47 @@ namespace UserControls.Models
 {
     public class SnakeMapViewModel : Observable
     {
-        public readonly int _numberOfTiles;
 
         public ObservableCollection<IMapItem> MapItems { get; set; }
 
-        public SnakeMapViewModel(int numTiles)
+        public SnakeMapViewModel()
         {
-            _numberOfTiles = numTiles;
             MapItems = new ObservableCollection<IMapItem>();
-
         }
-        
-        public void CreateVisionLines(VisionData[] visionData)
+
+        public void CreateVisionLines(VisionData[] visionData, int mapSize)
         {
-            if(visionData is null)
+            if (visionData is null)
                 return;
 
-            double cellSize = Cons.cMapSize / _numberOfTiles;   // size of each tile;
-            double midPoint = cellSize /2 ;                     //midpoint offset.
+            double cellSize = Cons.cMapSize / mapSize;   // size of each tile;
+            double midPoint = cellSize / 2;                     //midpoint offset.
 
-            for(int i = 0; i < visionData.Length; i++)
+            for (int i = 0; i < visionData.Length; i++)
             {
                 CellVision cv = new(visionData[i], cellSize, midPoint);
                 MapItems.Add(cv);
             }
         }
 
-        private void SetCells(List<(int X, int Y, MapCellType Status)> cellUpdateList)    
+        private void SetCells(List<(int X, int Y, MapCellType Status)> cellUpdateList, int mapSize)
         {
-            double size = Cons.cMapSize / _numberOfTiles ;
+            double size = Cons.cMapSize / mapSize;
 
-            for(int i = 0; i < cellUpdateList.Count; i++)
+            for (int i = 0; i < cellUpdateList.Count; i++)
             {
                 (int x, int y, MapCellType cellType) = cellUpdateList[i];
-                MapCell mc = new(x * size , y * size, size, size, cellType);
+                MapCell mc = new(x * size, y * size, size, size, cellType);
 
                 MapItems.Add(mc);
             }
-
         }
 
-        public void SetCells(List<(int X, int Y, MapCellType Status)> cellUpdateList, VisionData[] visionData)
+        public void SetCells(List<(int X, int Y, MapCellType Status)> cellUpdateList, VisionData[] visionData, int mapSize)
         {
             MapItems.Clear();
-            SetCells(cellUpdateList);
-            CreateVisionLines(visionData);
+            SetCells(cellUpdateList, mapSize);
+            CreateVisionLines(visionData, mapSize);
         }
     }
 }

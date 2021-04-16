@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using UserControls.Core.Base;
 using Simulation.Enums;
 using Simulation.Interfaces;
+using UserControls.Core.Base;
 
 namespace UserControls.Objects.SnakeDisplay
 {
