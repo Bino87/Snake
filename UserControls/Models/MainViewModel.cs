@@ -62,7 +62,7 @@ namespace UserControls.Models
                 new LayerInfo(new Identity(), 2 * 4 + 8 * 5 + 6),
                 new LayerInfo(new ReLu(), 20),
                 new LayerInfo(new ReLu(), 12),
-                new LayerInfo(new Sigmoid(), 3));
+                new LayerInfo(new Sigmoid(), 5));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
             mm = new MapManager(OnUpdate, 500, SnakeMapViewModel._numberOfTiles, 200, ni, .05, 1);
             Parallel = true;

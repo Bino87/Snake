@@ -87,6 +87,13 @@ namespace Simulation
                 for (; i < _agents.Length; i++)
                 {
                     Run(i);
+
+                    if (RunParallel)
+                    {
+                        parallel = RunParallel;
+                        RunItPerallel(i+1);
+                        break;
+                    }
                 }
             }
 

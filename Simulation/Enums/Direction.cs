@@ -11,7 +11,7 @@
     public enum TurnDirection
     {
         Left,
+        Right,
         None,
-        Right
     }
 }

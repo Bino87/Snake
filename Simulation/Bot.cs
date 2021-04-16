@@ -125,6 +125,8 @@ namespace Simulation
             double max = double.MinValue;
             int index = 0;
 
+            
+
             for (int i = 0; i < result.Count; i++)
             {
                 if (result[i] == 0)
@@ -132,7 +134,7 @@ namespace Simulation
                 if (max > result[i])
                     continue;
 
-                if (max < result[i])
+                if (max <= result[i])
                 {
                     index = i;
                     max = result[i];
@@ -142,7 +144,16 @@ namespace Simulation
                     index = i;
             }
 
-            TurnDirection td = (TurnDirection)index;
+            TurnDirection td = index switch
+                {
+                    0 => TurnDirection.Left,
+                    1 => TurnDirection.Left,
+                    2 => TurnDirection.None,
+                    3 => TurnDirection.Right,
+                    4 => TurnDirection.Right,
+
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
             return Head.Direction.Turn(td);
         }
