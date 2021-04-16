@@ -14,9 +14,8 @@ namespace Simulation.SimResults
         {
             int steps = uniqueCells.Sum(t => t.Count);
 
-            double a = 0; // (Math.Pow(2, points) + Math.Pow(points, 2.1) * 10);
-            double b = 0; //Math.Pow(points, 1.2) * Math.Pow(steps, 1.3) * .25;
-            Points = steps + a - b;
+            double a = points * 5; 
+            Points = steps + a ;
             Generation = generation;
 
         }

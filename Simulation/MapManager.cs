@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Network;
 using Network.Mutators;
 using Simulation.Core;
@@ -20,6 +21,8 @@ namespace Simulation
         private double _mutationRate;
         private double _mutationChance;
 
+        public bool RunParallel { get; set; }
+
         public MapManager(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> updateCallback, int numberOfPairs, int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, double mutationRate, double mutationChance)
         {
             _mapSize = mapSize;
@@ -36,24 +39,13 @@ namespace Simulation
             _updateCallback = updateCallback;
         }
 
-        public void Run(Action<double[][], int,int> onSimulationStart, CancellationToken token)
+        public void Run(Action<double[][], int, int> onSimulationStart, CancellationToken token)
         {
             int generation = 0;
 
             do
             {
-                List<FitnessResults> results = new(_agents.Length);
-
-                for (int i = 0; i < _agents.Length; i++)
-                {
-                    if (token.IsCancellationRequested)
-                        return;
-
-                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights, generation, i+1);
-                    SimulationResult res = _agents[i].Run(_updateCallback);
-
-                    results.Add(new FitnessResults(i, res, _agents[i].ID));
-                }
+                List<FitnessResults> results = new(GetFitnessResults(onSimulationStart, generation, RunParallel));
 
                 //sort based on results
                 results.Sort();
@@ -63,21 +55,43 @@ namespace Simulation
                 Debug.WriteLine(generation++ + " : " + avg.ToString("F4") + " : " + results.Max(x => x.Result.Points).ToString("F4"));
 
                 _agents = PropagateNewGeneration(results, _agents);
-                ShuffleAgents();
+                //ShuffleAgents();
 
             } while (true);
         }
 
-        void ShuffleAgents()
+        private FitnessResults[] GetFitnessResults(Action<double[][], int, int> onSimulationStart, int generation, bool parallel)
         {
-            Random random = new Random();
-            for (int i = 0; i < _agents.Length; i++)
+            FitnessResults[] results = new FitnessResults[_agents.Length];
+            void Run(int i)
             {
-                int index = random.Next(_agents.Length);
-                Bot temp = _agents[i];
-                _agents[i] = _agents[index];
-                _agents[index] = temp;
+                if (!parallel)
+                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights, generation, i + 1);
+                SimulationResult res = _agents[i].Run(parallel ? null : _updateCallback);
+
+                results[i] = new FitnessResults(i, res, _agents[i].ID);
             }
+
+            void RunItPerallel(int i)
+            {
+                Parallel.For(i, _agents.Length, Run);
+            }
+
+            int i = 0;
+            if (parallel)
+            {
+                RunItPerallel(i);
+            }
+            else
+            {
+                for (; i < _agents.Length; i++)
+                {
+                    Run(i);
+                }
+            }
+
+
+            return results;
         }
 
         private static double CalculateAverage(List<FitnessResults> results)
@@ -102,7 +116,7 @@ namespace Simulation
             int len = res.Length / 2;
             IMutator mutator = new StringMutator(_mutationChance, _mutationRate);
 
-            for (int i = 0; i < len ; i+= 2)
+            for (int i = 0; i < len; i += 2)
             {
                 res[i] = agents[fitnessResults[i].AgentIndex];
                 res[i + 1] = agents[fitnessResults[i + 1].AgentIndex];

@@ -9,12 +9,13 @@
              d:DataContext="{d:DesignInstance models:MainViewModel}">
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
 
-        <controls:NeuralNetDisplayControl DataContext="{Binding Path=.NeuralNetDisplay}" />
+        <controls:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
 
         <StackPanel Orientation="Vertical">
             <TextBox VerticalAlignment="Top" Width="100" Height="25" Text="{Binding Path=Deley, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="{Binding Path=Generation, StringFormat=Generation: {0}}"/>
-            <TextBlock Text="{Binding Path=Individual, StringFormat=Individual: {0}}"></TextBlock>
+            <TextBlock Text="{Binding Path=Individual, StringFormat=Individual: {0}}"/>
+            <CheckBox IsChecked="{Binding Path=Parallel}"></CheckBox>
 
         </StackPanel>
         <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>

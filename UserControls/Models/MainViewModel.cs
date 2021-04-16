@@ -23,7 +23,7 @@ namespace UserControls.Models
         private MapManager mm;
         private int _generation;
         private int _individual;
-
+        private bool _parallel;
         public int Generation
         {
             get => _generation;
@@ -43,18 +43,29 @@ namespace UserControls.Models
             set => SetField(ref _individual, value);
         }
 
+        public bool Parallel
+        {
+            get => _parallel;
+            set
+            {
+                if (SetField(ref _parallel, value))
+                    mm.RunParallel = value;
+            }
+        }
+
         public MainViewModel()
         {
             SnakeMapViewModel = new SnakeMapViewModel(Cons.cNumberOfTiles);
             Deley = 1;
+            
             NetworkInfo ni = new NetworkInfo(
-                new LayerInfo(new Identity(), 2 * 4 + 8 * 3 ),
-                new LayerInfo(new ReLu(), 30),
-                new LayerInfo(new ReLu(), 15),
+                new LayerInfo(new Identity(), 2 * 4 + 8 * 5 + 6),
+                new LayerInfo(new ReLu(), 20),
+                new LayerInfo(new ReLu(), 12),
                 new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(OnUpdate, 500, SnakeMapViewModel._numberOfTiles, 100, ni, .05, .2);
-
+            mm = new MapManager(OnUpdate, 500, SnakeMapViewModel._numberOfTiles, 200, ni, .05, 1);
+            Parallel = true;
 
             StartSimulation();
         }

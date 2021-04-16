@@ -56,7 +56,6 @@ namespace Simulation
             SpawnNewFood(updateCellData);
             onCellsUpdated?.Invoke(updateCellData, null, visionData.ToArray());
             int movesSinceLastFood = 0;
-            MovePrognosis movePrognosis;
             while (movesSinceLastFood < _maxMovesWithoutFood + _snake.Count)
             {
                 (double[][] calculationResults, Direction direction) = CalculateSnakeDirection(visionData);
@@ -67,7 +66,7 @@ namespace Simulation
                 updateCellData.Clear();
                 visionData.Clear();
 
-                movePrognosis = GetMoveResults(direction);
+                MovePrognosis movePrognosis = GetMoveResults(direction);
 
                 if (movePrognosis == MovePrognosis.Ok)
                 {

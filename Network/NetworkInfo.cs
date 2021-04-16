@@ -69,7 +69,7 @@ namespace Network
             }
         }
 
-        protected NetworkInfo(int[] biasCount,int[] weightCount, IActivationFunction[] activationFunction, int inputCount, int outputCount, int layers)
+        protected NetworkInfo(int[] biasCount, int[] weightCount, IActivationFunction[] activationFunction, int inputCount, int outputCount, int layers)
         {
             Layers = layers;
             WeightsCount = weightCount;
@@ -82,7 +82,7 @@ namespace Network
 
         public NetworkInfo Copy()
         {
-            return new(BiasCount, WeightsCount,ActivationFunction, InputCount, OutputCount, Layers);
+            return new(BiasCount, WeightsCount, ActivationFunction, InputCount, OutputCount, Layers);
         }
 
 
@@ -109,7 +109,7 @@ namespace Network
 
                 for (int x = 0; x < bias[i].Length; x++)
                 {
-                    bias[i][x] = rand.NextDouble(-.01,.01);
+                    bias[i][x] = rand.NextDouble(-1d, 1);
                 }
 
                 for (int x = 0; x < weights[i].Length; x++)
@@ -135,14 +135,14 @@ namespace Network
         {
             int index = 0;
             Weights = Create2DArrayFromBytes(arr, ref index, WeightsCount, true);
-            Bias = Create2DArrayFromBytes(arr, ref index, BiasCount,  false);
+            Bias = Create2DArrayFromBytes(arr, ref index, BiasCount, false);
         }
 
-        double[][] Create2DArrayFromBytes(byte[] arr, ref int index, int[] lookUp,  bool clamp)
+        double[][] Create2DArrayFromBytes(byte[] arr, ref int index, int[] lookUp, bool clamp)
         {
             double[][] item = new double[lookUp.Length][];
 
-            for(int i = 0; i < lookUp.Length; i++)
+            for (int i = 0; i < lookUp.Length; i++)
             {
                 item[i] = new double[lookUp[i]];
             }

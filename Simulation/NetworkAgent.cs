@@ -38,7 +38,13 @@ namespace Simulation
             {
                 (double value, bool seesSelf, bool seesFood) = GetValue(x, y, parameters, visionData);
 
-                res[index++] = 1d - value;
+                int X = parameters.Head.X + x;
+                int Y = parameters.Head.Y + y;
+
+                bool aa = X < 0 || Y < 0 || X >= parameters.MapSize || Y >= parameters.MapSize;
+                res[index++] = aa ? 1 : 0;
+                res[index++] = value;
+                res[index++] = 1 - value;
                 res[index++] = seesSelf ? 1 : 0;
                 res[index++] = seesFood ? 1 : 0;
             }
@@ -64,12 +70,12 @@ namespace Simulation
             res[index++] = parameters.Tail.Direction == Direction.Down ? 1 : 0;
             res[index++] = parameters.Tail.Direction == Direction.Right ? 1 : 0;
 
-            //res[index++] = parameters.Food.X > parameters.Head.X ? 1 : 0;
-            //res[index++] = parameters.Food.X == parameters.Head.X ? 1 : 0;
-            //res[index++] = parameters.Food.X < parameters.Head.X ? 1 : 0;
-            //res[index++] = parameters.Food.Y > parameters.Head.Y ? 1 : 0;
-            //res[index++] = parameters.Food.Y == parameters.Head.Y ? 1 : 0;
-            //res[index++] = parameters.Food.Y < parameters.Head.Y ? 1 : 0;
+            res[index++] = parameters.Food.X > parameters.Head.X ? 1 : 0;
+            res[index++] = parameters.Food.X == parameters.Head.X ? 1 : 0;
+            res[index++] = parameters.Food.X < parameters.Head.X ? 1 : 0;
+            res[index++] = parameters.Food.Y > parameters.Head.Y ? 1 : 0;
+            res[index++] = parameters.Food.Y == parameters.Head.Y ? 1 : 0;
+            res[index++] = parameters.Food.Y < parameters.Head.Y ? 1 : 0;
 
             return res;
         }
