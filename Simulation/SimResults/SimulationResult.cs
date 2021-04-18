@@ -10,12 +10,12 @@ namespace Simulation.SimResults
         public double Points { get; }
 
 
-        public SimulationResult(int points, int generation, List<HashSet<int>> uniqueCells)
+        public SimulationResult(int points, int generation, List<HashSet<int>> uniqueCells, int maxMovesWithoutFood, double ratio)
         {
-            int steps = uniqueCells.Sum(t => t.Count);
+            int steps = uniqueCells[^1].Count;
 
-            double a = points * 100; 
-            Points = steps + a ;
+            double a = points * maxMovesWithoutFood;
+            Points = (steps + a ) * ratio ;
             Generation = generation;
 
         }

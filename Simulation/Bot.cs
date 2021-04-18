@@ -43,28 +43,39 @@ namespace Simulation
             _uniqueCells = new List<HashSet<int>>();
         }
 
+
         public SimulationResult Run(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> onCellsUpdated)
         {
 
             List<(int X, int Y, MapCellType Status)> updateCellData = new();
-            List<VisionData> visionData = new();
+            List<VisionData> visionData = onCellsUpdated is not null ? new() : null;
             _uniqueCells.Clear();
             _uniqueCells.Add(new HashSet<int>());
             _takenCells.Clear();
+            Dictionary<TurnDirection, double> turnDirections = new()
+                {
+                    {TurnDirection.Right, 0},
+                    {TurnDirection.None, 0},
+                    {TurnDirection.Left, 0},
 
+                };
             SpawnSnake(updateCellData);
             SpawnNewFood(updateCellData);
-            onCellsUpdated?.Invoke(updateCellData, null, visionData.ToArray());
+            onCellsUpdated?.Invoke(updateCellData, null, visionData?.ToArray());
             int movesSinceLastFood = 0;
             while (movesSinceLastFood < _maxMovesWithoutFood + _snake.Count)
             {
-                (double[][] calculationResults, Direction direction) = CalculateSnakeDirection(visionData);
+                (double[][] calculationResults, TurnDirection turnDirection) = CalculateSnakeDirection(visionData);
 
                 updateCellData.Add((_food.X, _food.Y, _food.Type));
-                visionData.Sort();
+                visionData?.Sort();
                 onCellsUpdated?.Invoke(updateCellData, calculationResults, visionData.ToArray());
                 updateCellData.Clear();
-                visionData.Clear();
+                visionData?.Clear();
+
+                turnDirections[turnDirection]++;
+
+                Direction direction = Head.Direction.Turn(turnDirection);
 
                 MovePrognosis movePrognosis = GetMoveResults(direction);
 
@@ -78,7 +89,12 @@ namespace Simulation
                 _uniqueCells[^1].Add(Head.Y * _mapSize + Head.X);
             }
 
-            return new SimulationResult(_snake.Count - cInitialSnakeSize, Generation, _uniqueCells);
+            double right = turnDirections[TurnDirection.Right];
+            double left = turnDirections[TurnDirection.Left];
+
+            double ratio = Math.Min(right, left) / Math.Max(right, left); 
+
+            return new SimulationResult(_snake.Count - cInitialSnakeSize, Generation, _uniqueCells, _maxMovesWithoutFood, ratio);
         }
 
         public NeuralNetwork GetNeuralNetwork() => _networkAgent.GetNeuralNetwork();
@@ -114,18 +130,23 @@ namespace Simulation
 
         }
 
-        private (double[][] calculationResults, Direction direction) CalculateSnakeDirection(List<VisionData> visionData)
+        private (double[][] calculationResults, TurnDirection direction) CalculateSnakeDirection(List<VisionData> visionData)
         {
             double[][] results = _networkAgent.Calculate(new NetworkAgentCalculationParameters(Head, Tail, _food, _takenCells, _mapSize), visionData);
             return (results, PickBest(results[^1]));
         }
 
-        private Direction PickBest(IReadOnlyList<double> result)
+        private static Dictionary<TurnDirection, int> _lookup = new Dictionary<TurnDirection, int>()
+            {
+                {TurnDirection.None, 0},
+                {TurnDirection.Right, 0},
+                {TurnDirection.Left, 0},
+            };
+
+        private TurnDirection PickBest(IReadOnlyList<double> result)
         {
             double max = double.MinValue;
             int index = 0;
-
-            
 
             for (int i = 0; i < result.Count; i++)
             {
@@ -144,18 +165,16 @@ namespace Simulation
                     index = i;
             }
 
-            TurnDirection td = index switch
+            return index switch
                 {
                     0 => TurnDirection.Left,
-                    1 => TurnDirection.Left,
-                    2 => TurnDirection.None,
-                    3 => TurnDirection.Right,
-                    4 => TurnDirection.Right,
+                    1 => TurnDirection.None,
+                    2 => TurnDirection.Right,
 
                     _ => throw new ArgumentOutOfRangeException()
                 };
-
-            return Head.Direction.Turn(td);
+            
+            //return Head.Direction.Turn(td);
         }
 
         private int Move(int movesSinceLastFood, List<(int X, int Y, MapCellType Status)> updateCellData, Direction direction)

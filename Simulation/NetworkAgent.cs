@@ -15,6 +15,7 @@ namespace Simulation
         {
             _inputCount = networkInfo.InputCount;
             _neuralNetwork = new NeuralNetwork(networkInfo);
+            _result = new[] {new double[3]};
         }
 
         public NeuralNetwork GetNeuralNetwork() => _neuralNetwork;
@@ -36,17 +37,21 @@ namespace Simulation
 
             void GetValueAndSetInput(int x, int y)
             {
-                (double value, bool seesSelf, bool seesFood) = GetValue(x, y, parameters, visionData);
+                (double value, double seesSelf, double seesFood) = GetValue(x, y, parameters, visionData);
 
                 int X = parameters.Head.X + x;
                 int Y = parameters.Head.Y + y;
 
                 bool aa = X < 0 || Y < 0 || X >= parameters.MapSize || Y >= parameters.MapSize;
+                bool bb = X < 1 || Y < 1 || X >= parameters.MapSize -1 || Y >= parameters.MapSize -1;
                 res[index++] = aa ? 1 : 0;
+                res[index++] = bb ? 1 : 0;
                 res[index++] = value;
-                res[index++] = 1 - value;
-                res[index++] = seesSelf ? 1 : 0;
-                res[index++] = seesFood ? 1 : 0;
+                //res[index++] = 1 - value;
+                res[index++] = seesSelf > 1 ? 1 : 0;
+                res[index++] = seesSelf;
+                res[index++] = seesFood > 1 ? 1 : 0;
+                res[index++] = seesFood;
             }
 
             GetValueAndSetInput(-1, 0);
@@ -77,14 +82,21 @@ namespace Simulation
             res[index++] = parameters.Food.Y == parameters.Head.Y ? 1 : 0;
             res[index++] = parameters.Food.Y < parameters.Head.Y ? 1 : 0;
 
+            for(int i = 0; i < _result[^1].Length; i++)
+            {
+                res[index++] = _result[^1][i];
+            }
+
             return res;
         }
 
         //private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, double divideBy, int mapSize, int headX, int headY, ICollection<VisionData> visionData, Dictionary<(int, int), MapCellType> mapCellTypes)
-        private (double value, bool seesSelf, bool seesFood) GetValue(int incX, int incY, NetworkAgentCalculationParameters parameters, List<VisionData> visionData)
+        private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, NetworkAgentCalculationParameters parameters, List<VisionData> visionData)
         {
-            bool seesFood = false;
-            bool seesSelf = false;
+            double? seesFood = null;
+            double? seesSelf = null;
+
+            double distance(int origin, int target) => Math.Sqrt(origin * origin + target * target);
 
 
             double value = 0;
@@ -109,16 +121,19 @@ namespace Simulation
                     {
                         case MapCellType.Food:
                             {
-                                seesFood = true;
-                                visionData.Add(new VisionData(VisionCollisionType.Food, headX, x, headY, y));
+                                double dist = distance(headX - x, headY - y);
+
+                                seesFood = seesFood.HasValue ? Math.Min(dist, seesFood.Value) : dist;
+                                visionData?.Add(new VisionData(VisionCollisionType.Food, headX, x, headY, y));
                             }
                             break;
                         case MapCellType.Snake:
                             if (x == headX && y == headY)
                                 break;
                             {
-                                seesSelf = true;
-                                visionData.Add(new VisionData(VisionCollisionType.Self, headX, x, headY, y));
+                                double dist = distance(headX - x, headY - y);
+                                seesSelf = seesSelf.HasValue ? Math.Min(dist, seesSelf.Value) : dist;
+                                visionData?.Add(new VisionData(VisionCollisionType.Self, headX, x, headY, y));
                             }
                             break;
                         case MapCellType.Head:
@@ -131,9 +146,12 @@ namespace Simulation
                 value++;
             }
 
-            visionData.Add(new VisionData(VisionCollisionType.Normal, headX, x, headY, y));
+            visionData?.Add(new VisionData(VisionCollisionType.Normal, headX, x, headY, y));
 
-            return (value / parameters.MapSize, seesSelf, seesFood);
+
+            return (value / parameters.MapSize,
+                seesSelf.HasValue ? seesSelf.Value / parameters.MapSize : 0,
+                seesFood.HasValue ? seesFood.Value / parameters.MapSize : 0);
         }
     }
 }

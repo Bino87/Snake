@@ -5,8 +5,8 @@ namespace UserControls.Core.Commands.Base
 {
     public class RelayCommand : ICommand
     {
-        private Action _execute;
-        private Func<bool> _canExecute;
+        private readonly Action _execute;
+        private readonly Func<bool> _canExecute;
 
         public RelayCommand(Action execute) : this(execute, () => true)
         {
@@ -15,8 +15,8 @@ namespace UserControls.Core.Commands.Base
 
         public RelayCommand(Action execute, Func<bool> canExecute)
         {
-            this._execute = execute;
-            this._canExecute = canExecute;
+            _execute = execute;
+            _canExecute = canExecute;
         }
 
         public bool CanExecute(object parameter)
@@ -38,8 +38,8 @@ namespace UserControls.Core.Commands.Base
 
     public class RelayCommand<T> : ICommand
     {
-        private Action<T> _execute;
-        private Predicate<T> _canExecute;
+        private readonly Action<T> _execute;
+        private readonly Predicate<T> _canExecute;
 
         public event EventHandler CanExecuteChanged
         {
@@ -54,21 +54,21 @@ namespace UserControls.Core.Commands.Base
 
         public RelayCommand(Action<T> execute, Predicate<T> canExecute)
         {
-            this._execute = execute;
-            this._canExecute = canExecute;
+            _execute = execute;
+            _canExecute = canExecute;
         }
 
         public bool CanExecute(object parameter)
         {
             if (parameter is T p)
-                return this._canExecute == null || this._canExecute(p);
+                return _canExecute == null || _canExecute(p);
             return false;
         }
 
         public void Execute(object parameter)
         {
             if (parameter is T p)
-                this._execute(p);
+                _execute(p);
         }
     }
 }

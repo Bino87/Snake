@@ -35,7 +35,7 @@
                                 <TranslateTransform X="{Binding Path = X}" Y="{Binding Y}"/>
                             </Ellipse.RenderTransform>
                         </Ellipse>
-                        <TextBlock  Text="{Binding StringFormat=N4, Path=ValueProvider.Value}" FontSize="8" Foreground="White">
+                        <TextBlock  Text="{Binding StringFormat=N4, Path=ValueProvider.Value}" FontSize="10" Foreground="White">
                             <TextBlock.RenderTransform>
                                 <TranslateTransform X="{Binding Path = X}" Y="{Binding Y}"/>
                             </TextBlock.RenderTransform>

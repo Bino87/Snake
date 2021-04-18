@@ -21,13 +21,14 @@ namespace UserControls.Models
         private int _numberOfPairs;
         private int _mapSize;
         private bool _runInBackground = true;
-        private int _maxMoves = 100;
+        private int _maxMoves ;
 
         public RelayCommand Run { get; set; }
 
         public int MaxMoves
         {
-            get => _maxMoves;
+            //get => _maxMoves;
+            get => MapSize * MapSize;
             set => SetField(ref _maxMoves, value);
         }
 

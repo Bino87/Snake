@@ -21,10 +21,10 @@ namespace UserControls.Converters
             {
                 if (d > 0)
                 {
-                    return d < Limit ? d : Limit;
+                    return (d < Limit ? d : Limit) / 3d;
                 }
 
-                return d < -Limit ? -Limit : d;
+                return (d < -Limit ? -Limit : d) / 3d;
             }
 
             return null;
@@ -48,7 +48,7 @@ namespace UserControls.Converters
             return this;
         }
 
-        byte LinearInterp(byte start, byte end, double percentage) => (byte) (start + (byte)Math.Round(percentage * (end - start)));
+        byte LinearInterp(byte start, byte end, double percentage) => (byte)(start + (byte)Math.Round(percentage * (end - start)));
         Color ColorInterp(Color start, Color end, double percentage)
         {
             byte r = LinearInterp(start.R, end.R, percentage);
@@ -57,7 +57,7 @@ namespace UserControls.Converters
 
             return Color.FromRgb(r, g, b);
         }
-            
+
         Color GradientPick(double percentage, Color Start, Color Center, Color End)
         {
             if (percentage < 0.5)
@@ -65,7 +65,7 @@ namespace UserControls.Converters
             else if (percentage == 0.5)
                 return Center;
             else
-                return ColorInterp(Center, End, (percentage - 0.5)/0.5);
+                return ColorInterp(Center, End, (percentage - 0.5) / 0.5);
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -78,11 +78,11 @@ namespace UserControls.Converters
                 d = d < -1 ? -1 : d;
                 d = d > 1 ? 1 : d;
 
-                if( d == 0)
+                if (d == 0)
                     return new SolidColorBrush(Colors.White);
                 if (d > 0)
                     return new SolidColorBrush(ColorInterp(Colors.White, Positive.Color, d));
-                Color c = ColorInterp(  Colors.White,Negative.Color,-d);
+                Color c = ColorInterp(Colors.White, Negative.Color, -d);
 
                 return new SolidColorBrush(c);
             }
