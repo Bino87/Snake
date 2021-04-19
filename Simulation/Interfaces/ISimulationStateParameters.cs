@@ -2,7 +2,7 @@
 
 namespace Simulation.Interfaces
 {
-    public interface ISimulationInitParameters
+    public interface ISimulationStateParameters
     {
         int MapSize { get; set; }
         int NumberOfPairs { get; set; }
@@ -11,6 +11,9 @@ namespace Simulation.Interfaces
         MutationTechnique MutationTechnique { get; set; }
         double MutationChance { get; set; }
         double MutationRate { get; set; }
-        int MaxMoves { get; set; }
+        int MaxMoves { get; }
+
+        int CurrentIndividual { get; set; }
+
     }
 }

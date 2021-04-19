@@ -6,30 +6,27 @@ using UserControls.Core.Commands.Base;
 
 namespace UserControls.Models
 {
-    
 
-    public class SimulationGuiViewModel : Observable, ISimulationInitParameters
+
+    public class SimulationGuiViewModel : Observable, ISimulationStateParameters
     {
         private int _generation;
-        private (int current, int total) _individual = (1,20);
         private int _moves;
         private int _points;
         private MutationTechnique _mutationTechnique;
-        private double _mutationChance = .2;
+        private double _mutationChance = .7;
         private double _mutationRate = .05;
         private int _updateDelay = 100;
-        private int _numberOfPairs;
-        private int _mapSize;
+        private int _numberOfPairs = 500;
+        private int _mapSize = 15;
         private bool _runInBackground = true;
-        private int _maxMoves ;
+        private int _currentIndividual;
 
         public RelayCommand Run { get; set; }
 
         public int MaxMoves
         {
-            //get => _maxMoves;
             get => MapSize * MapSize;
-            set => SetField(ref _maxMoves, value);
         }
 
         public int MapSize
@@ -38,10 +35,26 @@ namespace UserControls.Models
             set => SetField(ref _mapSize, value);
         }
 
+        public int CurrentIndividual
+        {
+            get => _currentIndividual;
+            set
+            {
+                if (SetField(ref _currentIndividual, value))
+                {
+                    OnPropertyChanged(nameof(Individual));
+                }
+            }
+        }
+
         public int NumberOfPairs
         {
             get => _numberOfPairs;
-            set => SetField(ref _numberOfPairs, value);
+            set
+            {
+                if(SetField(ref _numberOfPairs, value))
+                    OnPropertyChanged(nameof(Individual));
+            }
         }
 
         public int UpdateDelay
@@ -62,11 +75,7 @@ namespace UserControls.Models
             set => SetField(ref _generation, value);
         }
 
-        public (int Current, int Total) Individual
-        {
-            get => _individual;
-            set => SetField(ref _individual, value);
-        }
+        public (int Current, int Total) Individual => (_currentIndividual, _numberOfPairs * 2);
 
         public int Moves
         {
@@ -80,7 +89,7 @@ namespace UserControls.Models
             set => SetField(ref _points, value);
         }
 
-        public MutationTechnique[] MutationTechniques => Enum.GetValues<MutationTechnique>();
+        public static MutationTechnique[] MutationTechniques => Enum.GetValues<MutationTechnique>();
 
         public MutationTechnique MutationTechnique
         {
@@ -103,14 +112,6 @@ namespace UserControls.Models
         public SimulationGuiViewModel(Action startSim)
         {
             Run = new RelayCommand(startSim);
-        }
-
-        public void SetParameters(ISimulationState state)
-        {
-            Generation = state.Generation;
-            //Individual = state.Individual;
-            Moves = state.Moves;
-            Points = state.Points;
         }
 
     }

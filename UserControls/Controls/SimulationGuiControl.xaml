@@ -11,7 +11,7 @@
              >
     <Grid>
         <Grid.Resources>
-            <converters:ValueTupeIntIntToStringConverter x:Key="IndividualConverter"/>
+            <converters:ValueTupleIntIntToStringConverter x:Key="IndividualConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>

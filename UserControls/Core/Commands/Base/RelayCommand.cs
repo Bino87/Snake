@@ -5,7 +5,7 @@ namespace UserControls.Core.Commands.Base
 {
     public class RelayCommand : ICommand
     {
-        private readonly Action _execute;
+        protected readonly Action _execute;
         private readonly Func<bool> _canExecute;
 
         public RelayCommand(Action execute) : this(execute, () => true)
@@ -19,12 +19,12 @@ namespace UserControls.Core.Commands.Base
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public virtual bool CanExecute(object parameter)
         {
             return _execute != null && _canExecute();
         }
 
-        public void Execute(object parameter)
+        public virtual void Execute(object parameter)
         {
             _execute();
         }

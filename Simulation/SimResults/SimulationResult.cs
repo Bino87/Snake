@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Simulation.Interfaces;
 
 namespace Simulation.SimResults
 {
@@ -8,6 +9,7 @@ namespace Simulation.SimResults
     {
         public int Generation { get; }
         public double Points { get; }
+
 
 
         public SimulationResult(int points, int generation, List<HashSet<int>> uniqueCells, int maxMovesWithoutFood, double ratio)
