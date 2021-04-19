@@ -92,7 +92,7 @@ namespace Simulation
             double right = turnDirections[TurnDirection.Right];
             double left = turnDirections[TurnDirection.Left];
 
-            double ratio = Math.Min(right, left) / Math.Max(right, left); 
+            double ratio = Math.Max(1,Math.Min(right, left)) / Math.Max(1,Math.Max(right, left)); 
 
             return new SimulationResult(_snake.Count - cInitialSnakeSize, Generation, _uniqueCells, _maxMovesWithoutFood, ratio);
         }

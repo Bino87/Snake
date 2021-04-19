@@ -15,7 +15,7 @@ namespace Simulation
         {
             _inputCount = networkInfo.InputCount;
             _neuralNetwork = new NeuralNetwork(networkInfo);
-            _result = new[] {new double[3]};
+            _result = new[] { new double[3] };
         }
 
         public NeuralNetwork GetNeuralNetwork() => _neuralNetwork;
@@ -43,7 +43,7 @@ namespace Simulation
                 int Y = parameters.Head.Y + y;
 
                 bool aa = X < 0 || Y < 0 || X >= parameters.MapSize || Y >= parameters.MapSize;
-                bool bb = X < 1 || Y < 1 || X >= parameters.MapSize -1 || Y >= parameters.MapSize -1;
+                bool bb = X == 1 || Y == 1 || X == parameters.MapSize - 1 || Y == parameters.MapSize - 1;
                 res[index++] = aa ? 1 : 0;
                 res[index++] = bb ? 1 : 0;
                 res[index++] = value;
@@ -82,7 +82,7 @@ namespace Simulation
             res[index++] = parameters.Food.Y == parameters.Head.Y ? 1 : 0;
             res[index++] = parameters.Food.Y < parameters.Head.Y ? 1 : 0;
 
-            for(int i = 0; i < _result[^1].Length; i++)
+            for (int i = 0; i < _result[^1].Length; i++)
             {
                 res[index++] = _result[^1][i];
             }
