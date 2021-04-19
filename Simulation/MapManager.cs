@@ -39,10 +39,15 @@ namespace Simulation
         {
             int generation = 0;
             InitializeAgents();
+            RunSimulation(onSimulationStart, generation);
+        }
+
+        private void RunSimulation(Action<double[][], int, int> onSimulationStart, int generation)
+        {
             do
             {
                 List<FitnessResults> results = new(GetFitnessResults(onSimulationStart, generation, _simStateParameters.RunInBackground));
-                
+
                 results.Sort();
 
                 double avg = CalculateAverage(results);
@@ -50,10 +55,13 @@ namespace Simulation
                 Debug.WriteLine(generation++ + " : " + avg.ToString("F4") + " : " + results.Max(x => x.Result.Points).ToString("F4"));
 
                 _agents = PropagateNewGeneration(results, _agents);
-                
+
                 //update
 
-            } while (true);
+                if(false)
+                    return;
+
+            } while(true);
         }
 
         private IEnumerable<FitnessResults> GetFitnessResults(Action<double[][], int, int> onSimulationStart, int generation, bool parallel)

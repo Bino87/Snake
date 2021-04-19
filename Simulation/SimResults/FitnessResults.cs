@@ -6,19 +6,18 @@ namespace Simulation.SimResults
     [DebuggerDisplay("{AgentID} : {_agentResults.Points}")]
     public class FitnessResults : IComparable
     {
-        private readonly int _agentIndex;
-        private readonly int _agentId;
+        public int AgentID { get; }
 
-        public int AgentID => _agentId;
-        public int AgentIndex => _agentIndex;
+        public int AgentIndex { get; }
+
         public SimulationResult Result => _agentResults;
 
         private  SimulationResult _agentResults { get; }
         public FitnessResults(int agentIndex, SimulationResult calculateFitness, int agentId)
         {
-            _agentIndex = agentIndex;
+            AgentIndex = agentIndex;
             _agentResults = calculateFitness;
-            _agentId = agentId;
+            AgentID = agentId;
         }
 
         public int CompareTo(object? obj)

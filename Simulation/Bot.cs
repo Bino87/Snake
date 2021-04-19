@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using Network;
 using Simulation.Core;
 using Simulation.Enums;
@@ -42,7 +41,6 @@ namespace Simulation
             _networkAgent = new NetworkAgent(networkInfo);
             _uniqueCells = new List<HashSet<int>>();
         }
-
 
         public SimulationResult Run(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> onCellsUpdated)
         {
@@ -136,13 +134,6 @@ namespace Simulation
             return (results, PickBest(results[^1]));
         }
 
-        private static Dictionary<TurnDirection, int> _lookup = new Dictionary<TurnDirection, int>()
-            {
-                {TurnDirection.None, 0},
-                {TurnDirection.Right, 0},
-                {TurnDirection.Left, 0},
-            };
-
         private TurnDirection PickBest(IReadOnlyList<double> result)
         {
             double max = double.MinValue;
@@ -173,8 +164,6 @@ namespace Simulation
 
                     _ => throw new ArgumentOutOfRangeException()
                 };
-            
-            //return Head.Direction.Turn(td);
         }
 
         private int Move(int movesSinceLastFood, List<(int X, int Y, MapCellType Status)> updateCellData, Direction direction)
@@ -213,58 +202,6 @@ namespace Simulation
             }
         }
 
-
-        string D(string[] before, string[] after)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            for(int i = 0; i < _mapSize; i++)
-            {
-                sb.Append(before[i]);
-                
-                sb.Append(" | ");
-                sb.AppendLine(after[i]);
-            }
-
-            return sb.ToString();
-        }
-
-        string[] D()
-        {
-            StringBuilder[] arr = new StringBuilder[_mapSize];
-
-            for(int i = 0; i < arr.Length; i++)
-            {
-                arr[i] = new StringBuilder();
-
-                for(int j = 0; j < _mapSize; j++)
-                {
-                    arr[i].Append(" ");
-                }
-            }
-
-            foreach(KeyValuePair<(int x, int y), MapCellType> k in _takenCells)
-            {
-                arr[k.Key.y][k.Key.x] = k.Value switch
-                    {
-
-                        MapCellType.Snake => 'S',
-                        MapCellType.Food => 'F',
-                        MapCellType.Head => 'H',
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-            }
-
-            string[] ret = new string[arr.Length];
-
-
-            for(int i = 0; i < ret.Length; i++)
-            {
-                ret[i] = arr[i].ToString();
-            }
-
-            return ret;
-        }
 
         private void EatFood(List<(int X, int Y, MapCellType Status)> updateCellData, Direction direction)
         {

@@ -17,7 +17,7 @@ namespace Simulation.SimResults
             int steps = uniqueCells[^1].Count;
 
             double a = points * maxMovesWithoutFood;
-            Points = (steps + a ) * ratio ;
+            Points = (steps + a) * ratio;
             Generation = generation;
 
         }
@@ -26,15 +26,8 @@ namespace Simulation.SimResults
         {
             if (obj is SimulationResult sr)
             {
-                //int genRes = Generation.CompareTo(sr.Generation);
-
-                //if (genRes == 0)
-                //{
-                    int i = Points.CompareTo(sr.Points);
-                    return i;
-                //}
-
-                //return genRes;
+                int i = Points.CompareTo(sr.Points);
+                return i;
             }
 
             return 0;
