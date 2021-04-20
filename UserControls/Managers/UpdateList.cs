@@ -6,9 +6,9 @@ namespace UserControls.Managers
 {
     public class UpdateList<T> : IList<T>
     {
-        private readonly ISimulationStateParameters _simulationGuiViewModel;
+        private readonly ISimulationUpdateManager _simulationGuiViewModel;
         private readonly List<T> _list;
-        public UpdateList(ISimulationStateParameters simulationGuiViewModel)
+        public UpdateList(ISimulationUpdateManager simulationGuiViewModel)
         {
             _simulationGuiViewModel = simulationGuiViewModel;
             _list = new List<T>();
@@ -16,7 +16,7 @@ namespace UserControls.Managers
 
         public void Add(T item)
         {
-            if (_simulationGuiViewModel.RunInBackground)
+            if (!_simulationGuiViewModel.ShouldUpdate)
                 return;
             _list.Add(item);
         }

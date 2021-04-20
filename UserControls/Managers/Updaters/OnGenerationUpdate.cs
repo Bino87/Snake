@@ -6,12 +6,12 @@ namespace UserControls.Managers.Updaters
 {
     public class OnGenerationUpdate : OnUpdateAbstract<IOnGenerationUpdateParameters>
     {
-        private IProgressGraphValueRegister _progressGraphValueRegister;
+        private readonly IProgressGraphValueRegister _progressGraphValueRegister;
         public override bool ShouldUpdate => true;
         public override IOnGenerationUpdateParameters Data { get; }
 
 
-        public OnGenerationUpdate(ISimulationStateParameters simulationGuiViewModel, IProgressGraphValueRegister progressGraphValueRegister) : base(simulationGuiViewModel)
+        public OnGenerationUpdate(ISimulationUpdateManager simulationUpdateManager, IProgressGraphValueRegister progressGraphValueRegister, ISimulationStateParameters simulationGuiViewModel) : base(simulationUpdateManager,simulationGuiViewModel)
         {
             Data = new OnGenerationUpdateParameters();
             _progressGraphValueRegister = progressGraphValueRegister;

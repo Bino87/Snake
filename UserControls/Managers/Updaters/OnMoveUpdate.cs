@@ -26,11 +26,11 @@ namespace UserControls.Managers.Updaters
             DelaySim();
         }
 
-        public OnMoveUpdate(ISimulationStateParameters simulationGuiViewModel, SnakeMapViewModel snakeMapViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel) : base(simulationGuiViewModel)
+        public OnMoveUpdate(ISimulationUpdateManager simulationUpdateManager, SnakeMapViewModel snakeMapViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel, ISimulationStateParameters simulationGuiViewModel) : base(simulationUpdateManager,simulationGuiViewModel)
         {
             _snakeMapViewModel = snakeMapViewModel;
             _neuralNetDisplayViewModel = neuralNetDisplayViewModel;
-            Data = new OnOnMoveUpdateParameters(simulationGuiViewModel);
+            Data = new OnOnMoveUpdateParameters(simulationUpdateManager);
         }
     }
 }

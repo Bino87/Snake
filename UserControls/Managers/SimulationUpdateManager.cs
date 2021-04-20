@@ -6,6 +6,7 @@ namespace UserControls.Managers
 {
     public class SimulationUpdateManager : ISimulationUpdateManager
     {
+        public bool ShouldUpdate { get; set; }
         public IUpdate<IOnGenerationUpdateParameters> OnGeneration { get; }
         public IUpdate<IOnMoveUpdateParameters> OnMove { get; }
         public IUpdate<IOnIndividualUpdateParameters> OnIndividual { get; }
@@ -13,9 +14,9 @@ namespace UserControls.Managers
 
         public SimulationUpdateManager(NeuralNetDisplayViewModel neuralNetDisplayViewModel, ISimulationStateParameters simulationGuiViewModel, SnakeMapViewModel snakeMapViewModel, IProgressGraphValueRegister progressGraphViewModel)
         {
-            OnMove = new OnMoveUpdate(simulationGuiViewModel, snakeMapViewModel, neuralNetDisplayViewModel);
-            OnIndividual = new OnIndividualUpdate(simulationGuiViewModel, neuralNetDisplayViewModel);
-            OnGeneration = new OnGenerationUpdate(simulationGuiViewModel, progressGraphViewModel);
+            OnMove = new OnMoveUpdate(this, snakeMapViewModel, neuralNetDisplayViewModel, simulationGuiViewModel);
+            OnIndividual = new OnIndividualUpdate(this, neuralNetDisplayViewModel, simulationGuiViewModel);
+            OnGeneration = new OnGenerationUpdate(this, progressGraphViewModel, simulationGuiViewModel);
         }
 
     }

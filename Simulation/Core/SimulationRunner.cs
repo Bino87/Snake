@@ -30,28 +30,28 @@ namespace Simulation.Core
             }
         }
 
-        public void PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults)
+        public void PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, int generation)
         {
             Bot[] res = new Bot[_agents.Length];
 
             int len = res.Length / 2;
             IMutator mutator = _simStateParameters.MutationTechnique.GetMutator(_simStateParameters.MutationChance, _simStateParameters.MutationRate);
 
-            for (int i = 0; i < len; i += 2)
+            Parallel.For(0, len / 2, (i) =>
             {
+                i = i * 2;
                 res[i] = _agents[fitnessResults[i].AgentIndex];
                 res[i + 1] = _agents[fitnessResults[i + 1].AgentIndex];
 
                 NeuralNetwork father = res[i].GetNeuralNetwork();
                 NeuralNetwork mother = res[i + 1].GetNeuralNetwork();
 
-                int generation = Math.Max(res[0].Generation, res[1].Generation);
 
                 (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
 
                 res[i + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
                 res[i + len + 1] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
-            }
+            });
 
             _agents = res;
         }
@@ -97,6 +97,9 @@ namespace Simulation.Core
                 for (int i = 0; i < _agents.Length; i++)
                 {
                     RunAgentSimulation(i);
+
+                    if (_simStateParameters.RunInBackground)
+                        _updateManager.ShouldUpdate = false;
                 }
             }
 
