@@ -44,7 +44,7 @@ namespace Simulation
         {
             do
             {
-                List<FitnessResults> results = new(GetFitnessResults( generation, _simStateParameters.RunInBackground));
+                List<FitnessResults> results = new(GetFitnessResults( generation));
 
                 results.Sort();
 
@@ -54,8 +54,9 @@ namespace Simulation
 
                 _agents = PropagateNewGeneration(results, _agents);
 
-                //updateManager
-                _updateManager.OnGeneration();
+                _updateManager.OnGeneration.Data.AverageFitnessValue = avg;
+                _updateManager.OnGeneration.Data.Generation = generation;
+                _updateManager.OnGeneration.Update();
 
                 if(false)
                     return;
@@ -63,15 +64,24 @@ namespace Simulation
             } while(true);
         }
 
-        private IEnumerable<FitnessResults> GetFitnessResults( int generation, bool parallel)
+        private IEnumerable<FitnessResults> GetFitnessResults( int generation)
         {
             FitnessResults[] results = new FitnessResults[_agents.Length];
             
             void RunLocal(int i)
             {
-                if (!parallel)
+                if (_updateManager.OnIndividual.ShouldUpdate)
                 {
-                    _updateManager.OnIndividual(_agents[i].GetNeuralNetwork().Weights, generation, i + 1);
+                    var weights = _agents[i].GetNeuralNetwork().Weights;
+
+                    foreach (double[] t in weights)
+                    {
+                        _updateManager.OnIndividual.Data.Weights.Add(t);
+                    }
+
+                    _updateManager.OnIndividual.Data.Generation = generation;
+                    _updateManager.OnIndividual.Data.IndividualIndex = i;
+                    _updateManager.OnIndividual.Update();
                 }
                 SimulationResult res = _agents[i].Run(_updateManager.OnMove);
 
@@ -84,7 +94,9 @@ namespace Simulation
             }
 
 
-            if (parallel)
+
+
+            if (_simStateParameters.RunInBackground)
             {
                 RunItParallel(0);
             }
@@ -98,7 +110,6 @@ namespace Simulation
 
                     if (_simStateParameters.RunInBackground)
                     {
-                        parallel = _simStateParameters.RunInBackground;
                         RunItParallel(i + 1);
                         break;
                     }

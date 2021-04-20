@@ -12,7 +12,6 @@ namespace Simulation.Interfaces
         double MutationChance { get; set; }
         double MutationRate { get; set; }
         int MaxMoves { get; }
-
         int CurrentIndividual { get; set; }
 
     }

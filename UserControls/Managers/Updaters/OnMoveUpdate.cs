@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using Simulation.Core;
-using Simulation.Enums;
+﻿using System.Windows;
 using Simulation.Interfaces;
 using UserControls.Models;
 
-namespace UserControls.Managers
+namespace UserControls.Managers.Updaters
 {
     public class OnMoveUpdate : OnUpdateAbstract<IOnMoveUpdateParameters>
     {
@@ -14,7 +11,7 @@ namespace UserControls.Managers
         public override IOnMoveUpdateParameters Data { get; }
         public override void Update()
         {
-            if(!ShouldUpdate)
+            if (!ShouldUpdate)
                 return;
 
             Application.Current?.Dispatcher.Invoke(() =>
@@ -34,32 +31,6 @@ namespace UserControls.Managers
             _snakeMapViewModel = snakeMapViewModel;
             _neuralNetDisplayViewModel = neuralNetDisplayViewModel;
             Data = new OnOnMoveUpdateParameters(simulationGuiViewModel);
-        }
-    }
-
-    public class OnOnMoveUpdateParameters : IOnMoveUpdateParameters
-    {
-        public OnOnMoveUpdateParameters(SimulationGuiViewModel simulationGuiViewModel)
-        {
-            VisionData = new UpdateList<VisionData>(simulationGuiViewModel);
-            CalculationResults = new UpdateList<double[]>(simulationGuiViewModel);
-            CellUpdateData = new UpdateList<CellUpdateData>(simulationGuiViewModel);
-            Points = 0;
-            Moves = 0;
-        }
-
-        public bool ShouldUpdate { get; set; }
-        public IList<VisionData> VisionData { get; }
-        public IList<double[]> CalculationResults { get; }
-        public IList<CellUpdateData> CellUpdateData { get; }
-        public int Points { get; set; }
-        public int Moves { get; set; }
-
-        public void Clear()
-        {
-            VisionData.Clear();
-            CalculationResults.Clear();
-            CellUpdateData.Clear();
         }
     }
 }

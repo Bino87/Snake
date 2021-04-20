@@ -2,7 +2,7 @@
 using Simulation.Interfaces;
 using UserControls.Models;
 
-namespace UserControls.Managers
+namespace UserControls.Managers.Updaters
 {
     public abstract class OnUpdateAbstract<T> : IUpdate<T>
     {
@@ -13,7 +13,7 @@ namespace UserControls.Managers
             _simulationGuiViewModel = simulationGuiViewModel;
         }
 
-        public bool ShouldUpdate => !_simulationGuiViewModel.RunInBackground;
+        public virtual bool ShouldUpdate => !_simulationGuiViewModel.RunInBackground;
 
         public abstract T Data { get; }
         public abstract void Update();

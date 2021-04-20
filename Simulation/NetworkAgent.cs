@@ -91,8 +91,6 @@ namespace Simulation
             return res;
         }
 
-        private static double Distance(int origin, int target) => Math.Sqrt(origin * origin + target * target);
-
         private static (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, NetworkAgentCalculationParameters parameters, IUpdate<IOnMoveUpdateParameters> updater)
         {
             double? seesFood = null;
@@ -103,13 +101,9 @@ namespace Simulation
             int y = parameters.Head.Y;
 
             int headX = parameters.Head.X;
-            int headY = parameters.Head.Y;  
+            int headY = parameters.Head.Y;
 
-            void Increment()
-            {
-                x += incX;
-                y += incY;
-            }
+            static double Distance(int origin, int target) => Math.Sqrt(origin * origin + target * target);
 
             void TryAdd(VisionCollisionType type)
             {
@@ -128,7 +122,6 @@ namespace Simulation
                                 double dist = Distance(headX - x, headY - y);
 
                                 seesFood = seesFood.HasValue ? Math.Min(dist, seesFood.Value) : dist;
-                                //private (double value, double seesSelf, double seesFood) GetValue(int incX, int incY, double divideBy, int mapSize, int headX, int headY, ICollection<VisionData> updater, Dictionary<(int, int), MapCellType> mapCellTypes)
                                 TryAdd(VisionCollisionType.Food);
                             }
                             break;
@@ -147,13 +140,14 @@ namespace Simulation
                     }
                 }
 
-                Increment();
+                x += incX;
+                y += incY;
                 value++;
             }
 
             TryAdd(VisionCollisionType.Normal);
 
-            return (value / parameters.MapSize,
+            return (value / Distance(0,parameters.MapSize),
                 seesSelf.HasValue ? seesSelf.Value / parameters.MapSize : 0,
                 seesFood.HasValue ? seesFood.Value / parameters.MapSize : 0);
         }

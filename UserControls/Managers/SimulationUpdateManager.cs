@@ -1,6 +1,5 @@
-﻿using System;
-using System.Windows;
-using Simulation.Interfaces;
+﻿using Simulation.Interfaces;
+using UserControls.Managers.Updaters;
 using UserControls.Models;
 
 namespace UserControls.Managers
@@ -10,7 +9,10 @@ namespace UserControls.Managers
         private readonly NeuralNetDisplayViewModel _neuralNetDisplayViewModel;
         private readonly SimulationGuiViewModel _simulationGuiViewModel;
 
+
+        public IUpdate<IOnGenerationUpdateParameters> OnGeneration { get; }
         public IUpdate<IOnMoveUpdateParameters> OnMove { get; }
+        public IUpdate<IOnIndividualUpdateParameters> OnIndividual { get; }
 
         public bool UpdateOnMove => !_simulationGuiViewModel.RunInBackground;
 
@@ -20,27 +22,9 @@ namespace UserControls.Managers
             _neuralNetDisplayViewModel = neuralNetDisplayViewModel;
             _simulationGuiViewModel = simulationGuiViewModel;
             OnMove = new OnMoveUpdate(simulationGuiViewModel, snakeMapViewModel, neuralNetDisplayViewModel);
+            OnIndividual = new OnIndividualUpdate(simulationGuiViewModel, neuralNetDisplayViewModel);
+            OnGeneration = new OnGenerationUpdate(simulationGuiViewModel);
         }
-
-        public void OnIndividual(double[][] weights, int generation, int i)
-        {
-            if (!UpdateOnMove)
-                return;
-
-            Application.Current?.Dispatcher.Invoke(() =>
-                {
-                    _neuralNetDisplayViewModel.UpdateWeights(weights);
-                    _simulationGuiViewModel.Generation = generation;
-                }
-            );
-
-        }
-
-        public void OnGeneration()
-        {
-            //throw new NotImplementedException();
-        }
-
 
     }
 }

@@ -6,7 +6,7 @@ namespace Simulation
 {
     internal class NetworkAgentCalculationParameters
     {
-        public NetworkAgentCalculationParameters(SnakeHead head, SnakePart tail, Food food, Dictionary<(int, int), MapCellType> lookUp, double mapSize)
+        public NetworkAgentCalculationParameters(SnakeHead head, SnakePart tail, Food food, Dictionary<(int, int), MapCellType> lookUp, int mapSize)
         {
             Head = head;
             Tail = tail;
@@ -15,7 +15,7 @@ namespace Simulation
             MapSize = mapSize;
         }
 
-        internal double MapSize { get; }
+        internal int MapSize { get; }
 
         internal SnakeHead Head { get; }
         internal SnakePart Tail { get; }

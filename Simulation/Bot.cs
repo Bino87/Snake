@@ -49,15 +49,15 @@ namespace Simulation
             _uniqueCells.Clear();
             _uniqueCells.Add(new HashSet<int>());
             _takenCells.Clear();
-            Dictionary<TurnDirection, double> turnDirections = new()
+            Dictionary<TurnDirection, int> turnDirections = new()
             {
                 { TurnDirection.Right, 0 },
                 { TurnDirection.None, 0 },
                 { TurnDirection.Left, 0 },
-
             };
+
             SpawnSnake(updater);
-            SpawnNewFood(updater);
+            SpawnNewFood();
             updater.Update();
             int movesSinceLastFood = 0;
 
@@ -65,8 +65,7 @@ namespace Simulation
             {
                 (double[][] calculationResults, TurnDirection turnDirection) = CalculateSnakeDirection(updater);
 
-
-                Update(updater, calculationResults, movesSinceLastFood);
+                UpdateVisual(updater, calculationResults, movesSinceLastFood);
 
                 turnDirections[turnDirection]++;
 
@@ -76,7 +75,7 @@ namespace Simulation
 
                 if (movePrognosis == MovePrognosis.Ok)
                 {
-                    movesSinceLastFood = Move(movesSinceLastFood, updater, direction);
+                    movesSinceLastFood = Move(movesSinceLastFood, direction);
                 }
                 else
                     break;
@@ -84,26 +83,30 @@ namespace Simulation
                 _uniqueCells[^1].Add(Head.Y * _mapSize + Head.X);
             }
 
-            double right = turnDirections[TurnDirection.Right];
-            double left = turnDirections[TurnDirection.Left];
+            double right = Math.Max(1,turnDirections[TurnDirection.Right]);
+            double left = Math.Max(1,turnDirections[TurnDirection.Left]);
 
-            double ratio = Math.Max(1, Math.Min(right, left)) / Math.Max(1, Math.Max(right, left));
+            double ratio = left == right /* no need to round since they are integers anyway*/ ? 1 : Math.Min(right, left) / Math.Max(right, left);
 
             return new SimulationResult(Generation, _uniqueCells, _maxMovesWithoutFood, ratio);
         }
 
-        private void Update(IUpdate<IOnMoveUpdateParameters> updater, IReadOnlyList<double[]> calculationResults, int movesSinceLastFood)
+        private void UpdateVisual(IUpdate<IOnMoveUpdateParameters> updater, IEnumerable<double[]> calculationResults, int movesSinceLastFood)
         {
             if (!updater.ShouldUpdate)
                 return;
             updater.Data.Moves = movesSinceLastFood;
             updater.Data.Points = _uniqueCells.Count - 1;
-
             updater.Data.CellUpdateData.Add(new CellUpdateData(_food.X, _food.Y, _food.Type));
 
-            for (int i = 0; i < calculationResults.Count; i++)
+            foreach (SnakePart snakePart in _snake)
             {
-                updater.Data.CalculationResults.Add(calculationResults[i]);
+                updater.Data.CellUpdateData.Add(new CellUpdateData(snakePart.X, snakePart.Y, snakePart.Type));
+            }
+
+            foreach (double[] t in calculationResults)
+            {
+                updater.Data.CalculationResults.Add(t);
             }
 
             updater.Update();
@@ -126,7 +129,7 @@ namespace Simulation
             }
         }
 
-        private void SpawnNewFood(IUpdate<IOnMoveUpdateParameters> updater)
+        private void SpawnNewFood()
         {
             int nextX = _rand.Next(0, _mapSize);
             int nextY = _rand.Next(0, _mapSize);
@@ -139,9 +142,6 @@ namespace Simulation
 
             _takenCells.Add((nextX, nextY), MapCellType.Food);
             _food = new Food(nextX, nextY);
-            if (updater.ShouldUpdate)
-                updater.Data.CellUpdateData.Add(new CellUpdateData(nextX, nextY, MapCellType.Food));
-
         }
 
         private (double[][] calculationResults, TurnDirection direction) CalculateSnakeDirection(IUpdate<IOnMoveUpdateParameters> updater)
@@ -150,7 +150,7 @@ namespace Simulation
             return (results, PickBest(results[^1]));
         }
 
-        private TurnDirection PickBest(IReadOnlyList<double> result)
+        private static TurnDirection PickBest(IReadOnlyList<double> result)
         {
             double max = double.MinValue;
             int index = 0;
@@ -167,9 +167,6 @@ namespace Simulation
                     index = i;
                     max = result[i];
                 }
-
-                if (max == result[i])
-                    index = i;
             }
 
             return index switch
@@ -182,23 +179,21 @@ namespace Simulation
             };
         }
 
-        private int Move(int movesSinceLastFood, IUpdate<IOnMoveUpdateParameters> updater, Direction direction)
+        private int Move(int movesSinceLastFood, Direction direction)
         {
             (int x, int y) = Head.GetPositionAfterMove(direction);
 
             if (x == _food.X && y == _food.Y)
             {
-                EatFood(updater, direction);
+                EatFood(direction);
                 return 0;
             }
-            else
-            {
-                Move(updater, direction);
-                return movesSinceLastFood + 1;
-            }
+
+            Move(direction);
+            return movesSinceLastFood + 1;
         }
 
-        private void Move(IUpdate<IOnMoveUpdateParameters> updater, Direction direction)
+        private void Move(Direction direction)
         {
 
             for (int i = 0; i < _snake.Count; i++)
@@ -212,27 +207,24 @@ namespace Simulation
                     _takenCells.Remove(moveCoordinates); //seams like there is a bug here somewhere
                 _takenCells.Add(moveCoordinates, snakePart.Type);
 
-                if (updater.ShouldUpdate)
-                    updater.Data.CellUpdateData.Add(new CellUpdateData(snakePart.X, snakePart.Y, snakePart.Type));
 
                 direction = previous;
             }
         }
 
-
-        private void EatFood(IUpdate<IOnMoveUpdateParameters> updater, Direction direction)
+        private void EatFood(Direction direction)
         {
             int x = Tail.X;
             int y = Tail.Y;
             Direction d = Tail.Direction;
 
             _takenCells.Remove((_food.X, _food.Y));
-            Move(updater, direction);
+            Move(direction);
             _snake.Add(new SnakePart(x, y, d));
             _takenCells.Add((x, y), MapCellType.Snake);
 
             _uniqueCells.Add(new HashSet<int>());
-            SpawnNewFood(updater);
+            SpawnNewFood();
         }
 
         private MovePrognosis GetMoveResults(Direction direction)
