@@ -11,11 +11,11 @@ namespace UserControls.Managers
         public IUpdate<IOnIndividualUpdateParameters> OnIndividual { get; }
 
 
-        public SimulationUpdateManager(NeuralNetDisplayViewModel neuralNetDisplayViewModel, ISimulationStateParameters simulationGuiViewModel, SnakeMapViewModel snakeMapViewModel)
+        public SimulationUpdateManager(NeuralNetDisplayViewModel neuralNetDisplayViewModel, ISimulationStateParameters simulationGuiViewModel, SnakeMapViewModel snakeMapViewModel, IProgressGraphValueRegister progressGraphViewModel)
         {
             OnMove = new OnMoveUpdate(simulationGuiViewModel, snakeMapViewModel, neuralNetDisplayViewModel);
             OnIndividual = new OnIndividualUpdate(simulationGuiViewModel, neuralNetDisplayViewModel);
-            OnGeneration = new OnGenerationUpdate(simulationGuiViewModel);
+            OnGeneration = new OnGenerationUpdate(simulationGuiViewModel, progressGraphViewModel);
         }
 
     }

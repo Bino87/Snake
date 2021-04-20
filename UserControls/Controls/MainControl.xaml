@@ -10,9 +10,10 @@
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
 
         <controls:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
-
-        <controls:SimulationGuiControl  DataContext="{Binding Path=SimulationGuiViewModel}" ></controls:SimulationGuiControl>
-
+        <StackPanel>
+            <controls:SimulationGuiControl  DataContext="{Binding Path=SimulationGuiViewModel}" />
+            <controls:ProgressGraphControl DataContext="{Binding Path=ProgressGraph}" VerticalAlignment="Bottom"/>
+        </StackPanel>
         <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
     </StackPanel>
 </UserControl>
