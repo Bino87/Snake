@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Simulation.Core;
 using Simulation.Interfaces;
-using UserControls.Models;
 
 namespace UserControls.Managers.Updaters
 {
     public class OnOnMoveUpdateParameters : IOnMoveUpdateParameters
     {
-        public OnOnMoveUpdateParameters(SimulationGuiViewModel simulationGuiViewModel)
+        public OnOnMoveUpdateParameters(ISimulationStateParameters simulationGuiViewModel)
         {
             VisionData = new UpdateList<VisionData>(simulationGuiViewModel);
             CalculationResults = new UpdateList<double[]>(simulationGuiViewModel);

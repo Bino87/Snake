@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Simulation.Core;
 using Simulation.Enums;
 
-namespace Simulation
+namespace Simulation.Core
 {
     internal class NetworkAgentCalculationParameters
     {

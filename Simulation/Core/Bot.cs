@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Network;
-using Simulation.Core;
 using Simulation.Enums;
 using Simulation.Extensions;
 using Simulation.Interfaces;
 using Simulation.SimResults;
 
-namespace Simulation
+namespace Simulation.Core
 {
 
     [DebuggerDisplay("{Id} : {Generation}")]

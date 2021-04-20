@@ -26,7 +26,7 @@ namespace UserControls.Managers.Updaters
             DelaySim();
         }
 
-        public OnMoveUpdate(SimulationGuiViewModel simulationGuiViewModel, SnakeMapViewModel snakeMapViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel) : base(simulationGuiViewModel)
+        public OnMoveUpdate(ISimulationStateParameters simulationGuiViewModel, SnakeMapViewModel snakeMapViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel) : base(simulationGuiViewModel)
         {
             _snakeMapViewModel = snakeMapViewModel;
             _neuralNetDisplayViewModel = neuralNetDisplayViewModel;

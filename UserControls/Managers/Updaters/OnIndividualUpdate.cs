@@ -8,7 +8,7 @@ namespace UserControls.Managers.Updaters
     {
         private readonly NeuralNetDisplayViewModel _neuralNetDisplayViewModel;
 
-        public OnIndividualUpdate(SimulationGuiViewModel simulationGuiViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel) : base(simulationGuiViewModel)
+        public OnIndividualUpdate(ISimulationStateParameters simulationGuiViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel) : base(simulationGuiViewModel)
         {
             _neuralNetDisplayViewModel = neuralNetDisplayViewModel;
             Data = new OnIndividualUpdateParameters(simulationGuiViewModel);
@@ -24,7 +24,7 @@ namespace UserControls.Managers.Updaters
             Application.Current?.Dispatcher.Invoke(() =>
                 {
                     _neuralNetDisplayViewModel.UpdateWeights(Data.Weights);
-                    _simulationGuiViewModel.Generation = Data.Generation;
+                    _simulationGuiViewModel.CurrentIndividual = Data.IndividualIndex;
                 }
             );
 

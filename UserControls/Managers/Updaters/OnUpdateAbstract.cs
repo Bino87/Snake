@@ -1,14 +1,13 @@
 ﻿using System.Threading;
 using Simulation.Interfaces;
-using UserControls.Models;
 
 namespace UserControls.Managers.Updaters
 {
     public abstract class OnUpdateAbstract<T> : IUpdate<T>
     {
-        protected SimulationGuiViewModel _simulationGuiViewModel;
+        protected ISimulationStateParameters _simulationGuiViewModel;
 
-        protected OnUpdateAbstract(SimulationGuiViewModel simulationGuiViewModel)
+        protected OnUpdateAbstract(ISimulationStateParameters simulationGuiViewModel)
         {
             _simulationGuiViewModel = simulationGuiViewModel;
         }

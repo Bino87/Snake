@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UserControls.Models;
+using Simulation.Interfaces;
 
 namespace UserControls.Managers
 {
     public class UpdateList<T> : IList<T>
     {
-        private readonly SimulationGuiViewModel _simulationGuiViewModel;
+        private readonly ISimulationStateParameters _simulationGuiViewModel;
         private readonly List<T> _list;
-        public UpdateList(SimulationGuiViewModel simulationGuiViewModel)
+        public UpdateList(ISimulationStateParameters simulationGuiViewModel)
         {
             _simulationGuiViewModel = simulationGuiViewModel;
             _list = new List<T>();

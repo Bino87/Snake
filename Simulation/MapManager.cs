@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Network;
-using Network.Mutators;
+using Simulation.Core;
+using Simulation.Extensions;
 using Simulation.Interfaces;
 using Simulation.SimResults;
 
@@ -12,153 +10,46 @@ namespace Simulation
 {
     public class MapManager
     {
-        private Bot[] _agents;
-        private readonly ISimulationStateParameters _simStateParameters;
+
         private readonly ISimulationUpdateManager _updateManager;
         private readonly NetworkInfo _networkInfo;
+        private readonly SimulationRunner _simulationRunner;
 
-        public MapManager( ISimulationStateParameters simStateParameters, NetworkInfo networkInfo, ISimulationUpdateManager updateManager)
+        public MapManager(ISimulationStateParameters simStateParameters, NetworkInfo networkInfo, ISimulationUpdateManager updateManager)
         {
-            _simStateParameters = simStateParameters;
             _networkInfo = networkInfo;
+            _simulationRunner = new SimulationRunner(simStateParameters, updateManager);
             _updateManager = updateManager;
         }
 
-        private void InitializeAgents()
-        {
-            _agents = new Bot[_simStateParameters.NumberOfPairs * 2];
-            for (int i = 0; i < _agents.Length; i++)
-            {
-                _agents[i] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, _networkInfo, 1);
-            }
-        }
+
 
         public void Run()
         {
-            int generation = 0;
-            InitializeAgents();
-            RunSimulation( generation);
+            _updateManager.OnGeneration.Data.Generation = 0;
+            _simulationRunner.InitializeAgents(_networkInfo);
+            RunSimulation();
         }
 
-        private void RunSimulation(int generation)
+        private void RunSimulation()
         {
             do
             {
-                List<FitnessResults> results = new(GetFitnessResults( generation));
+                List<FitnessResults> results = new(_simulationRunner.GetFitnessResults());
 
                 results.Sort();
 
-                double avg = CalculateAverage(results);
+                double avg = results.CalculateAverageResult();
 
-                Debug.WriteLine(generation++ + " : " + avg.ToString("F4") + " : " + results.Max(x => x.Result.Points).ToString("F4"));
+                _simulationRunner.PropagateNewGeneration(results);
 
-                _agents = PropagateNewGeneration(results, _agents);
+                _updateManager.OnGeneration.UpdateOnGeneration(avg);
 
-                _updateManager.OnGeneration.Data.AverageFitnessValue = avg;
-                _updateManager.OnGeneration.Data.Generation = generation;
-                _updateManager.OnGeneration.Update();
 
-                if(false)
+                if (false)
                     return;
 
-            } while(true);
-        }
-
-        private IEnumerable<FitnessResults> GetFitnessResults( int generation)
-        {
-            FitnessResults[] results = new FitnessResults[_agents.Length];
-            
-            void RunLocal(int i)
-            {
-                if (_updateManager.OnIndividual.ShouldUpdate)
-                {
-                    var weights = _agents[i].GetNeuralNetwork().Weights;
-
-                    foreach (double[] t in weights)
-                    {
-                        _updateManager.OnIndividual.Data.Weights.Add(t);
-                    }
-
-                    _updateManager.OnIndividual.Data.Generation = generation;
-                    _updateManager.OnIndividual.Data.IndividualIndex = i;
-                    _updateManager.OnIndividual.Update();
-                }
-                SimulationResult res = _agents[i].Run(_updateManager.OnMove);
-
-                results[i] = new FitnessResults(i, res, _agents[i].Id);
-            }
-
-            void RunItParallel(int i)
-            {
-                Parallel.For(i, _agents.Length, RunLocal);
-            }
-
-
-
-
-            if (_simStateParameters.RunInBackground)
-            {
-                RunItParallel(0);
-            }
-            else
-            {
-                for (int i = 0; i < _agents.Length; i++)
-                {
-                    RunLocal(i);
-
-                    _simStateParameters.CurrentIndividual = i;
-
-                    if (_simStateParameters.RunInBackground)
-                    {
-                        RunItParallel(i + 1);
-                        break;
-                    }
-                }
-            }
-
-
-            return results;
-        }
-
-        private static double CalculateAverage(IReadOnlyList<FitnessResults> results)
-        {
-            int len = (int)(results.Count * .5);
-            double total = 0;
-
-            for (int i = 0; i < len; i++)
-            {
-                total += results[i].Result.Points;
-            }
-
-            total /= len;
-            return total;
-        }
-
-        private Bot[] PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, IReadOnlyList<Bot> agents)
-
-        {
-            Bot[] res = new Bot[agents.Count];
-
-            int len = res.Length / 2;
-            IMutator mutator = new StringMutator(_simStateParameters.MutationChance, _simStateParameters.MutationRate);
-
-            for (int i = 0; i < len; i += 2)
-            {
-                res[i] = agents[fitnessResults[i].AgentIndex];
-                res[i + 1] = agents[fitnessResults[i + 1].AgentIndex];
-
-                NeuralNetwork father = res[i].GetNeuralNetwork();
-                NeuralNetwork mother = res[i + 1].GetNeuralNetwork();
-
-                int generation = Math.Max(res[0].Generation, res[1].Generation);
-
-                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
-
-                res[i + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
-                res[i + len + 1] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
-            }
-
-            return res;
+            } while (true);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Simulation.Interfaces;
-using UserControls.Models;
 
 namespace UserControls.Managers.Updaters
 {
@@ -11,7 +10,7 @@ namespace UserControls.Managers.Updaters
         public override IOnGenerationUpdateParameters Data { get; }
 
 
-        public OnGenerationUpdate(SimulationGuiViewModel simulationGuiViewModel) : base(simulationGuiViewModel)
+        public OnGenerationUpdate(ISimulationStateParameters simulationGuiViewModel) : base(simulationGuiViewModel)
         {
             Data = new OnGenerationUpdateParameters();
         }

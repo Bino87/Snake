@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Network;
-using Simulation.Core;
 using Simulation.Enums;
 using Simulation.Interfaces;
 
-namespace Simulation
+namespace Simulation.Core
 {
     internal class NetworkAgent
     {
@@ -29,7 +27,6 @@ namespace Simulation
             return _result;
         }
 
-        //private double[] GetInputValues(Direction headDirection, Direction tailDirection, int mapSize, int foodX, int foodY, ICollection<VisionData> updater, Dictionary<(int, int), MapCellType> mapCellTypes)
         private double[] GetInputValues(NetworkAgentCalculationParameters parameters, IUpdate<IOnMoveUpdateParameters> updater)
         {
             double[] res = new double[_inputCount];
