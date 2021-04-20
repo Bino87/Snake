@@ -5,8 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Network;
 using Network.Mutators;
-using Simulation.Core;
-using Simulation.Enums;
 using Simulation.Interfaces;
 using Simulation.SimResults;
 
@@ -14,16 +12,16 @@ namespace Simulation
 {
     public class MapManager
     {
-        private readonly Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> _updateCallback;
         private Bot[] _agents;
-        private ISimulationStateParameters _simStateParameters;
-        private NetworkInfo _networkInfo;
+        private readonly ISimulationStateParameters _simStateParameters;
+        private readonly ISimulationUpdateManager _updateManager;
+        private readonly NetworkInfo _networkInfo;
 
-        public MapManager(Action<List<(int X, int Y, MapCellType Status)>, double[][], VisionData[]> updateCallback, ISimulationStateParameters simStateParameters, NetworkInfo networkInfo)
+        public MapManager( ISimulationStateParameters simStateParameters, NetworkInfo networkInfo, ISimulationUpdateManager updateManager)
         {
             _simStateParameters = simStateParameters;
             _networkInfo = networkInfo;
-            _updateCallback = updateCallback;
+            _updateManager = updateManager;
         }
 
         private void InitializeAgents()
@@ -35,18 +33,18 @@ namespace Simulation
             }
         }
 
-        public void Run(Action<double[][], int, int> onSimulationStart)
+        public void Run()
         {
             int generation = 0;
             InitializeAgents();
-            RunSimulation(onSimulationStart, generation);
+            RunSimulation( generation);
         }
 
-        private void RunSimulation(Action<double[][], int, int> onSimulationStart, int generation)
+        private void RunSimulation(int generation)
         {
             do
             {
-                List<FitnessResults> results = new(GetFitnessResults(onSimulationStart, generation, _simStateParameters.RunInBackground));
+                List<FitnessResults> results = new(GetFitnessResults( generation, _simStateParameters.RunInBackground));
 
                 results.Sort();
 
@@ -56,7 +54,8 @@ namespace Simulation
 
                 _agents = PropagateNewGeneration(results, _agents);
 
-                //update
+                //updateManager
+                _updateManager.OnGeneration();
 
                 if(false)
                     return;
@@ -64,17 +63,19 @@ namespace Simulation
             } while(true);
         }
 
-        private IEnumerable<FitnessResults> GetFitnessResults(Action<double[][], int, int> onSimulationStart, int generation, bool parallel)
+        private IEnumerable<FitnessResults> GetFitnessResults( int generation, bool parallel)
         {
             FitnessResults[] results = new FitnessResults[_agents.Length];
             
             void RunLocal(int i)
             {
                 if (!parallel)
-                    onSimulationStart?.Invoke(_agents[i].GetNeuralNetwork().Weights, generation, i + 1);
-                SimulationResult res = _agents[i].Run(parallel ? null : _updateCallback);
+                {
+                    _updateManager.OnIndividual(_agents[i].GetNeuralNetwork().Weights, generation, i + 1);
+                }
+                SimulationResult res = _agents[i].Run(_updateManager.OnMove);
 
-                results[i] = new FitnessResults(i, res, _agents[i].ID);
+                results[i] = new FitnessResults(i, res, _agents[i].Id);
             }
 
             void RunItParallel(int i)

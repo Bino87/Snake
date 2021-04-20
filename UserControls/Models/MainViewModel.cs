@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,7 +9,7 @@ using Simulation;
 using Simulation.Core;
 using Simulation.Enums;
 using UserControls.Core.Base;
-using UserControls.Objects.SnakeDisplay;
+using UserControls.Managers;
 
 namespace UserControls.Models
 {
@@ -19,7 +18,7 @@ namespace UserControls.Models
         public SnakeMapViewModel SnakeMapViewModel { get; set; }
         public SimulationGuiViewModel SimulationGuiViewModel { get; set; }
         public NeuralNetDisplayViewModel NeuralNetDisplay { get; set; }
-        private MapManager mm;
+        private readonly MapManager _mm;
         
 
         public MainViewModel()
@@ -34,28 +33,10 @@ namespace UserControls.Models
                 new LayerInfo(new ReLu(), 12),
                 new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
-            mm = new MapManager(OnUpdate, SimulationGuiViewModel, ni);
+            _mm = new MapManager(SimulationGuiViewModel, ni, new SimulationUpdateManager(NeuralNetDisplay, SimulationGuiViewModel, SnakeMapViewModel));
 
         }
-
-        private void OnUpdate(List<(int X, int Y, MapCellType Status)> cellUpdateList, double[][] values, VisionData[] visionData)
-        {
-
-            Application.Current?.Dispatcher.Invoke(() =>
-            {
-                SnakeMapViewModel.SetCells(cellUpdateList, visionData, SimulationGuiViewModel.MapSize);
-
-                if (values is not null)
-                    NeuralNetDisplay.OnResultsCalculated(values);
-            });
-            DeleySim();
-        }
-
-        void DeleySim()
-        {
-            Thread.Sleep(SimulationGuiViewModel.UpdateDelay);
-        }
-
+        
         private void StartSimulation()
         {
             CancellationTokenSource source = new();
@@ -64,7 +45,7 @@ namespace UserControls.Models
                                 {
                                     try
                                     {
-                                        mm.Run(OnSimulationStart);
+                                        _mm.Run();
                                     }
                                     catch (Exception exception)
                                     {
@@ -73,15 +54,5 @@ namespace UserControls.Models
                                 }, tok);
         }
 
-        private void OnSimulationStart(double[][] obj, int generation, int individual)
-        {
-            Application.Current?.Dispatcher.Invoke(() =>
-            {
-                NeuralNetDisplay.UpdateWeights(obj);
-                SimulationGuiViewModel.Generation = generation;
-            }
-            );
-            DeleySim();
-        }
     }
 }

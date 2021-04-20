@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Simulation.Core;
-using Simulation.Enums;
 using Simulation.Interfaces;
 using UserControls.Constants;
 using UserControls.Core.Base;
@@ -20,7 +19,7 @@ namespace UserControls.Models
             MapItems = new ObservableCollection<IMapItem>();
         }
 
-        public void CreateVisionLines(VisionData[] visionData, int mapSize)
+        public void CreateVisionLines(IList<VisionData> visionData, int mapSize)
         {
             if (visionData is null)
                 return;
@@ -28,27 +27,27 @@ namespace UserControls.Models
             double cellSize = Cons.cMapSize / mapSize;   // size of each tile;
             double midPoint = cellSize / 2;                     //midpoint offset.
 
-            for (int i = 0; i < visionData.Length; i++)
+            for (int i = 0; i < visionData.Count; i++)
             {
                 CellVision cv = new(visionData[i], cellSize, midPoint);
                 MapItems.Add(cv);
             }
         }
 
-        private void SetCells(List<(int X, int Y, MapCellType Status)> cellUpdateList, int mapSize)
+        private void SetCells(IList<CellUpdateData> cellUpdateList, int mapSize)
         {
             double size = Cons.cMapSize / mapSize;
 
             for (int i = 0; i < cellUpdateList.Count; i++)
             {
-                (int x, int y, MapCellType cellType) = cellUpdateList[i];
-                MapCell mc = new(x * size, y * size, size, size, cellType);
+                CellUpdateData item = cellUpdateList[i];
+                MapCell mc = new(item.X * size, item.Y * size, size, size, item.CellType);
 
                 MapItems.Add(mc);
             }
         }
 
-        public void SetCells(List<(int X, int Y, MapCellType Status)> cellUpdateList, VisionData[] visionData, int mapSize)
+        public void SetCells(IList<CellUpdateData> cellUpdateList, IList<VisionData> visionData, int mapSize)
         {
             MapItems.Clear();
             SetCells(cellUpdateList, mapSize);

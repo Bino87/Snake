@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Network;
 using UserControls.Constants;
 using UserControls.Core.Base;
@@ -87,9 +88,9 @@ namespace UserControls.Models
             }
         }
 
-    public void OnResultsCalculated(double[][] results)
+    public void OnResultsCalculated(IList<double[]> results)
     {
-        for (int i = 0; i < results.Length; i++)
+        for (int i = 0; i < results.Count; i++)
         {
             for (int j = 0; j < results[i].Length; j++)
             {
