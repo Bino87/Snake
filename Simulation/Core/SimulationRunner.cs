@@ -97,12 +97,6 @@ namespace Simulation.Core
                 for (int i = 0; i < _agents.Length; i++)
                 {
                     RunAgentSimulation(i);
-
-                    if (!_simStateParameters.RunInBackground)
-                        continue;
-
-                    RunItParallel(i + 1);
-                    break;
                 }
             }
 
