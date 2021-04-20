@@ -98,7 +98,7 @@ namespace Simulation.Core
                 {
                     RunAgentSimulation(i);
 
-                    if (_simStateParameters.RunInBackground)
+                    if (_simStateParameters.RunInBackground && _updateManager.ShouldUpdate)
                         _updateManager.ShouldUpdate = false;
                 }
             }
