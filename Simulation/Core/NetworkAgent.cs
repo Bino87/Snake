@@ -114,9 +114,9 @@ namespace Simulation.Core
                 int tempY = y + incY;
 
                 if (tempX < 0) return false;
-                if (tempX > parameters.MapSize) return false;
+                if (tempX >= parameters.MapSize) return false;
                 if (tempY < 0) return false;
-                if (tempY > parameters.MapSize) return false;
+                if (tempY >= parameters.MapSize) return false;
 
                 x = tempX;
                 y = tempY;

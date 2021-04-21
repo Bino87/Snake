@@ -39,15 +39,13 @@
                     </DataTemplate>
 
                     <DataTemplate x:Key="{x:Static constants:Cons.cVisionDataTemplate}" DataType="objects:CellVision">
-                        <Line StrokeThickness="1" Stroke="{Binding Path=VisionCollisionType, Converter={StaticResource MapVisionColorConverter}, Mode=OneWay}" 
-                              X1="{Binding Path=X1}"
-                              X2="{Binding Path=X2}"
-                              Y1="{Binding Path=Y1}"
-                              Y2="{Binding Path=Y2}"
-                              />
+                            <Line StrokeThickness="1" Stroke="{Binding Path=VisionCollisionType, Converter={StaticResource MapVisionColorConverter}, Mode=OneWay}" 
+                                  X1="{Binding Path=X1}"
+                                  X2="{Binding Path=X2}"
+                                  Y1="{Binding Path=Y1}"
+                                  Y2="{Binding Path=Y2}"
+                            />
                     </DataTemplate>
-
-
                 </ResourceDictionary>
             </ItemsControl.Resources>
             <ItemsControl.ItemsPanel>

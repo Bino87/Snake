@@ -20,19 +20,13 @@ namespace UserControls.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is VisionCollisionType vct)
+            return value switch
             {
-                return vct switch
-                    {
-                        VisionCollisionType.Normal => Normal,
-                        VisionCollisionType.Self => Self,
-                        VisionCollisionType.Food => Food,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-            }
-
-
-            return null;
+                VisionCollisionType.Normal => Normal,
+                VisionCollisionType.Self => Self,
+                VisionCollisionType.Food => Food,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

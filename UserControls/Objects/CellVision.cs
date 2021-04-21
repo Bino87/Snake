@@ -23,7 +23,6 @@ namespace UserControls.Objects
         public CellVision(VisionData visionData, double size, double cellSize)
         {
             VisionCollisionType = visionData.VisionCollisionType;
-            cellSize = 0;
             X1 = size * visionData.X1 + cellSize;
             Y1 = size * visionData.Y1 + cellSize;
             X2 = size * visionData.X2 + cellSize;
