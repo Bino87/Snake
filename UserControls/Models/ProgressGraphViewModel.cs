@@ -38,10 +38,11 @@ namespace UserControls.Models
                 DataSource.Clear(); 
                 for (int i = 1; i < _results.Count; i++)
                 {
-                    double x1 = (i - 1d) / _results.Count * Cons.cProgressGraphWidth;
-                    double x2 = ((double)i) / _results.Count * Cons.cProgressGraphWidth;
-                    double y1 = Cons.cProgressGraphHeight - InverseLerp(_results[i - 1]) * Cons.cProgressGraphHeight;
-                    double y2 = Cons.cProgressGraphHeight - InverseLerp(_results[i]) * Cons.cProgressGraphHeight;
+                    double x1 = InverseLerp(i-1,0, _results.Count - 1)* Cons.cProgressGraphWidth;
+                    double x2 = InverseLerp(i,  0, _results.Count - 1)* Cons.cProgressGraphWidth;
+                    //double x2 = ((double)i) / _results.Count * Cons.cProgressGraphWidth;
+                    double y1 = Cons.cProgressGraphHeight - InverseLerp(_results[i - 1],_min,_max) * Cons.cProgressGraphHeight;
+                    double y2 = Cons.cProgressGraphHeight - InverseLerp(_results[i]    ,_min,_max) * Cons.cProgressGraphHeight;
 
                     ProgressGraphLine pgl = new(x1, x2, y1, y2);
                     DataSource.Add(pgl);
@@ -49,13 +50,13 @@ namespace UserControls.Models
             }
         }
 
-        double InverseLerp(double value)
+        double InverseLerp(double value, double min, double max)
         {
-            if (value <= _min)
+            if (value <= min)
                 return 0;
-            if (value >= _max)
+            if (value >= max)
                 return 1;
-            return (value - _min) / (_max - _min);
+            return (value - min) / (max - min);
         }
     }
 }

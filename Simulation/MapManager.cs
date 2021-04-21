@@ -42,7 +42,7 @@ namespace Simulation
 
                 results.Sort();
 
-                double avg = results.CalculateAverageResult();
+                double avg = results[results.Count / 2].Result.Points;// results.CalculateAverageResult();
 
                 _simulationRunner.PropagateNewGeneration(results, _simStateParameters.Generation);
 

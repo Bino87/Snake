@@ -19,7 +19,12 @@ namespace Simulation.SimResults
             double a = points * maxMovesWithoutFood;
             Points = (steps + a) * ratio;
             Generation = generation;
+        }
 
+        private SimulationResult(double points, int generation)
+        {
+            Points = points;
+            Generation = generation;
         }
 
         public int CompareTo(object? obj)
@@ -32,5 +37,7 @@ namespace Simulation.SimResults
 
             return 0;
         }
+
+        public static SimulationResult operator +(SimulationResult sr1, SimulationResult sr2) => new(sr1.Points + sr2.Points, sr1.Generation);
     }
 }

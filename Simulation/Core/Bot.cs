@@ -44,7 +44,18 @@ namespace Simulation.Core
 
         public SimulationResult Run(IUpdate<IOnMoveUpdateParameters> updater)
         {
+            SimulationResult res = new SimulationResult();
 
+            for (int i = 0; i < 5; i++)
+            {
+                res+=  GetResultsFromSimulation(updater);
+            }
+
+            return res;
+        }
+
+        private SimulationResult GetResultsFromSimulation(IUpdate<IOnMoveUpdateParameters> updater)
+        {
             _uniqueCells.Clear();
             _uniqueCells.Add(new HashSet<int>());
             _takenCells.Clear();

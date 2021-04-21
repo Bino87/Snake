@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics;
+using System.IO.Compression;
+using System.Net.Http.Headers;
 using Simulation.Core;
 using Simulation.Enums;
 using Simulation.Interfaces;
+using UserControls.Constants;
 using UserControls.Core.Base;
 
 namespace UserControls.Objects
@@ -15,11 +18,12 @@ namespace UserControls.Objects
         public double X1 { get; set; }
         public double Y1 { get; set; }
         public double X2 { get; set; }
-        public double Y2 { get; }
+        public double Y2 { get; set; }
 
         public CellVision(VisionData visionData, double size, double cellSize)
         {
             VisionCollisionType = visionData.VisionCollisionType;
+            cellSize = 0;
             X1 = size * visionData.X1 + cellSize;
             Y1 = size * visionData.Y1 + cellSize;
             X2 = size * visionData.X2 + cellSize;

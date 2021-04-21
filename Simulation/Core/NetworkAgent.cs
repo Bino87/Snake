@@ -108,7 +108,25 @@ namespace Simulation.Core
                     updater.Data.VisionData.Add(new VisionData(type, headX, x, headY, y));
             }
 
-            while (x >= 0 && x < parameters.MapSize && y >= 0 && y < parameters.MapSize)
+            bool ShouldKeepRuning()
+            {
+                int tempX = x + incX;
+                int tempY = y + incY;
+
+                if (tempX < 0) return false;
+                if (tempX > parameters.MapSize) return false;
+                if (tempY < 0) return false;
+                if (tempY > parameters.MapSize) return false;
+
+                x = tempX;
+                y = tempY;
+
+                return true;
+            }
+
+
+            //while (x + incX >= 0 && x + incX <= parameters.MapSize && y + incY >= 0 && y + incY <= parameters.MapSize)
+            while (ShouldKeepRuning())
             {
                 if (parameters.LookUp.TryGetValue((x, y), out MapCellType item))
                 {
@@ -137,14 +155,13 @@ namespace Simulation.Core
                     }
                 }
 
-                x += incX;
-                y += incY;
+
                 value++;
             }
 
             TryAdd(VisionCollisionType.Normal);
 
-            return (value / Distance(0,parameters.MapSize),
+            return (value / Distance(0, parameters.MapSize),
                 seesSelf.HasValue ? seesSelf.Value / parameters.MapSize : 0,
                 seesFood.HasValue ? seesFood.Value / parameters.MapSize : 0);
         }
