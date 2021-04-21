@@ -48,12 +48,7 @@ namespace Simulation.Core
             _uniqueCells.Clear();
             _uniqueCells.Add(new HashSet<int>());
             _takenCells.Clear();
-            Dictionary<TurnDirection, int> turnDirections = new()
-            {
-                { TurnDirection.Right, 0 },
-                { TurnDirection.None, 0 },
-                { TurnDirection.Left, 0 },
-            };
+
 
             SpawnSnake(updater);
             SpawnNewFood();
@@ -66,28 +61,18 @@ namespace Simulation.Core
 
                 UpdateVisual(updater, calculationResults, movesSinceLastFood);
 
-                turnDirections[turnDirection]++;
-
                 Direction direction = Head.Direction.Turn(turnDirection);
-
                 MovePrognosis movePrognosis = GetMoveResults(direction);
 
                 if (movePrognosis == MovePrognosis.Ok)
-                {
                     movesSinceLastFood = Move(movesSinceLastFood, direction);
-                }
                 else
                     break;
 
                 _uniqueCells[^1].Add(Head.Y * _mapSize + Head.X);
             }
 
-            double right = Math.Max(1,turnDirections[TurnDirection.Right]);
-            double left = Math.Max(1,turnDirections[TurnDirection.Left]);
-
-            double ratio = left == right /* no need to round since they are integers anyway*/ ? 1 : Math.Min(right, left) / Math.Max(right, left);
-
-            return new SimulationResult(Generation, _uniqueCells, _maxMovesWithoutFood, ratio);
+            return new SimulationResult(Generation, _uniqueCells, _maxMovesWithoutFood, 1);
         }
 
         private void UpdateVisual(IUpdate<IOnMoveUpdateParameters> updater, IEnumerable<double[]> calculationResults, int movesSinceLastFood)

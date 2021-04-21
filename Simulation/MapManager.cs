@@ -12,11 +12,13 @@ namespace Simulation
     {
 
         private readonly ISimulationUpdateManager _updateManager;
+        private ISimulationStateParameters _simStateParameters;
         private readonly NetworkInfo _networkInfo;
         private readonly SimulationRunner _simulationRunner;
 
         public MapManager(ISimulationStateParameters simStateParameters, NetworkInfo networkInfo, ISimulationUpdateManager updateManager)
         {
+            _simStateParameters = simStateParameters;
             _networkInfo = networkInfo;
             _simulationRunner = new SimulationRunner(simStateParameters, updateManager);
             _updateManager = updateManager;
@@ -35,13 +37,14 @@ namespace Simulation
         {
             do
             {
+                _updateManager.ShouldUpdate = !_simStateParameters.RunInBackground;
                 List<FitnessResults> results = new(_simulationRunner.GetFitnessResults());
 
                 results.Sort();
 
                 double avg = results.CalculateAverageResult();
 
-                _simulationRunner.PropagateNewGeneration(results);
+                _simulationRunner.PropagateNewGeneration(results, _simStateParameters.Generation);
 
                 _updateManager.OnGeneration.UpdateOnGeneration(avg);
 

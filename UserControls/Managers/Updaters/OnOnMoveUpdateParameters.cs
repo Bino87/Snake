@@ -6,11 +6,11 @@ namespace UserControls.Managers.Updaters
 {
     public class OnOnMoveUpdateParameters : IOnMoveUpdateParameters
     {
-        public OnOnMoveUpdateParameters(ISimulationStateParameters simulationGuiViewModel)
+        public OnOnMoveUpdateParameters(ISimulationUpdateManager simulationUpdateManager)
         {
-            VisionData = new UpdateList<VisionData>(simulationGuiViewModel);
-            CalculationResults = new UpdateList<double[]>(simulationGuiViewModel);
-            CellUpdateData = new UpdateList<CellUpdateData>(simulationGuiViewModel);
+            VisionData = new UpdateList<VisionData>(simulationUpdateManager);
+            CalculationResults = new UpdateList<double[]>(simulationUpdateManager);
+            CellUpdateData = new UpdateList<CellUpdateData>(simulationUpdateManager);
             Points = 0;
             Moves = 0;
         }

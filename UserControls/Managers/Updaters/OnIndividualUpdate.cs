@@ -8,10 +8,10 @@ namespace UserControls.Managers.Updaters
     {
         private readonly NeuralNetDisplayViewModel _neuralNetDisplayViewModel;
 
-        public OnIndividualUpdate(ISimulationStateParameters simulationGuiViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel) : base(simulationGuiViewModel)
+        public OnIndividualUpdate(ISimulationUpdateManager simulationUpdateManager, NeuralNetDisplayViewModel neuralNetDisplayViewModel, ISimulationStateParameters simulationGuiViewModel) : base(simulationUpdateManager, simulationGuiViewModel)
         {
             _neuralNetDisplayViewModel = neuralNetDisplayViewModel;
-            Data = new OnIndividualUpdateParameters(simulationGuiViewModel);
+            Data = new OnIndividualUpdateParameters(simulationUpdateManager);
         }
 
         public override IOnIndividualUpdateParameters Data { get; }

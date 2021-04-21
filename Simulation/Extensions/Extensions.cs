@@ -9,8 +9,9 @@ namespace Simulation.Extensions
         public static double CalculateAverageResult(this IReadOnlyList<FitnessResults> results)
         {
             double total = 0;
+            var len = results.Count / 2;
 
-            for (int i = 0; i < results.Count; i++)
+            for (int i = 0; i < len; i++)
             {
                 total += results[i].Result.Points;
             }

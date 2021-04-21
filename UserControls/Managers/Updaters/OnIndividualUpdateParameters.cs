@@ -5,7 +5,7 @@ namespace UserControls.Managers.Updaters
 {
     public class OnIndividualUpdateParameters : IOnIndividualUpdateParameters
     {
-        public OnIndividualUpdateParameters(ISimulationStateParameters simulationGuiViewModel)
+        public OnIndividualUpdateParameters(ISimulationUpdateManager simulationGuiViewModel)
         {
             Weights = new UpdateList<double[]>(simulationGuiViewModel);
         }
