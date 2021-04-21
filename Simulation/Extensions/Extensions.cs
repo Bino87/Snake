@@ -6,10 +6,10 @@ namespace Simulation.Extensions
 {
     public static class Extensions
     {
-        public static double CalculateAverageResult(this IReadOnlyList<FitnessResults> results)
+        public static double CalculateAverageResultOfTopPercent(this IReadOnlyList<FitnessResults> results, double percentile)
         {
             double total = 0;
-            var len = results.Count / 2;
+            int len = (int) (results.Count * percentile);
 
             for (int i = 0; i < len; i++)
             {

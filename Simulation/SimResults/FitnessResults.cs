@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Simulation.SimResults
 {
-    [DebuggerDisplay("{AgentID} : {_agentResults.Points}")]
+    [DebuggerDisplay("ID:{AgentID} : Gen:{_agentResults.Generation} Points:{_agentResults.Points}")]
     public class FitnessResults : IComparable
     {
         public int AgentID { get; }

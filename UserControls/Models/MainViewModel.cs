@@ -27,7 +27,7 @@ namespace UserControls.Models
             NetworkInfo ni = new(
                 new LayerInfo(new Identity(), 2 * 4 + 8 * 7 + 6 + 3),
                 new LayerInfo(new ReLu(), 20),
-                new LayerInfo(new Sigmoid(), 12),
+                //new LayerInfo(new Sigmoid(), 12),
                 new LayerInfo(new ReLu(), 12),
                 new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);

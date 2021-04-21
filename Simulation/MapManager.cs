@@ -41,7 +41,7 @@ namespace Simulation
 
                 results.Sort();
 
-                double avg = results[results.Count / 2].Result.Points;// results.CalculateAverageResult();
+                double avg = results.CalculateAverageResultOfTopPercent(.5);
 
                 _simulationRunner.PropagateNewGeneration(results, _simStateParameters.Generation);
 

@@ -33,7 +33,7 @@ namespace Network.Mutators
 
 
         private bool debug = false;
-        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
+        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother, Func<int,int,int> getRandom)
         {
             NetworkInfo fNetworkInfo = father.ToNetworkInfo();
             NetworkInfo mNetworkInfo = mother.ToNetworkInfo();

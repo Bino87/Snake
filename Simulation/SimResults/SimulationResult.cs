@@ -36,6 +36,6 @@ namespace Simulation.SimResults
             return 0;
         }
 
-        public static SimulationResult operator +(SimulationResult sr1, SimulationResult sr2) => new(sr1.Points + sr2.Points, sr1.Generation);
+        public static SimulationResult operator +(SimulationResult sr1, SimulationResult sr2) => new(sr1.Points + sr2.Points, sr2.Generation);
     }
 }

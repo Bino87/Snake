@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Network;
 using Network.Mutators;
@@ -13,11 +14,23 @@ namespace Simulation.Core
         private Bot[] _agents;
         private readonly ISimulationStateParameters _simStateParameters;
         private readonly ISimulationUpdateManager _updateManager;
+        private readonly Random _rand;
+
+        private object _lock = new object();
 
         public SimulationRunner(ISimulationStateParameters simStateParameters, ISimulationUpdateManager simulationUpdateManager)
         {
             _simStateParameters = simStateParameters;
             _updateManager = simulationUpdateManager;
+            _rand = new Random();
+        }
+
+        int GetRandom(int min, int max)
+        {
+            lock (_lock)
+            {
+                return _rand.Next(min, max);
+            }
         }
 
         public void InitializeAgents(NetworkInfo networkInfo)
@@ -28,6 +41,8 @@ namespace Simulation.Core
                 _agents[i] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, networkInfo, 1);
             }
         }
+
+
 
         public void PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, int generation)
         {
@@ -46,7 +61,7 @@ namespace Simulation.Core
                 NeuralNetwork mother = res[i + 1].GetNeuralNetwork();
 
 
-                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
+                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother, GetRandom);
 
                 res[i + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
                 res[i + len + 1] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
@@ -87,20 +102,20 @@ namespace Simulation.Core
             }
 
 
-            if (_simStateParameters.RunInBackground)
+            //if (_simStateParameters.RunInBackground)
+            //{
+            //    RunItParallel(0);
+            //}
+            //else
+            //{
+            for (int i = 0; i < _agents.Length; i++)
             {
-                RunItParallel(0);
-            }
-            else
-            {
-                for (int i = 0; i < _agents.Length; i++)
-                {
-                    RunAgentSimulation(i);
+                RunAgentSimulation(i);
 
-                    if (_simStateParameters.RunInBackground && _updateManager.ShouldUpdate)
-                        _updateManager.ShouldUpdate = false;
-                }
+                if (_simStateParameters.RunInBackground && _updateManager.ShouldUpdate)
+                    _updateManager.ShouldUpdate = false;
             }
+            //}
 
 
             return results;

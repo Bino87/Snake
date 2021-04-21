@@ -4,7 +4,6 @@ namespace Network
 {
     public static class RandomExtension
     {
-
         public static double NextDouble(this Random rand, double min, double max)
         {
             double t = rand.NextDouble();
