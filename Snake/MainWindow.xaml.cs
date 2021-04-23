@@ -8,7 +8,7 @@ namespace Snake
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel mvm;
+        private readonly MainViewModel mvm;
         
        
         public MainWindow()

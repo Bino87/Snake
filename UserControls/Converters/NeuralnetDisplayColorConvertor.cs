@@ -11,16 +11,15 @@ namespace UserControls.Converters
         public SolidColorBrush Positive { get; set; }
         public SolidColorBrush Negative { get; set; }
 
-        private LinearGradientBrush Gradient { get; set; }
-
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;
         }
 
-        byte LinearInterp(byte start, byte end, double percentage) => (byte)(start + (byte)Math.Round(percentage * (end - start)));
-        Color ColorInterp(Color start, Color end, double percentage)
+        private static byte LinearInterp(byte start, byte end, double percentage) => (byte)(start + (byte)Math.Round(percentage * (end - start)));
+
+        private static Color ColorInterp(Color start, Color end, double percentage)
         {
             byte r = LinearInterp(start.R, end.R, percentage);
             byte g = LinearInterp(start.G, end.G, percentage);

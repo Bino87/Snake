@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Commons;
 
 namespace Network.Mutators
@@ -68,7 +69,7 @@ namespace Network.Mutators
             return arr;
         }
 
-        private void Mutate(byte[] arr, int index)
+        private static void Mutate(IList<byte> arr, int index)
         {
             MutationType[] enums = Enum.GetValues<MutationType>();
 
@@ -77,7 +78,7 @@ namespace Network.Mutators
             switch (current)
             {
                 case MutationType.DuplicateNext:
-                    if (index + 1 < arr.Length)
+                    if (index + 1 < arr.Count)
                     {
                         arr[index] = arr[index + 1];
                     }
@@ -91,7 +92,7 @@ namespace Network.Mutators
 
                     break;
                 case MutationType.SwapWithNext:
-                    if (index + 1 < arr.Length)
+                    if (index + 1 < arr.Count)
                     {
                         byte temp = arr[index];
                         arr[index] = arr[index + 1];
@@ -123,7 +124,7 @@ namespace Network.Mutators
             }
         }
 
-        private (byte[] first, byte[] sec) MixBytes(byte[] fBytes, byte[] mBytes)
+        private static (byte[] first, byte[] sec) MixBytes(byte[] fBytes, byte[] mBytes)
         {
 
             byte[] bytes1 = new byte[fBytes.Length];

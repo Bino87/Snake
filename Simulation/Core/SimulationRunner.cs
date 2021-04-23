@@ -40,7 +40,7 @@ namespace Simulation.Core
 
             Parallel.For(0, len / 2, (i) =>
             {
-                i = i * 2;
+                i *= 2;
                 int x = i + 1;
 
                 res[i] = _agents[fitnessResults[i].AgentIndex];

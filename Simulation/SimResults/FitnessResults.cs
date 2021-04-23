@@ -3,28 +3,28 @@ using System.Diagnostics;
 
 namespace Simulation.SimResults
 {
-    [DebuggerDisplay("ID:{AgentID} : Gen:{_agentResults.Generation} Points:{_agentResults.Points}")]
+    [DebuggerDisplay("ID:{AgentID} : Gen:{AgentResults.Generation} Points:{_agentResults.Points}")]
     public class FitnessResults : IComparable
     {
         public int AgentID { get; }
 
         public int AgentIndex { get; }
 
-        public SimulationResult Result => _agentResults;
+        public SimulationResult Result => AgentResults;
 
-        private  SimulationResult _agentResults { get; }
+        private  SimulationResult AgentResults { get; }
         public FitnessResults(int agentIndex, SimulationResult calculateFitness, int agentId)
         {
             AgentIndex = agentIndex;
-            _agentResults = calculateFitness;
+            AgentResults = calculateFitness;
             AgentID = agentId;
         }
 
-        public int CompareTo(object? obj)
+        public int CompareTo(object obj)
         {
             if (obj is FitnessResults fr)
             {
-                return fr._agentResults.CompareTo(_agentResults);
+                return fr.AgentResults.CompareTo(AgentResults);
             }
 
             return 0;

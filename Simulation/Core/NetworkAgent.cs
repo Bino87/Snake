@@ -1,4 +1,5 @@
 ﻿using System;
+using Commons.Extensions;
 using Network;
 using Simulation.Enums;
 using Simulation.Extensions;
@@ -100,7 +101,7 @@ namespace Simulation.Core
             int headX = parameters.Head.X;
             int headY = parameters.Head.Y;
 
-            static double Distance(int origin, int target) => Math.Sqrt(origin * origin + target * target);
+            static double Distance(int origin, int target) => Math.Sqrt(origin.Pow2() + target.Pow2());
 
             bool ShouldKeepRunning()
             {

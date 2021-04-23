@@ -43,7 +43,7 @@ namespace Simulation.Core
 
         public SimulationResult Run(IUpdate<IOnMoveUpdateParameters> updater)
         {
-            SimulationResult res = new SimulationResult();
+            SimulationResult res = new();
 
             for (int i = 0; i < 10; i++)
             {
