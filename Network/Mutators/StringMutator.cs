@@ -62,18 +62,15 @@ namespace Network.Mutators
         {
             if (_rand.NextDouble() < _mutationChancePercentage)
             {
-                int a = (int) (str.Length * _mutationPercentage);
-                int amount = getRandom(1, a);
-
-
+                int amount = getRandom(1, (int) (str.Length * _mutationPercentage));
+                
                 StringBuilder sb = new(str);
 
-                for (int i = 0; i < amount; i++)
+                for(int i = 0; i < amount; i++)
                 {
-                    int index = _rand.Next(str.Length);
-                    if (sb[index] == '1')
-                        sb[index] = '0';
-                    else sb[index] = '1';
+                    int index = getRandom(0, str.Length);
+
+                    sb[index] = sb[index] == '1' ? '0' : '1';
                 }
 
                 return sb.ToString();

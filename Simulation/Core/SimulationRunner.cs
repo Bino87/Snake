@@ -67,6 +67,22 @@ namespace Simulation.Core
                 res[i + len + 1] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
             });
 
+            //for (int i = 0 ; i < len; i+=2)
+            //{
+            //    int fIndex = i;
+            //    int mIndex = i + 1;
+            //    res[fIndex] = _agents[fitnessResults[fIndex].AgentIndex];
+            //    res[mIndex] = _agents[fitnessResults[mIndex].AgentIndex];
+
+            //    NeuralNetwork father = res[fIndex].GetNeuralNetwork();
+            //    NeuralNetwork mother = res[mIndex].GetNeuralNetwork();
+
+            //    (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother, GetRandom);
+
+            //    res[fIndex + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
+            //    res[mIndex + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
+            //}
+
             _agents = res;
         }
 
