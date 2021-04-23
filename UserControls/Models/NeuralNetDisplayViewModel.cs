@@ -9,11 +9,16 @@ namespace UserControls.Models
 {
     public class NeuralNetDisplayViewModel : Observable
     {
-        public ObservableCollection<PrimitiveShape> DisplayItems { get; set; }
+        private const double cAvailible = Cons.cNetHeight - (2 * Cons.cNetHeightPadding);
+
         private readonly PrimitiveShapeValueProvider[][] _lineValueProviders;
         private readonly PrimitiveShapeValueProvider[][] _circleValueProviders;
         private readonly NetworkInfo _networkInfo;
         private const double cRadius = 10;
+
+        public ObservableCollection<PrimitiveShape> DisplayItems { get; set; }
+
+        
         public NeuralNetDisplayViewModel(NetworkInfo networkInfo)
         {
             DisplayItems = new ObservableCollection<PrimitiveShape>();
@@ -47,10 +52,9 @@ namespace UserControls.Models
 
         private void CreateConnections(double start, double end, int upper, int lower, int layerIndex)
         {
-            double availible = Cons.cNetHeight - (2 * Cons.cNetHeightPadding);
-            double verticalSpacingA = availible / (upper - 1);
-            double verticalSpacingB = availible / (lower - 1);
-            double wOffset = Cons.cNetHeightPadding;
+            
+            double verticalSpacingA = cAvailible / (upper - 1);
+            double verticalSpacingB = cAvailible / (lower - 1);
             _lineValueProviders[layerIndex] = new PrimitiveShapeValueProvider[lower * upper];
             for (int j = 0; j < upper; j++)
             {
@@ -58,7 +62,7 @@ namespace UserControls.Models
                 {
                     PrimitiveShapeValueProvider provider = new();
                     _lineValueProviders[layerIndex][j * lower + i] = provider;
-                    DisplayItems.Add(new PrimitiveLine(provider, start, end, j * verticalSpacingA + wOffset, i * verticalSpacingB + Cons.cNetHeightPadding));
+                    DisplayItems.Add(new PrimitiveLine(provider, start, end, j * verticalSpacingA + Cons.cNetHeightPadding, i * verticalSpacingB + Cons.cNetHeightPadding));
                 }
             }
         }
@@ -66,8 +70,7 @@ namespace UserControls.Models
         private void CreateNeuronLayer(double x, int count, int layerIndex)
         {
             double offset = cRadius / 2;
-            double availible = Cons.cNetHeight - (2 * Cons.cNetHeightPadding);
-            double verticalSpacing = availible / (count - 1);
+            double verticalSpacing = cAvailible / (count - 1);
             double wOffset = Cons.cNetHeightPadding;
 
             _circleValueProviders[layerIndex] = new PrimitiveShapeValueProvider[count];

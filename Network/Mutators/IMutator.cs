@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Network.Mutators
+﻿namespace Network.Mutators
 {
     public interface IMutator
     {

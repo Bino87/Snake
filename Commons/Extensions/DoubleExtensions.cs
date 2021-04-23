@@ -15,8 +15,21 @@ namespace Commons.Extensions
             return (value - min) / (max - min);
         }
 
+        public static double Pow2(this double value) => value * value;
+
         public static double InverseLerp(this int value, double min, double max) => ((double)value).InverseLerp(min, max);
 
         public static float ToFloat(this double d) => (float)d;
+
+        public static byte[] GetBytes(this double d) => BitConverter.GetBytes(d);
+
+        public static double Clamp(this double v, double min, double max)
+        {
+            if (v <= min) return min;
+            if (v >= max) return max;
+            return v;
+        }
+
+        public static double Clamp01(this double v) => v.Clamp(0, 1);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Commons;
+using Commons.Extensions;
 using Network.ActivationFunctions;
 
 namespace Network
@@ -87,7 +88,7 @@ namespace Network
         }
 
 
-        public (double[][] Weights, double[][] Biass) CreateWeightsAndBiases()
+        public (double[][] Weights, double[][] Biass) InitiateRandomWeightsAndBiases()
         {
             double[][] bias = new double[Layers][];
             double[][] weights = new double[Layers][];
@@ -138,11 +139,11 @@ namespace Network
             Bias = Create2DArrayFromBytes(arr, ref index, BiasCount, false);
         }
 
-        double[][] Create2DArrayFromBytes(byte[] arr, ref int index, int[] lookUp, bool clamp)
+        private double[][] Create2DArrayFromBytes(byte[] arr, ref int index, IReadOnlyList<int> lookUp, bool clamp)
         {
-            double[][] item = new double[lookUp.Length][];
+            double[][] item = new double[lookUp.Count][];
 
-            for (int i = 0; i < lookUp.Length; i++)
+            for (int i = 0; i < lookUp.Count; i++)
             {
                 item[i] = new double[lookUp[i]];
             }
@@ -151,7 +152,7 @@ namespace Network
             {
                 for (int w = 0; w < lookUp[i]; w++)
                 {
-                    double d = clamp ? Clamp(BitConverter.ToDouble(arr, index)) : BitConverter.ToDouble(arr, index);
+                    double d = clamp ? arr.ToDouble(index).Clamp01() : arr.ToDouble(index);
 
                     item[i][w] = d;
 
@@ -162,23 +163,13 @@ namespace Network
             return item;
         }
 
-        double Clamp(double d)
-        {
-            return d switch
-            {
-                > 1 => 1,
-                < -1 => -1,
-                _ => d
-            };
-        }
-
         private void ConvertToBytes(ICollection<byte> bytes, IReadOnlyList<double[]> arr)
         {
             for (int i = 0; i < Layers; i++)
             {
                 for (int x = 0; x < arr[i].Length; x++)
                 {
-                    byte[] b = BitConverter.GetBytes(arr[i][x]);
+                    byte[] b = arr[i][x].GetBytes();
 
                     for (int z = 0; z < b.Length; z++)
                     {

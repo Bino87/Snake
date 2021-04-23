@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using Commons;
 
 namespace Network.Mutators
@@ -31,11 +30,10 @@ namespace Network.Mutators
         }
 
 
-        private bool debug = false;
         public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
         {
-            NetworkInfo fNetworkInfo = father.ToNetworkInfo();
-            NetworkInfo mNetworkInfo = mother.ToNetworkInfo();
+            NetworkInfo fNetworkInfo = father.CopyNetworkInfo();
+            NetworkInfo mNetworkInfo = mother.CopyNetworkInfo();
 
             byte[] fBytes = fNetworkInfo.ToByteArr();
             byte[] mBytes = mNetworkInfo.ToByteArr();
@@ -51,51 +49,12 @@ namespace Network.Mutators
             firstNetworkInfo.FromByteArray(first);
             secondNetworkInfo.FromByteArray(second);
 
-            if (debug)
-            {
-                DataTable dt = new DataTable();
-
-                dt.Columns.Add("father");
-                dt.Columns.Add("mother");
-                dt.Columns.Add("first");
-                dt.Columns.Add("second");
-
-                for (int i = 0; i < fBytes.Length; i++)
-                {
-
-                    if (Check(fBytes[i], mBytes[i], first[i], second[i]))
-                        dt.Rows.Add(
-                            fBytes[i],
-                            mBytes[i],
-                            first[i],
-                            second[i]
-                        );
-                }
-            }
-
-
             return (fNetworkInfo, mNetworkInfo);
-        }
-
-        bool Check(params byte[] arr)
-        {
-            for (int x = 0; x < arr.Length; x++)
-            {
-                for (int z = 0; z < arr.Length; z++)
-                {
-                    if (x == z)
-                        continue;
-                    if (arr[x] != arr[z])
-                        return true;
-                }
-            }
-
-            return false;
         }
 
         private byte[] Mutate(byte[] arr)
         {
-            if (RNG.Instance.NextDouble() < _mutationChancePercentage)
+            if (RNG.Instance.NextDouble01() < _mutationChancePercentage)
             {
                 int mutationAmount = RNG.Instance.Next(1, (int) (_mutationPercentage * arr.Length + 1));
 

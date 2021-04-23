@@ -13,7 +13,7 @@ namespace Commons
         public static RNG Instance => _instance ??= new RNG();
 
 
-        public RNG()
+        private RNG()
         {
             _rand = new Random(13 * 11);
         }
@@ -26,10 +26,6 @@ namespace Commons
             }
         }
 
-        public int Next(int max) => Next(0, max);
-
-        public double NextDouble() => NextDouble(0, 1);
-
         public double NextDouble(double min, double max)
         {
             lock (_key)
@@ -37,6 +33,16 @@ namespace Commons
                 return _rand.NextDouble(min, max);
             }
         }
+
+        public float NextFloat(float min, float max) => NextDouble(min, max).ToFloat();
+
+        public float NextFloat(float max) => NextFloat(0, max);
+
+        public float NextFloat01() => NextFloat(0, 1);
+
+        public int Next(int max) => Next(0, max);
+
+        public double NextDouble01() => NextDouble(0, 1);
 
         public double NextDouble(double max) => NextDouble(0, max);
 

@@ -23,17 +23,17 @@ namespace Network
             }
             else
             {
-                (double[][] weights, double[][] biass) = networkInfo.CreateWeightsAndBiases();
+                (double[][] weights, double[][] biass) = networkInfo.InitiateRandomWeightsAndBiases();
                 _biases = biass;
                 _weights = weights;
             }
-            
+                
             _numLayers = networkInfo.Layers;
             _inputCount = networkInfo.InputCount;
             _activationFunction = networkInfo.ActivationFunction;
         }
 
-        public NetworkInfo ToNetworkInfo() => new(_activationFunction, _weights, _biases, _inputCount, _biases[^1].Length);
+        public NetworkInfo CopyNetworkInfo() => new(_activationFunction, _weights, _biases, _inputCount, _biases[^1].Length);
 
         public double[][] Evaluate(double[] input)
         {

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Data;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Text;
 using Commons;
+using Commons.Extensions;
 
 namespace Network.Mutators
 {
@@ -25,17 +25,17 @@ namespace Network.Mutators
 
         public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
         {
-            NetworkInfo fNetworkInfo = father.ToNetworkInfo();
-            NetworkInfo mNetworkInfo = mother.ToNetworkInfo();
+            NetworkInfo fNetworkInfo = father.CopyNetworkInfo();
+            NetworkInfo mNetworkInfo = mother.CopyNetworkInfo();
 
             byte[] fBytes = fNetworkInfo.ToByteArr();
             byte[] mBytes = mNetworkInfo.ToByteArr();
 
-            string fStr = ToBinaryString(fBytes);
-            string mStr = ToBinaryString(mBytes);
+            string fStr = fBytes.ToBinaryString();
+            string mStr = mBytes.ToBinaryString();
 
             byte[] firstBytes = CreateArray(Mutate(Mix(fStr, mStr)), fBytes.Length);
-            byte[] secondBytes = CreateArray(Mutate(Mix(mStr, fStr)), fBytes.Length);
+            byte[] secondBytes = CreateArray(Mutate(Mix(mStr, fStr)), mBytes.Length);
 
             fNetworkInfo.FromByteArray(firstBytes);
             fNetworkInfo.FromByteArray(secondBytes);
@@ -50,7 +50,7 @@ namespace Network.Mutators
 
             for (int i = 0; i < arrLen; i++)
             {
-                var subString = str.Substring(i * 8, 8);
+                string subString = str.Substring(i * 8, 8);
                 arr[i] = Convert.ToByte(subString, 2);
             }
 
@@ -59,7 +59,7 @@ namespace Network.Mutators
 
         private string Mutate(string str)
         {
-            if (RNG.Instance.NextDouble() < _mutationChancePercentage)
+            if (RNG.Instance.NextDouble01() < _mutationChancePercentage)
             {
                 int amount = RNG.Instance.Next(1, (int) (str.Length * _mutationPercentage));
                 
@@ -106,20 +106,6 @@ namespace Network.Mutators
                 }
 
                 sb.Append(substring);
-            }
-
-            return sb.ToString();
-        }
-
-        private static string ToBinaryString(byte[] arr)
-        {
-            StringBuilder sb = new();
-
-            for (int i = 0; i < arr.Length; i++)
-            {
-                string str = Convert.ToString(arr[i], 2).PadLeft(8, '0');
-
-                sb.Append(str);
             }
 
             return sb.ToString();
