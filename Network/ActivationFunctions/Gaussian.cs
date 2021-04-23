@@ -1,12 +1,13 @@
 ﻿using System;
+using Commons.Extensions;
 
 namespace Network.ActivationFunctions
 {
-    public class Gausian : IActivationFunction
+    public class Gaussian : IActivationFunction
     {
         public double Evaluate(double value)
         {
-            return Math.Pow(Math.E, -Math.Pow(value,2));
+            return Math.Pow(Math.E, -value.Pow2());
         }
     }
 }

@@ -102,7 +102,7 @@ namespace Simulation.Core
 
             static double Distance(int origin, int target) => Math.Sqrt(origin * origin + target * target);
 
-            bool ShouldKeepRuning()
+            bool ShouldKeepRunning()
             {
                 int tempX = x + incX;
                 int tempY = y + incY;
@@ -118,7 +118,7 @@ namespace Simulation.Core
                 return true;
             }
 
-            while (ShouldKeepRuning())
+            while (ShouldKeepRunning())
             {
                 if (parameters.LookUp.TryGetValue((x, y), out MapCellType item))
                 {
@@ -146,7 +146,6 @@ namespace Simulation.Core
                         default: throw new ArgumentOutOfRangeException();
                     }
                 }
-
 
                 value++;
             }

@@ -30,6 +30,8 @@ namespace Commons.Extensions
             return v;
         }
 
+        public static double  Abs(this double value) => Math.Abs(value);
+
         public static double Clamp1Neg1(this double d) => d.Clamp(-1, 1);
 
         public static double Clamp01(this double v) => v.Clamp(0, 1);

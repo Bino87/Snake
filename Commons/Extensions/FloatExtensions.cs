@@ -28,6 +28,8 @@ namespace Commons.Extensions
             return v;
         }
 
+        public static float Abs(this float value) => Math.Abs(value);
+
         public static float Clamp01(this float v) => v.Clamp(0, 1);
 
         public static byte[] GetBytes(this float d) => BitConverter.GetBytes(d);

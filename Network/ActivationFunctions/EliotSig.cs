@@ -1,4 +1,5 @@
 ﻿using System;
+using Commons.Extensions;
 
 namespace Network.ActivationFunctions
 {
@@ -6,7 +7,7 @@ namespace Network.ActivationFunctions
     {
         public double Evaluate(double value)
         {
-            return value / (1+ Math.Abs(value));
+            return value / (1 + value.Abs());
         }
     }
 }
