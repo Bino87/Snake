@@ -48,7 +48,7 @@ namespace Simulation.Core
 
             for (int i = 0; i < 10; i++)
             {
-                res+=  GetResultsFromSimulation(updater);
+                res += GetResultsFromSimulation(updater);
             }
 
             return res;
@@ -70,7 +70,7 @@ namespace Simulation.Core
             {
                 (double[][] calculationResults, TurnDirection turnDirection) = CalculateSnakeDirection(updater);
 
-                UpdateVisual(updater, calculationResults, movesSinceLastFood);
+                updater.UpdateVisual(calculationResults, movesSinceLastFood, _food, _snake, _uniqueCells);
 
                 Direction direction = Head.Direction.Turn(turnDirection);
                 MovePrognosis movePrognosis = GetMoveResults(direction);
@@ -86,27 +86,6 @@ namespace Simulation.Core
             return new SimulationResult(Generation, _uniqueCells, _maxMovesWithoutFood, 1);
         }
 
-        private void UpdateVisual(IUpdate<IOnMoveUpdateParameters> updater, IEnumerable<double[]> calculationResults, int movesSinceLastFood)
-        {
-            if (!updater.ShouldUpdate)
-                return;
-            updater.Data.Moves = movesSinceLastFood;
-            updater.Data.Points = _uniqueCells.Count - 1;
-            updater.Data.CellUpdateData.Add(new CellUpdateData(_food.X, _food.Y, _food.Type));
-
-            foreach (SnakePart snakePart in _snake)
-            {
-                updater.Data.CellUpdateData.Add(new CellUpdateData(snakePart.X, snakePart.Y, snakePart.Type));
-            }
-
-            foreach (double[] t in calculationResults)
-            {
-                updater.Data.CalculationResults.Add(t);
-            }
-
-            updater.Update();
-        }
-
         public NeuralNetwork GetNeuralNetwork() => _networkAgent.GetNeuralNetwork();
 
         private void SpawnSnake(IUpdate<IOnMoveUpdateParameters> updater)
@@ -118,8 +97,7 @@ namespace Simulation.Core
             {
                 int y = x + i;
                 _snake.Add(i == 0 ? new SnakeHead(x, y, Direction.Up) : new SnakePart(x, y, Direction.Up));
-                if (updater.ShouldUpdate)
-                    updater.Data.CellUpdateData.Add(new CellUpdateData(x, y, i == 0 ? MapCellType.Head : MapCellType.Snake));
+                updater.TryAddCellUpdateData(x, y, i == 0 ? MapCellType.Head : MapCellType.Snake);
                 _takenCells.Add((x, y), _snake[^1].Type);
             }
         }

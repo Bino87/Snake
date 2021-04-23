@@ -2,7 +2,7 @@
 
 namespace Network
 {
-    public static class RandomExtension
+    public static class Extensions
     {
         public static double NextDouble(this Random rand, double min, double max)
         {

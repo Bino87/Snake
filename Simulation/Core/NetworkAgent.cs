@@ -1,6 +1,7 @@
 ﻿using System;
 using Network;
 using Simulation.Enums;
+using Simulation.Extensions;
 using Simulation.Interfaces;
 
 namespace Simulation.Core
@@ -102,12 +103,6 @@ namespace Simulation.Core
 
             static double Distance(int origin, int target) => Math.Sqrt(origin * origin + target * target);
 
-            void TryAdd(VisionCollisionType type)
-            {
-                if (updater.ShouldUpdate)
-                    updater.Data.VisionData.Add(new VisionData(type, headX, x, headY, y));
-            }
-
             bool ShouldKeepRuning()
             {
                 int tempX = x + incX;
@@ -123,9 +118,7 @@ namespace Simulation.Core
 
                 return true;
             }
-
-
-            //while (x + incX >= 0 && x + incX <= parameters.MapSize && y + incY >= 0 && y + incY <= parameters.MapSize)
+           
             while (ShouldKeepRuning())
             {
                 if (parameters.LookUp.TryGetValue((x, y), out MapCellType item))
@@ -137,7 +130,7 @@ namespace Simulation.Core
                                 double dist = Distance(headX - x, headY - y);
 
                                 seesFood = seesFood.HasValue ? Math.Min(dist, seesFood.Value) : dist;
-                                TryAdd(VisionCollisionType.Food);
+                                updater.TryAddVisionData(headX, headY, x, y, VisionCollisionType.Food);
                             }
                             break;
                         case MapCellType.Snake:
@@ -146,7 +139,7 @@ namespace Simulation.Core
                             {
                                 double dist = Distance(headX - x, headY - y);
                                 seesSelf = seesSelf.HasValue ? Math.Min(dist, seesSelf.Value) : dist;
-                                TryAdd(VisionCollisionType.Self);
+                                updater.TryAddVisionData(headX, headY, x, y, VisionCollisionType.Self);
                             }
                             break;
                         case MapCellType.Head:
@@ -159,7 +152,7 @@ namespace Simulation.Core
                 value++;
             }
 
-            TryAdd(VisionCollisionType.Normal);
+            updater.TryAddVisionData(headX, headY, x, y, VisionCollisionType.Normal);
 
             return (value / Distance(0, parameters.MapSize),
                 seesSelf.HasValue ? seesSelf.Value / parameters.MapSize : 0,
