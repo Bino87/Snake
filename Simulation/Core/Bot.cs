@@ -103,12 +103,12 @@ namespace Simulation.Core
 
         private void SpawnNewFood()
         {
-            int nextX = RNG.Instance.Next(0, _mapSize);
-            int nextY = RNG.Instance.Next(0, _mapSize);
+            int nextX;
+            int nextY;
 
             int count = 0;
 
-            while (_takenCells.ContainsKey((nextX, nextY)))
+            do
             {
                 nextX = RNG.Instance.Next(0, _mapSize);
                 nextY = RNG.Instance.Next(0, _mapSize);
@@ -119,7 +119,8 @@ namespace Simulation.Core
                 {
                     //TODO: this should be handled somehow.
                 }
-            }
+
+            } while (_takenCells.ContainsKey((nextX, nextY)));
 
             _takenCells.Add((nextX, nextY), MapCellType.Food);
             _food = new Food(nextX, nextY);

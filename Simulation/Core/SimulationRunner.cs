@@ -49,7 +49,7 @@ namespace Simulation.Core
                 NeuralNetwork parent1 = res[i].GetNeuralNetwork();
                 NeuralNetwork parent2 = res[x].GetNeuralNetwork();
 
-                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(parent1, parent2);
+                (NetworkInfo first, NetworkInfo second) = mutator.Get2Offsprings(parent1, parent2);
 
                 res[i + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
                 res[x + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);

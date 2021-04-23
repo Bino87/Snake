@@ -30,7 +30,7 @@ namespace Network.Mutators
         }
 
 
-        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork parent1, NeuralNetwork parent2)
+        public (NetworkInfo First, NetworkInfo Second) Get2Offsprings(NeuralNetwork parent1, NeuralNetwork parent2)
         {
             NetworkInfo fNetworkInfo = parent1.CopyNetworkInfo();
             NetworkInfo mNetworkInfo = parent2.CopyNetworkInfo();
@@ -71,10 +71,9 @@ namespace Network.Mutators
         private void Mutate(byte[] arr, int index)
         {
             MutationType[] enums = Enum.GetValues<MutationType>();
-            //enums = new[] { MutationType.Decrement, MutationType.Increment, /*MutationType.SwapWithNext,MutationType.SwapWithPrevious*/};
 
             MutationType current = (MutationType)RNG.Instance.Next(enums.Length);
-            //current = MutationType.Randomize;
+            
             switch (current)
             {
                 case MutationType.DuplicateNext:

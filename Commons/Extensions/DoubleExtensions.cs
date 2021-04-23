@@ -31,5 +31,12 @@ namespace Commons.Extensions
         }
 
         public static double Clamp01(this double v) => v.Clamp(0, 1);
+
+        public static bool IsOkNumber(this double d)
+        {
+            if (double.IsNaN(d)) return false;
+            if (double.IsInfinity(d)) return false;
+            return true;
+        }
     }
 }

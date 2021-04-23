@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Commons.Extensions;
 using Network.ActivationFunctions;
 
 namespace Network
@@ -8,9 +11,9 @@ namespace Network
         private readonly int _inputCount;
         private readonly int _numLayers;
 
-        readonly double[][] _biases;
-        readonly double[][] _weights;
-        readonly IActivationFunction[] _activationFunction;
+        private readonly double[][] _biases;
+        private readonly double[][] _weights;
+        private readonly IActivationFunction[] _activationFunction;
 
         public double[][] Weights => _weights;
 
@@ -57,7 +60,6 @@ namespace Network
                     output[layerIndex + 1][outputIndex] = res;
                 }
 
-
                 input = output[layerIndex + 1];
                 layerIndex++;
 
@@ -68,18 +70,15 @@ namespace Network
 
         private double CalculateValue(double[] input, int outputIndex, int index)
         {
-
             double value = 0;
+
             for(int inputIndex = 0; inputIndex < input.Length; inputIndex++)
             {
                 int weightIndex = outputIndex * input.Length + inputIndex;
                 double result = input[inputIndex] * _weights[index][weightIndex];
-                if (double.IsNaN(result) || double.IsInfinity(result))
-                {
-                    continue;
-                }
 
-                value += result;
+                if(result.IsOkNumber())
+                    value += result;
             }
 
             return value;
