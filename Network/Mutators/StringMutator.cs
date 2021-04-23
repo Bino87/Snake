@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using Commons;
 using Commons.Extensions;
@@ -23,10 +22,10 @@ namespace Network.Mutators
             _mutationPercentage = mutationPercentage;
         }
 
-        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
+        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork parent1, NeuralNetwork parent2)
         {
-            NetworkInfo fNetworkInfo = father.CopyNetworkInfo();
-            NetworkInfo mNetworkInfo = mother.CopyNetworkInfo();
+            NetworkInfo fNetworkInfo = parent1.CopyNetworkInfo();
+            NetworkInfo mNetworkInfo = parent2.CopyNetworkInfo();
 
             byte[] fBytes = fNetworkInfo.ToByteArr();
             byte[] mBytes = mNetworkInfo.ToByteArr();
@@ -38,7 +37,7 @@ namespace Network.Mutators
             byte[] secondBytes = CreateArray(Mutate(Mix(mStr, fStr)), mBytes.Length);
 
             fNetworkInfo.FromByteArray(firstBytes);
-            fNetworkInfo.FromByteArray(secondBytes);
+            mNetworkInfo.FromByteArray(secondBytes);
 
             return (fNetworkInfo, mNetworkInfo);
 
@@ -83,26 +82,29 @@ namespace Network.Mutators
         {
             StringBuilder sb = new();
 
-            int a = 4;
+            int fCount = fStr.Length / 2;
+            int mCount = mStr.Length / 2;
 
-            int fCount = fStr.Length / (a / 2);
-            int mCount = mStr.Length / (a / 2);
-
-
-            for (int i = 0; i < fStr.Length; i += a)
+            int geneLen;
+            for (int i = 0; i < fStr.Length; i += geneLen)
             {
-                int random = RNG.Instance.Next(fCount + mCount);
+                geneLen = RNG.Instance.Next(2, 12);
 
                 string substring;
-                if (random < fCount)
+                if (RNG.Instance.Next(fCount + mCount) < fCount)
                 {
-                    fCount -= a;
-                    substring = fStr.Substring(i, a);
+                    if (geneLen > fCount) 
+                        geneLen = fCount;
+
+                    fCount -= geneLen;
+                    substring = fStr.Substring(i, geneLen);
                 }
                 else
                 {
-                    mCount -= a;
-                    substring = mStr.Substring(i, a);
+                    if (geneLen > mCount) 
+                        geneLen = mCount;
+                    mCount -= geneLen;
+                    substring = mStr.Substring(i, geneLen);
                 }
 
                 sb.Append(substring);

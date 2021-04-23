@@ -2,6 +2,6 @@
 {
     public interface IMutator
     {
-        (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother);
+        (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork parent1, NeuralNetwork parent2);
     }
 }

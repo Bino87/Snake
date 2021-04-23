@@ -15,8 +15,6 @@ namespace Simulation.Core
         private readonly ISimulationStateParameters _simStateParameters;
         private readonly ISimulationUpdateManager _updateManager;
 
-        private readonly object _lock = new();
-
         public SimulationRunner(ISimulationStateParameters simStateParameters, ISimulationUpdateManager simulationUpdateManager)
         {
             _simStateParameters = simStateParameters;
@@ -43,22 +41,23 @@ namespace Simulation.Core
             Parallel.For(0, len / 2, (i) =>
             {
                 i = i * 2;
+                int x = i + 1;
+
                 res[i] = _agents[fitnessResults[i].AgentIndex];
-                res[i + 1] = _agents[fitnessResults[i + 1].AgentIndex];
+                res[x] = _agents[fitnessResults[x].AgentIndex];
 
-                NeuralNetwork father = res[i].GetNeuralNetwork();
-                NeuralNetwork mother = res[i + 1].GetNeuralNetwork();
+                NeuralNetwork parent1 = res[i].GetNeuralNetwork();
+                NeuralNetwork parent2 = res[x].GetNeuralNetwork();
 
-
-                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
+                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(parent1, parent2);
 
                 res[i + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
-                res[i + len + 1] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
+                res[x + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
             });
 
             _agents = res;
         }
-        
+
 
         public IEnumerable<FitnessResults> GetFitnessResults()
         {

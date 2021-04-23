@@ -30,10 +30,10 @@ namespace Network.Mutators
         }
 
 
-        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
+        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork parent1, NeuralNetwork parent2)
         {
-            NetworkInfo fNetworkInfo = father.CopyNetworkInfo();
-            NetworkInfo mNetworkInfo = mother.CopyNetworkInfo();
+            NetworkInfo fNetworkInfo = parent1.CopyNetworkInfo();
+            NetworkInfo mNetworkInfo = parent2.CopyNetworkInfo();
 
             byte[] fBytes = fNetworkInfo.ToByteArr();
             byte[] mBytes = mNetworkInfo.ToByteArr();
