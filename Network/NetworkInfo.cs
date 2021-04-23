@@ -8,13 +8,12 @@ namespace Network
 {
     public class NetworkInfo
     {
-        private const double cBiasRange = 1;
+        private const double cBiasRange = 10;
         private const double cWeightRange = 1;
 
         public double[][] Weights { get; private set; }
         public double[][] Bias { get; private set; }
 
-        public bool HasValues => Weights is not null && Bias is not null;
         public int InputCount { get; }
         public int OutputCount { get; }
         public int Layers { get; }
@@ -88,7 +87,14 @@ namespace Network
         }
 
 
-        public (double[][] Weights, double[][] Biass) InitiateRandomWeightsAndBiases()
+        public (double[][] Weights, double[][] Biass) GetWeightsAndBiases()
+        {
+            if (Weights is not null && Bias is not null)
+                return (Weights, Bias);
+            return (Weights, Bias) = InitiateRandomWeightsAndBiases();
+        }
+
+        private (double[][] Weights, double[][] Biass) InitiateRandomWeightsAndBiases()
         {
             double[][] bias = new double[Layers][];
             double[][] weights = new double[Layers][];
@@ -106,16 +112,14 @@ namespace Network
 
             for (int i = 0; i < Layers; i++)
             {
-                double bRange = i == 0 ? InputCount : BiasCount[i - 1];
-
                 for (int x = 0; x < bias[i].Length; x++)
                 {
-                    bias[i][x] = RNG.Instance.NextDouble(-1d, 1);
+                    bias[i][x] = RNG.Instance.NextDouble(-cBiasRange, cBiasRange);
                 }
 
                 for (int x = 0; x < weights[i].Length; x++)
                 {
-                    weights[i][x] = RNG.Instance.NextDouble(-1d, 1d);
+                    weights[i][x] = RNG.Instance.NextDouble(-cWeightRange, cWeightRange);
                 }
             }
 

@@ -21,7 +21,7 @@ namespace Network.Mutators
             _maxSubstringLength = maxSubstringLen;
         }
 
-        public (NetworkInfo First, NetworkInfo Second) Get2Offsprings(NeuralNetwork parent1, NeuralNetwork parent2)
+        public (NetworkInfo First, NetworkInfo Second) Get2Offsprings(BasicNeuralNetwork parent1, BasicNeuralNetwork parent2)
         {
             NetworkInfo fNetworkInfo = parent1.CopyNetworkInfo();
             NetworkInfo mNetworkInfo = parent2.CopyNetworkInfo();

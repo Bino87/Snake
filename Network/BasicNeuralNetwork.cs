@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Commons.Extensions;
 using Network.ActivationFunctions;
 
 namespace Network
 {
-    public class NeuralNetwork
+    public class BasicNeuralNetwork
     {
         private readonly int _inputCount;
         private readonly int _numLayers;
@@ -17,20 +15,10 @@ namespace Network
 
         public double[][] Weights => _weights;
 
-        public NeuralNetwork(NetworkInfo networkInfo)
+        public BasicNeuralNetwork(NetworkInfo networkInfo)
         {
-            if (networkInfo.HasValues)
-            {
-                _biases = networkInfo.Bias;
-                _weights = networkInfo.Weights;
-            }
-            else
-            {
-                (double[][] weights, double[][] biass) = networkInfo.InitiateRandomWeightsAndBiases();
-                _biases = biass;
-                _weights = weights;
-            }
-                
+            (_weights, _biases) = networkInfo.GetWeightsAndBiases();
+
             _numLayers = networkInfo.Layers;
             _inputCount = networkInfo.InputCount;
             _activationFunction = networkInfo.ActivationFunction;
@@ -72,12 +60,12 @@ namespace Network
         {
             double value = 0;
 
-            for(int inputIndex = 0; inputIndex < input.Length; inputIndex++)
+            for (int inputIndex = 0; inputIndex < input.Length; inputIndex++)
             {
                 int weightIndex = outputIndex * input.Length + inputIndex;
                 double result = input[inputIndex] * _weights[index][weightIndex];
 
-                if(result.IsOkNumber())
+                if (result.IsOkNumber())
                     value += result;
             }
 

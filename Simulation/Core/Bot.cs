@@ -85,7 +85,7 @@ namespace Simulation.Core
             return new SimulationResult(Generation, _uniqueCells, _maxMovesWithoutFood, 1);
         }
 
-        public NeuralNetwork GetNeuralNetwork() => _networkAgent.GetNeuralNetwork();
+        public BasicNeuralNetwork GetNeuralNetwork() => _networkAgent.GetNeuralNetwork();
 
         private void SpawnSnake(IUpdate<IOnMoveUpdateParameters> updater)
         {

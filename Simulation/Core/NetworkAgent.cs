@@ -9,21 +9,21 @@ namespace Simulation.Core
     internal class NetworkAgent
     {
         private readonly int _inputCount;
-        private readonly NeuralNetwork _neuralNetwork;
+        private readonly BasicNeuralNetwork _basicNeuralNetwork;
         private double[][] _result;
         internal NetworkAgent(NetworkInfo networkInfo)
         {
             _inputCount = networkInfo.InputCount;
-            _neuralNetwork = new NeuralNetwork(networkInfo);
+            _basicNeuralNetwork = new BasicNeuralNetwork(networkInfo);
             _result = new[] { new double[3] };
         }
 
-        public NeuralNetwork GetNeuralNetwork() => _neuralNetwork;
+        public BasicNeuralNetwork GetNeuralNetwork() => _basicNeuralNetwork;
         public double[][] Calculate(NetworkAgentCalculationParameters parameters, IUpdate<IOnMoveUpdateParameters> updater)
         {
             double[] input = GetInputValues(parameters, updater);
 
-            _result = _neuralNetwork.Evaluate(input);
+            _result = _basicNeuralNetwork.Evaluate(input);
 
             return _result;
         }

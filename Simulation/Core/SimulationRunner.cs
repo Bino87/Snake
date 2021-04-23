@@ -46,8 +46,8 @@ namespace Simulation.Core
                 res[i] = _agents[fitnessResults[i].AgentIndex];
                 res[x] = _agents[fitnessResults[x].AgentIndex];
 
-                NeuralNetwork parent1 = res[i].GetNeuralNetwork();
-                NeuralNetwork parent2 = res[x].GetNeuralNetwork();
+                BasicNeuralNetwork parent1 = res[i].GetNeuralNetwork();
+                BasicNeuralNetwork parent2 = res[x].GetNeuralNetwork();
 
                 (NetworkInfo first, NetworkInfo second) = mutator.Get2Offsprings(parent1, parent2);
 
