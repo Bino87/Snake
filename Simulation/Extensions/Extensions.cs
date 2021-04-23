@@ -16,7 +16,7 @@ namespace Simulation.Extensions
                 total += results[i].Result.Points;
             }
 
-            total /= results.Count;
+            total /= len;
             return total;
         }
 
