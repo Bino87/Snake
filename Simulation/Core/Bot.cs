@@ -117,7 +117,7 @@ namespace Simulation.Core
 
                 if (count > 50)
                 {
-
+                    //TODO: this should be handled somehow.
                 }
             }
 
@@ -149,6 +149,8 @@ namespace Simulation.Core
                     max = result[i];
                 }
             }
+
+            //TODO: support visualization of directions?
 
             return index switch
             {

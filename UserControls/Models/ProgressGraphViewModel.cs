@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Commons.Extensions;
 using UserControls.Constants;
 using UserControls.Core.Base;
 using UserControls.Objects.NeuralNetDisplay;
@@ -34,14 +35,14 @@ namespace UserControls.Models
 
             if (_results.Count > 1)
             {
-                DataSource.Clear(); 
+                DataSource.Clear();
                 for (int i = 1; i < _results.Count; i++)
                 {
-                    double x1 = InverseLerp(i-1,0, _results.Count - 1)* Cons.cProgressGraphWidth;
-                    double x2 = InverseLerp(i,  0, _results.Count - 1)* Cons.cProgressGraphWidth;
-                    //double x2 = ((double)i) / _results.Count * Cons.cProgressGraphWidth;
-                    double y1 = Cons.cProgressGraphHeight - InverseLerp(_results[i - 1],_min,_max) * Cons.cProgressGraphHeight;
-                    double y2 = Cons.cProgressGraphHeight - InverseLerp(_results[i]    ,_min,_max) * Cons.cProgressGraphHeight;
+                    int x = i - 1;
+                    double x1 = x.InverseLerp(0, _results.Count - 1) * Cons.cProgressGraphWidth;
+                    double x2 = i.InverseLerp(0, _results.Count - 1) * Cons.cProgressGraphWidth;
+                    double y1 = Cons.cProgressGraphHeight - _results[x].InverseLerp(_min, _max) * Cons.cProgressGraphHeight;
+                    double y2 = Cons.cProgressGraphHeight - _results[i].InverseLerp(_min, _max) * Cons.cProgressGraphHeight;
 
                     ProgressGraphLine pgl = new(x1, x2, y1, y2);
                     DataSource.Add(pgl);
@@ -49,13 +50,5 @@ namespace UserControls.Models
             }
         }
 
-        double InverseLerp(double value, double min, double max)
-        {
-            if (value <= min)
-                return 0;
-            if (value >= max)
-                return 1;
-            return (value - min) / (max - min);
-        }
     }
 }
