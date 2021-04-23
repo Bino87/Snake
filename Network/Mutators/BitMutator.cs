@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using Commons;
 
 namespace Network.Mutators
 {
@@ -7,7 +8,6 @@ namespace Network.Mutators
     {
         private readonly double _mutationChancePercentage;
         private readonly double _mutationPercentage;
-        private readonly Random _rand;
         enum MutationType
         {
             DuplicateNext,
@@ -28,12 +28,11 @@ namespace Network.Mutators
         {
             _mutationChancePercentage = mutationChancePercentage;
             _mutationPercentage = mutationPercentage;
-            _rand = new Random();
         }
 
 
         private bool debug = false;
-        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother, Func<int,int,int> getRandom)
+        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
         {
             NetworkInfo fNetworkInfo = father.ToNetworkInfo();
             NetworkInfo mNetworkInfo = mother.ToNetworkInfo();
@@ -96,13 +95,13 @@ namespace Network.Mutators
 
         private byte[] Mutate(byte[] arr)
         {
-            if (_rand.NextDouble() < _mutationChancePercentage)
+            if (RNG.Instance.NextDouble() < _mutationChancePercentage)
             {
-                int mutationAmount = _rand.Next(1, (int) (_mutationPercentage * arr.Length + 1));
+                int mutationAmount = RNG.Instance.Next(1, (int) (_mutationPercentage * arr.Length + 1));
 
                 for (int i = 0; i < mutationAmount; i++)
                 {
-                    int index = _rand.Next(arr.Length);
+                    int index = RNG.Instance.Next(arr.Length);
                     Mutate(arr, index);
                 }
             }
@@ -115,7 +114,7 @@ namespace Network.Mutators
             MutationType[] enums = Enum.GetValues<MutationType>();
             //enums = new[] { MutationType.Decrement, MutationType.Increment, /*MutationType.SwapWithNext,MutationType.SwapWithPrevious*/};
 
-            MutationType current = (MutationType)_rand.Next(enums.Length);
+            MutationType current = (MutationType)RNG.Instance.Next(enums.Length);
             //current = MutationType.Randomize;
             switch (current)
             {
@@ -153,7 +152,7 @@ namespace Network.Mutators
                     break;
                 case MutationType.Randomize:
 
-                    arr[index] = (byte)_rand.Next(0, byte.MaxValue + 1);
+                    arr[index] = (byte)RNG.Instance.Next(0, byte.MaxValue + 1);
                     break;
                 case MutationType.Increment:
                     arr[index]++;
@@ -178,7 +177,7 @@ namespace Network.Mutators
 
             for (int i = 0; i < len; i++)
             {
-                int a = _rand.Next(0, fLen + mLen);
+                int a = RNG.Instance.Next(0, fLen + mLen);
 
                 if (a < fLen)
                 {

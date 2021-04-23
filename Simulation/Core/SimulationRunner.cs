@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Network;
 using Network.Mutators;
+using Simulation.Core.Internal;
 using Simulation.Extensions;
 using Simulation.Interfaces;
 using Simulation.SimResults;
@@ -14,7 +15,6 @@ namespace Simulation.Core
         private Bot[] _agents;
         private readonly ISimulationStateParameters _simStateParameters;
         private readonly ISimulationUpdateManager _updateManager;
-        private readonly Random _rand;
 
         private readonly object _lock = new();
 
@@ -22,16 +22,8 @@ namespace Simulation.Core
         {
             _simStateParameters = simStateParameters;
             _updateManager = simulationUpdateManager;
-            _rand = new Random();
         }
 
-        int GetRandom(int min, int max)
-        {
-            lock (_lock)
-            {
-                return _rand.Next(min, max);
-            }
-        }
 
         public void InitializeAgents(NetworkInfo networkInfo)
         {
@@ -59,7 +51,7 @@ namespace Simulation.Core
                 NeuralNetwork mother = res[i + 1].GetNeuralNetwork();
 
 
-                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother, GetRandom);
+                (NetworkInfo first, NetworkInfo second) = mutator.GetOffsprings(father, mother);
 
                 res[i + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
                 res[i + len + 1] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
@@ -67,45 +59,13 @@ namespace Simulation.Core
 
             _agents = res;
         }
+        
 
         public IEnumerable<FitnessResults> GetFitnessResults()
         {
-            FitnessResults[] results = new FitnessResults[_agents.Length];
+            GenerationSimulator gs = _simStateParameters.RunInBackground ? new ParallelGenerationSimulator(_agents, _updateManager) : new LinearGenerationSimulator(_agents, _updateManager, _simStateParameters);
 
-            void RunAgentSimulation(int i)
-            {
-                _updateManager.UpdateIndividual(_agents[i].GetNeuralNetwork().Weights, i);
-
-
-                SimulationResult res = _agents[i].Run(_updateManager.OnMove);
-
-                results[i] = new FitnessResults(i, res, _agents[i].Id);
-            }
-
-            void RunItParallel(int i)
-            {
-                Parallel.For(i, _agents.Length, RunAgentSimulation);
-            }
-
-
-            //TODO: turn back parallel, but add RNG_Provider class or something like that.
-
-            //if (_simStateParameters.RunInBackground)
-            //{
-            //    RunItParallel(0);
-            //}
-            //else
-            //{
-            for (int i = 0; i < _agents.Length; i++)
-            {
-                RunAgentSimulation(i);
-
-                if (_simStateParameters.RunInBackground && _updateManager.ShouldUpdate)
-                    _updateManager.ShouldUpdate = false;
-            }
-
-
-            return results;
+            return gs.SimulateGeneration();
         }
     }
 }

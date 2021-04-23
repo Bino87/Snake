@@ -2,6 +2,7 @@
 using System.Data;
 using System.Diagnostics;
 using System.Text;
+using Commons;
 
 namespace Network.Mutators
 {
@@ -10,7 +11,6 @@ namespace Network.Mutators
     {
         private readonly double _mutationChancePercentage;
         private readonly double _mutationPercentage;
-        private readonly Random _rand;
 
         /// <summary>
         /// 
@@ -21,10 +21,9 @@ namespace Network.Mutators
         {
             _mutationChancePercentage = mutationChancePercentage;
             _mutationPercentage = mutationPercentage;
-            _rand = new Random(123);
         }
 
-        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother, Func<int,int,int>getRandom)
+        public (NetworkInfo First, NetworkInfo Second) GetOffsprings(NeuralNetwork father, NeuralNetwork mother)
         {
             NetworkInfo fNetworkInfo = father.ToNetworkInfo();
             NetworkInfo mNetworkInfo = mother.ToNetworkInfo();
@@ -35,8 +34,8 @@ namespace Network.Mutators
             string fStr = ToBinaryString(fBytes);
             string mStr = ToBinaryString(mBytes);
 
-            byte[] firstBytes = CreateArray(Mutate(Mix(fStr, mStr), getRandom), fBytes.Length);
-            byte[] secondBytes = CreateArray(Mutate(Mix(mStr, fStr), getRandom), fBytes.Length);
+            byte[] firstBytes = CreateArray(Mutate(Mix(fStr, mStr)), fBytes.Length);
+            byte[] secondBytes = CreateArray(Mutate(Mix(mStr, fStr)), fBytes.Length);
 
             fNetworkInfo.FromByteArray(firstBytes);
             fNetworkInfo.FromByteArray(secondBytes);
@@ -58,17 +57,17 @@ namespace Network.Mutators
             return arr;
         }
 
-        private string Mutate(string str, Func<int, int, int> getRandom)
+        private string Mutate(string str)
         {
-            if (_rand.NextDouble() < _mutationChancePercentage)
+            if (RNG.Instance.NextDouble() < _mutationChancePercentage)
             {
-                int amount = getRandom(1, (int) (str.Length * _mutationPercentage));
+                int amount = RNG.Instance.Next(1, (int) (str.Length * _mutationPercentage));
                 
                 StringBuilder sb = new(str);
 
                 for(int i = 0; i < amount; i++)
                 {
-                    int index = getRandom(0, str.Length);
+                    int index = RNG.Instance.Next(0, str.Length);
 
                     sb[index] = sb[index] == '1' ? '0' : '1';
                 }
@@ -92,7 +91,7 @@ namespace Network.Mutators
 
             for (int i = 0; i < fStr.Length; i += a)
             {
-                int random = _rand.Next(fCount + mCount);
+                int random = RNG.Instance.Next(fCount + mCount);
 
                 string substring;
                 if (random < fCount)

@@ -48,13 +48,14 @@ namespace Simulation.Extensions
                 updater.Data.VisionData.Add(new VisionData(type, originX, x, originY, y));
         }
 
-        public static void UpdateVisual(this IUpdate<IOnMoveUpdateParameters> updater, IEnumerable<double[]> calculationResults, int movesSinceLastFood, Food food, List<SnakePart> snakeParts, List<HashSet<int>> uniqueCells)
+        public static void UpdateVisual(this IUpdate<IOnMoveUpdateParameters> updater, IEnumerable<double[]> calculationResults, int movesSinceLastFood, Food food, IEnumerable<SnakePart> snakeParts, IList<HashSet<int>> uniqueCells)
         {
             if (updater is null)
                 return;
 
             if (!updater.ShouldUpdate)
                 return;
+
             updater.Data.Moves = movesSinceLastFood;
             updater.Data.Points = uniqueCells.Count - 1;
             updater.Data.CellUpdateData.Add(new CellUpdateData(food.X, food.Y, food.Type));

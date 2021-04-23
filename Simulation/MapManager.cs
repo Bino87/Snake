@@ -11,7 +11,7 @@ namespace Simulation
     {
 
         private readonly ISimulationUpdateManager _updateManager;
-        private ISimulationStateParameters _simStateParameters;
+        private readonly ISimulationStateParameters _simStateParameters;
         private readonly NetworkInfo _networkInfo;
         private readonly SimulationRunner _simulationRunner;
 

@@ -24,7 +24,7 @@ namespace UserControls.Models
             if (visionData is null)
                 return;
 
-            double cellSize = Cons.cMapSize / mapSize;   // size of each tile;
+            double cellSize = Cons.cMapSize / mapSize;          // size of each tile;
             double midPoint = cellSize / 2;                     //midpoint offset.
 
             for (int i = 0; i < visionData.Count; i++)

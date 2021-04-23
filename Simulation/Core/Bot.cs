@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Commons;
 using Network;
 using Simulation.Enums;
 using Simulation.Extensions;
@@ -19,7 +20,6 @@ namespace Simulation.Core
         private readonly List<SnakePart> _snake;
         private Food _food;
         private readonly int _maxMovesWithoutFood;
-        private readonly Random _rand;
         private SnakeHead Head => _snake[0] as SnakeHead;
         private SnakePart Tail => _snake[^1];
         private readonly Dictionary<(int, int), MapCellType> _takenCells;
@@ -36,7 +36,6 @@ namespace Simulation.Core
             Id = _idCounter++;
             _mapSize = mapSize;
             _maxMovesWithoutFood = maxMovesWithoutFood;
-            _rand = new Random();
             _snake = new List<SnakePart>();
             _networkAgent = new NetworkAgent(networkInfo);
             _uniqueCells = new List<HashSet<int>>();
@@ -104,13 +103,22 @@ namespace Simulation.Core
 
         private void SpawnNewFood()
         {
-            int nextX = _rand.Next(0, _mapSize);
-            int nextY = _rand.Next(0, _mapSize);
+            int nextX = RNG.Instance.Next(0, _mapSize);
+            int nextY = RNG.Instance.Next(0, _mapSize);
+
+            int count = 0;
 
             while (_takenCells.ContainsKey((nextX, nextY)))
             {
-                nextX = _rand.Next(0, _mapSize);
-                nextY = _rand.Next(0, _mapSize);
+                nextX = RNG.Instance.Next(0, _mapSize);
+                nextY = RNG.Instance.Next(0, _mapSize);
+
+                count++;
+
+                if (count > 50)
+                {
+
+                }
             }
 
             _takenCells.Add((nextX, nextY), MapCellType.Food);

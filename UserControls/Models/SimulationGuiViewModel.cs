@@ -14,20 +14,17 @@ namespace UserControls.Models
         private int _moves;
         private int _points;
         private MutationTechnique _mutationTechnique;
-        private double _mutationChance = .7;
-        private double _mutationRate = .05;
-        private int _updateDelay = 100;
-        private int _numberOfPairs = 500;
-        private int _mapSize = 15;
+        private double _mutationChance = .05;
+        private double _mutationRate = .005;
+        private int _updateDelay = 25;
+        private int _numberOfPairs = 150;
+        private int _mapSize = 11;
         private bool _runInBackground = true;
         private int _currentIndividual;
 
         public RelayCommand Run { get; set; }
 
-        public int MaxMoves
-        {
-            get => MapSize * MapSize;
-        }
+        public int MaxMoves => MapSize * MapSize;
 
         public int MapSize
         {

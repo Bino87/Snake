@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Commons;
 using Network.ActivationFunctions;
 
 namespace Network
@@ -101,7 +102,6 @@ namespace Network
                 weights[i] = new double[WeightsCount[i]];
             }
 
-            Random rand = new();
 
             for (int i = 0; i < Layers; i++)
             {
@@ -109,12 +109,12 @@ namespace Network
 
                 for (int x = 0; x < bias[i].Length; x++)
                 {
-                    bias[i][x] = rand.NextDouble(-1d, 1);
+                    bias[i][x] = RNG.Instance.NextDouble(-1d, 1);
                 }
 
                 for (int x = 0; x < weights[i].Length; x++)
                 {
-                    weights[i][x] = rand.NextDouble(-1d, 1d);
+                    weights[i][x] = RNG.Instance.NextDouble(-1d, 1d);
                 }
             }
 

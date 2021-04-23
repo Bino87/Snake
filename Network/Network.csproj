@@ -8,4 +8,8 @@
     <PackageReference Include="ILGPU" Version="0.10.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Commons\Commons.csproj" />
+  </ItemGroup>
+
 </Project>
