@@ -46,21 +46,20 @@ namespace Simulation.Core
                 res[index++] = aa ? 1 : 0;
                 res[index++] = bb ? 1 : 0;
                 res[index++] = value;
-                //res[index++] = 1 - value;
                 res[index++] = seesSelf > 1 ? 1 : 0;
                 res[index++] = seesSelf;
                 res[index++] = seesFood > 1 ? 1 : 0;
                 res[index++] = seesFood;
             }
 
+            GetValueAndSetInput(-1, -1);
             GetValueAndSetInput(-1, 0);
-            GetValueAndSetInput(1, 0);
+            GetValueAndSetInput(-1, 1);
             GetValueAndSetInput(0, -1);
             GetValueAndSetInput(0, 1);
-            GetValueAndSetInput(1, 1);
-            GetValueAndSetInput(-1, 1);
             GetValueAndSetInput(1, -1);
-            GetValueAndSetInput(-1, -1);
+            GetValueAndSetInput(1, 0);
+            GetValueAndSetInput(1, 1);
 
             //Head Direction
             res[index++] = parameters.Head.Direction == Direction.Up ? 1 : 0;
@@ -118,7 +117,7 @@ namespace Simulation.Core
 
                 return true;
             }
-           
+
             while (ShouldKeepRuning())
             {
                 if (parameters.LookUp.TryGetValue((x, y), out MapCellType item))

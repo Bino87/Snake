@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Commons;
 using Commons.Extensions;
 using Network.ActivationFunctions;
@@ -128,12 +129,32 @@ namespace Network
 
         internal byte[] ToByteArr()
         {
-            List<byte> bytes = new();
+            int weightCount = Weights.Sum(t => t.Length * 8);
+            int biasCount = Bias.Sum(t => t.Length * 8);
 
-            ConvertToBytes(bytes, Weights);
-            ConvertToBytes(bytes, Bias);
+            byte[] arr = new byte[weightCount + biasCount];
 
-            return bytes.ToArray();
+            ConvertToBytes(arr, Weights, 0);
+            ConvertToBytes(arr, Bias, weightCount);
+
+            return arr;
+        }
+
+
+        static void ConvertToBytes(byte[] arr, double[][] values, int index)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                for (int x = 0; x < values[i].Length; x++)
+                {
+                    byte[] b = values[i][x].GetBytes();
+
+                    for (int z = 0; z < b.Length; z++)
+                    {
+                        arr[index++] = b[z];
+                    }
+                }
+            }
         }
 
         internal void FromByteArray(byte[] arr)
@@ -156,7 +177,7 @@ namespace Network
             {
                 for (int w = 0; w < lookUp[i]; w++)
                 {
-                    double d = clamp ? arr.ToDouble(index).Clamp01() : arr.ToDouble(index);
+                    double d = clamp ? arr.ToDouble(index).Clamp1Neg1() : arr.ToDouble(index);
 
                     item[i][w] = d;
 
@@ -167,21 +188,6 @@ namespace Network
             return item;
         }
 
-        private void ConvertToBytes(ICollection<byte> bytes, IReadOnlyList<double[]> arr)
-        {
-            for (int i = 0; i < Layers; i++)
-            {
-                for (int x = 0; x < arr[i].Length; x++)
-                {
-                    byte[] b = arr[i][x].GetBytes();
-
-                    for (int z = 0; z < b.Length; z++)
-                    {
-                        bytes.Add(b[z]);
-                    }
-                }
-            }
-        }
 
     }
 }
