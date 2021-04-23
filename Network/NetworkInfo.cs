@@ -14,7 +14,6 @@ namespace Network
 
         public double[][] Weights { get; private set; }
         public double[][] Bias { get; private set; }
-
         public int InputCount { get; }
         public int OutputCount { get; }
         public int Layers { get; }
@@ -92,7 +91,7 @@ namespace Network
         {
             if (Weights is not null && Bias is not null)
                 return (Weights, Bias);
-            return (Weights, Bias) = InitiateRandomWeightsAndBiases();
+            return InitiateRandomWeightsAndBiases();
         }
 
         private (double[][] Weights, double[][] Biass) InitiateRandomWeightsAndBiases()
@@ -100,19 +99,12 @@ namespace Network
             double[][] bias = new double[Layers][];
             double[][] weights = new double[Layers][];
 
-            for (int i = 0; i < BiasCount.Length; i++)
-            {
-                bias[i] = new double[BiasCount[i]];
-            }
-
-            for (int i = 0; i < WeightsCount.Length; i++)
-            {
-                weights[i] = new double[WeightsCount[i]];
-            }
-
 
             for (int i = 0; i < Layers; i++)
             {
+                bias[i] = new double[BiasCount[i]];
+                weights[i] = new double[WeightsCount[i]];
+
                 for (int x = 0; x < bias[i].Length; x++)
                 {
                     bias[i][x] = RNG.Instance.NextDouble(-cBiasRange, cBiasRange);
@@ -168,13 +160,10 @@ namespace Network
         {
             double[][] item = new double[lookUp.Count][];
 
-            for (int i = 0; i < lookUp.Count; i++)
-            {
-                item[i] = new double[lookUp[i]];
-            }
-
             for (int i = 0; i < Layers; i++)
             {
+                item[i] = new double[lookUp[i]];
+
                 for (int w = 0; w < lookUp[i]; w++)
                 {
                     double d = clamp ? arr.ToDouble(index).Clamp1Neg1() : arr.ToDouble(index);
@@ -187,7 +176,5 @@ namespace Network
 
             return item;
         }
-
-
     }
 }
