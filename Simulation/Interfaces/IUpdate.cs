@@ -1,6 +1,6 @@
 ﻿namespace Simulation.Interfaces
 {
-    public interface IUpdate<T>
+    public interface IUpdate<out T>
     {
         bool ShouldUpdate { get; }
         T Data { get; }

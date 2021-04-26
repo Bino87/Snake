@@ -25,7 +25,7 @@ namespace Simulation.SimResults
             Generation = generation;
         }
 
-        public int CompareTo(object? obj)
+        public int CompareTo(object obj)
         {
             if (obj is SimulationResult sr)
             {

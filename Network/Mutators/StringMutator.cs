@@ -26,20 +26,23 @@ namespace Network.Mutators
             NetworkInfo fNetworkInfo = parent1.CopyNetworkInfo();
             NetworkInfo mNetworkInfo = parent2.CopyNetworkInfo();
 
-            byte[] fBytes = fNetworkInfo.ToByteArr();
-            byte[] mBytes = mNetworkInfo.ToByteArr();
+            (string fBinaryString, int fArrLen) = ConvertToBinaryString(fNetworkInfo);
+            (string mBinaryString, int mArrLen) = ConvertToBinaryString(mNetworkInfo);
 
-            string fStr = fBytes.ToBinaryString();
-            string mStr = mBytes.ToBinaryString();
-
-            byte[] firstBytes = CreateArray(Mutate(Mix(fStr, mStr)), fBytes.Length);
-            byte[] secondBytes = CreateArray(Mutate(Mix(mStr, fStr)), mBytes.Length);
+            byte[] firstBytes = CreateArray(Mutate(Mix(fBinaryString, mBinaryString)), fArrLen);
+            byte[] secondBytes = CreateArray(Mutate(Mix(mBinaryString, fBinaryString)), mArrLen);
 
             fNetworkInfo.FromByteArray(firstBytes);
             mNetworkInfo.FromByteArray(secondBytes);
 
             return (fNetworkInfo, mNetworkInfo);
+        }
 
+        private static (string Value, int byteArrLenght) ConvertToBinaryString(NetworkInfo networkInfo)
+        {
+            byte[] arr = networkInfo.ToByteArr();
+
+            return (arr.ToBinaryString(), arr.Length);
         }
 
         private static byte[] CreateArray(string str, int arrLen)

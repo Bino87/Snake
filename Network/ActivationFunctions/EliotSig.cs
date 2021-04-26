@@ -1,5 +1,4 @@
-﻿using System;
-using Commons.Extensions;
+﻿using Commons.Extensions;
 
 namespace Network.ActivationFunctions
 {

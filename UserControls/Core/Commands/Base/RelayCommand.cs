@@ -47,7 +47,7 @@ namespace UserControls.Core.Commands.Base
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public RelayCommand(Action<T> execute) : this(execute, x => true)
+        public RelayCommand(Action<T> execute) : this(execute, _ => true)
         {
 
         }

@@ -26,9 +26,9 @@ namespace UserControls.Models
             
             NetworkInfo ni = new(
                 new LayerInfo(new Identity(), 2 * 4 + 8 * 7 + 6 + 3),
-                new LayerInfo(new ReLu(), 45),
-                new LayerInfo(new Sigmoid(), 30),
-                new LayerInfo(new ReLu(), 12),
+                new LayerInfo(new ReLu(), 30),
+                new LayerInfo(new Sigmoid(), 15),
+                new LayerInfo(new ReLu(), 9),
                 new LayerInfo(new Sigmoid(), 3));
             NeuralNetDisplay = new NeuralNetDisplayViewModel(ni);
             _mm = new MapManager(SimulationGuiViewModel, ni, new SimulationUpdateManager(NeuralNetDisplay, SimulationGuiViewModel, SnakeMapViewModel, ProgressGraph));

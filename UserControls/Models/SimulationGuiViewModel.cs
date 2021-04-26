@@ -14,10 +14,10 @@ namespace UserControls.Models
         private int _moves;
         private int _points;
         private MutationTechnique _mutationTechnique;
-        private double _mutationChance = .05;
+        private double _mutationChance = .03;
         private double _mutationRate = .005;
         private int _updateDelay = 25;
-        private int _numberOfPairs = 150;
+        private int _numberOfPairs = 1000;
         private int _mapSize = 11;
         private bool _runInBackground = true;
         private int _currentIndividual;
