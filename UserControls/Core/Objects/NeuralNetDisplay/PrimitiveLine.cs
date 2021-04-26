@@ -1,6 +1,6 @@
-﻿using UserControls.Enums;
+﻿using UserControls.Core.Enums;
 
-namespace UserControls.Objects.NeuralNetDisplay
+namespace UserControls.Core.Objects.NeuralNetDisplay
 {
     public class PrimitiveLine : PrimitiveShape
     {

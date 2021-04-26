@@ -1,6 +1,6 @@
 ﻿using UserControls.Core.Base;
 
-namespace UserControls.Objects.NeuralNetDisplay
+namespace UserControls.Core.Objects.NeuralNetDisplay
 {
     public class PrimitiveShapeValueProvider : Observable
     {

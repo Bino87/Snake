@@ -1,4 +1,4 @@
-﻿namespace UserControls.Enums
+﻿namespace UserControls.Core.Enums
 {
     public enum ShapeType
     {

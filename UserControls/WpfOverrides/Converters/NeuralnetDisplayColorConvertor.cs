@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 
-namespace UserControls.Converters
+namespace UserControls.WpfOverrides.Converters
 {
     public class NeuralnetDisplayColorConvertor : MarkupExtension, IValueConverter
     {

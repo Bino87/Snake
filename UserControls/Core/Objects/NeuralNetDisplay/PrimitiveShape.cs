@@ -1,7 +1,7 @@
 ﻿using UserControls.Core.Base;
-using UserControls.Enums;
+using UserControls.Core.Enums;
 
-namespace UserControls.Objects.NeuralNetDisplay
+namespace UserControls.Core.Objects.NeuralNetDisplay
 {
     public abstract class PrimitiveShape : Observable
     {

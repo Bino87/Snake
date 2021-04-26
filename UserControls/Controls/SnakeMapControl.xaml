@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:models="clr-namespace:UserControls.Models"
-             xmlns:converters="clr-namespace:UserControls.Converters"
              xmlns:constants="clr-namespace:UserControls.Constants"
-             xmlns:templateSelectors="clr-namespace:UserControls.TemplateSelectors"
-             xmlns:objects="clr-namespace:UserControls.Objects"
-             xmlns:snakeDisplay="clr-namespace:UserControls.Objects.SnakeDisplay"
+             xmlns:snakeDisplay="clr-namespace:UserControls.Core.Objects.SnakeDisplay"
+             xmlns:templateSelectors="clr-namespace:UserControls.WpfOverrides.TemplateSelectors"
+             xmlns:converters="clr-namespace:UserControls.WpfOverrides.Converters"
+
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance models:SnakeMapViewModel}">
@@ -38,7 +38,7 @@
                             </Rectangle>
                     </DataTemplate>
 
-                    <DataTemplate x:Key="{x:Static constants:Cons.cVisionDataTemplate}" DataType="objects:CellVision">
+                    <DataTemplate x:Key="{x:Static constants:Cons.cVisionDataTemplate}" DataType="snakeDisplay:CellVision">
                             <Line StrokeThickness="1" Stroke="{Binding Path=VisionCollisionType, Converter={StaticResource MapVisionColorConverter}, Mode=OneWay}" 
                                   X1="{Binding Path=X1}"
                                   X2="{Binding Path=X2}"

@@ -8,12 +8,22 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance models:MainViewModel}">
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
+        <GroupBox Header=" Neural Net Display">
+            <controls:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
+        </GroupBox>
 
-        <controls:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
+
         <StackPanel>
-            <controls:SimulationGuiControl  DataContext="{Binding Path=SimulationGuiViewModel}" />
-            <controls:ProgressGraphControl DataContext="{Binding Path=ProgressGraph}" VerticalAlignment="Bottom"/>
+            <GroupBox Header="Settings">
+                <controls:SimulationGuiControl  DataContext="{Binding Path=SimulationGuiViewModel}" />
+            </GroupBox>
+            <GroupBox Header="Progress">
+                <controls:ProgressGraphControl DataContext="{Binding Path=ProgressGraph}" VerticalAlignment="Bottom"/>
+            </GroupBox>
         </StackPanel>
-        <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
+
+        <GroupBox Header="Simulation">
+            <controls:SnakeMapControl DataContext="{Binding Path=SnakeMapViewModel}"/>
+        </GroupBox>
     </StackPanel>
 </UserControl>

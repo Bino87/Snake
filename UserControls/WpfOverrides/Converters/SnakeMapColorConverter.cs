@@ -5,26 +5,21 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using Simulation.Enums;
 
-namespace UserControls.Converters
+namespace UserControls.WpfOverrides.Converters
 {
-    public class MapVisionColorConverter : MarkupExtension, IValueConverter
+    public class SnakeMapColorConverter : MarkupExtension, IValueConverter
     {
-        public SolidColorBrush Normal { get; set; }
+        public SolidColorBrush Snake { get; set; }
         public SolidColorBrush Food { get; set; }
-        public SolidColorBrush Self { get; set; }
-
-        public override object ProvideValue(IServiceProvider serviceProvider)
-        {
-            return this;
-        }
+        public SolidColorBrush Head { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value switch
             {
-                VisionCollisionType.Normal => Normal,
-                VisionCollisionType.Self => Self,
-                VisionCollisionType.Food => Food,
+                MapCellType.Snake => Snake,
+                MapCellType.Food => Food,
+                MapCellType.Head => Head,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -32,6 +27,11 @@ namespace UserControls.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider)
+        {
+            return this;
         }
     }
 }

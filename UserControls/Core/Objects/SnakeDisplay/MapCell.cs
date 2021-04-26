@@ -3,7 +3,7 @@ using Simulation.Enums;
 using Simulation.Interfaces;
 using UserControls.Core.Base;
 
-namespace UserControls.Objects.SnakeDisplay
+namespace UserControls.Core.Objects.SnakeDisplay
 {
     [DebuggerDisplay("X1:{X} Y1:{Y} {CellType}")]
     public class MapCell : Observable, IMapCell

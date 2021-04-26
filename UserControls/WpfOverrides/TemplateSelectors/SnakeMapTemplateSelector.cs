@@ -4,7 +4,7 @@ using Simulation.Enums;
 using Simulation.Interfaces;
 using UserControls.Constants;
 
-namespace UserControls.TemplateSelectors
+namespace UserControls.WpfOverrides.TemplateSelectors
 {
     public class SnakeMapTemplateSelector : DataTemplateSelector
     {

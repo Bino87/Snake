@@ -1,10 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using UserControls.Constants;
-using UserControls.Enums;
-using UserControls.Objects.NeuralNetDisplay;
+using UserControls.Core.Enums;
+using UserControls.Core.Objects.NeuralNetDisplay;
 
-namespace UserControls.StyleSelectors
+
+namespace UserControls.WpfOverrides.StyleSelectors
 {
     public class NeuralNetShapeStyleSelector : StyleSelector
     {

@@ -8,7 +8,7 @@
         public const double cNetWidth = 300;
         public const double cNetWidthPadding = 25;
         public const double cProgressGraphWidth = 400;
-        public const double cProgressGraphHeight = 260;
+        public const double cProgressGraphHeight = 236;
 
 
         public const string cShapeCircleDataTemplate = "cShapeCircleDataTemplate";

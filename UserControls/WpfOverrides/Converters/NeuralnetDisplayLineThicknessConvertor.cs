@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace UserControls.Converters
+namespace UserControls.WpfOverrides.Converters
 {
     public class NeuralnetDisplayLineThicknessConvertor : MarkupExtension, IValueConverter
     {

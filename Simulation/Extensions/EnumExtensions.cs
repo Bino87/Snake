@@ -6,7 +6,6 @@ namespace Simulation.Extensions
 {
     public static class EnumExtensions
     {
-
         public static Direction Turn(this Direction direction, TurnDirection turn)
         {
             return (direction, turn) switch
@@ -47,7 +46,6 @@ namespace Simulation.Extensions
                 MutationTechnique.String => new StringMutator(mutationChance, mutationRate, 2,12),
                 MutationTechnique.BitArr => new BitMutator(mutationChance, mutationRate),
                 _ => throw new ArgumentOutOfRangeException()
-
             };
         }
     }

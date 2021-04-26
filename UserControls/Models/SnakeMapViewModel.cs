@@ -4,8 +4,7 @@ using Simulation.Core;
 using Simulation.Interfaces;
 using UserControls.Constants;
 using UserControls.Core.Base;
-using UserControls.Objects;
-using UserControls.Objects.SnakeDisplay;
+using UserControls.Core.Objects.SnakeDisplay;
 
 namespace UserControls.Models
 {

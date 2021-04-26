@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using Commons.Extensions;
 using UserControls.Constants;
 using UserControls.Core.Base;
-using UserControls.Objects.NeuralNetDisplay;
+using UserControls.Core.Objects.NeuralNetDisplay;
 
 namespace UserControls.Models
 {

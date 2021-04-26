@@ -7,17 +7,17 @@
 
   <ItemGroup>
     <Compile Remove="Interfaces\**" />
+    <Compile Remove="Core\Objects\ProgressGraph\**" />
     <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="Core\Objects\ProgressGraph\**" />
     <None Remove="Interfaces\**" />
+    <None Remove="Core\Objects\ProgressGraph\**" />
     <Page Remove="Interfaces\**" />
+    <Page Remove="Core\Objects\ProgressGraph\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Simulation\Simulation.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Objects\ProgressGraph\" />
   </ItemGroup>
 
 </Project>
