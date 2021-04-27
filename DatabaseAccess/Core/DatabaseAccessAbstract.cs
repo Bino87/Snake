@@ -1,4 +1,7 @@
-﻿namespace DataAccessLibrary.Core
+﻿using System.Threading.Tasks;
+using DataAccessLibrary.DataTransferObjects;
+
+namespace DataAccessLibrary.Core
 {
     public abstract class DatabaseAccessAbstract<T>
     {
@@ -16,5 +19,20 @@
 
         public abstract int Upsert(T item);
 
+        public abstract int InsertMany(T[] items);
+
+        public abstract Task<T[]> GetAllAsync();
+
+        public abstract Task<T> GetByIdAsync(int id);
+
+        public abstract Task<int> InsertAsync(T item);
+
+        public abstract Task DeleteItemAsync(T item);
+
+        public abstract Task DeleteByIdAsync(int id);
+
+        public abstract Task<int> UpdateAsync(T item);
+
+        public abstract Task<int> UpsertAsync(T item);
     }
 }

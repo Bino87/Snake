@@ -1,36 +1,39 @@
 ﻿using System;
+using System.Data.SqlClient;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Internal.SQL
 {
-    internal class SqlCallParameter
+    internal record SqlCallParameter(string ParameterName, object Value, DataType DataType, Direction Direction)
     {
-        private readonly string _parameterName;
-        private readonly object _value;
-        private readonly DataType _dataType;
-        private readonly Direction _direction;
-
-        public SqlCallParameter(string parameterName, object value, DataType dataType, Direction direction)
+        internal SqlParameter ToSqlParameter() => new()
         {
-            _parameterName = parameterName;
-            _value = value;
-            _dataType = dataType;
-            _direction = direction;
-        }
+            Direction = Direction.ToParameterDirection(),
+            ParameterName = ParameterName,
+            Value = Value,
+            SqlDbType = DataType.ToSqlType()
+        };
     }
 
     internal class SqlCallParameters
     {
+        private readonly SQL_STORED_PROCEDURE _sqlStoredProcedureName;
         private readonly SqlCallParameter[] _sqlCallParameters;
-        private int _currentParameterIndex = 0;
+        internal int ParameterCount => _sqlCallParameters.Length;
+        private int _currentParameterIndex;
 
-        internal SqlCallParameters(int parametersCount, Actions action) : this(parametersCount)
+        public SqlCallParameter this[int index] => _sqlCallParameters[index];
+
+        internal string StoredProcedure => _sqlStoredProcedureName.ToString();
+
+        internal SqlCallParameters(int parametersCount, SQL_STORED_PROCEDURE sqlStoredProcedureName, Actions action) : this(parametersCount, sqlStoredProcedureName)
         {
             AddParameter(ParameterNames.ParameterNames.cAction, action, DataType.Int, Direction.Input);
         }
 
-        internal SqlCallParameters(int parametersCount)
+        private SqlCallParameters(int parametersCount, SQL_STORED_PROCEDURE sqlStoredProcedureName)
         {
+            _sqlStoredProcedureName = sqlStoredProcedureName;
             _sqlCallParameters = new SqlCallParameter[parametersCount];
         }
 
@@ -52,6 +55,14 @@ namespace DataAccessLibrary.Internal.SQL
             if (_currentParameterIndex == _sqlCallParameters.Length)
                 return true;
             return false;
+        }
+
+        public void FillParameters(SqlParameterCollection cmdParameters)
+        {
+            for (int i = 0; i < _sqlCallParameters.Length; i++)
+            {
+                cmdParameters.Add(_sqlCallParameters[i].ToSqlParameter());
+            }
         }
     }
 }

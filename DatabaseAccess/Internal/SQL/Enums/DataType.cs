@@ -3,7 +3,7 @@ using System.Data;
 
 namespace DataAccessLibrary.Internal.SQL.Enums
 {
-    internal enum StoredProcedures
+    internal enum SQL_STORED_PROCEDURE
     {
 
     }
@@ -17,6 +17,9 @@ namespace DataAccessLibrary.Internal.SQL.Enums
         DeleteItem = 5,
         Update = 6,
         Upsert = 7,
+        InsertMany = 8,
+        UpdateMany = 9,
+        UpsertMany = 10,
     }
 
     internal enum DataType
@@ -41,11 +44,6 @@ namespace DataAccessLibrary.Internal.SQL.Enums
         internal static int ToActionId(this Actions action)
         {
             return (int) action;
-        }
-
-        internal static string CreateStoredProcedureFullName(this Actions action, StoredProcedures storedProcedure)
-        {
-            return string.Join("_", storedProcedure.ToString(), action.ToActionId());
         }
 
         internal static ParameterDirection ToParameterDirection(this Direction direction)
