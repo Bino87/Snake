@@ -12,11 +12,10 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.Internal
 {
-    internal abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T> where T : SqlDataTransferObject
+    public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T> where T : SqlDataTransferObject
     {
-        private const string cConnectionString = "Data Source=Local;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
+        private const string cConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
 
-        protected abstract SQL_STORED_PROCEDURE StoredProcedure { get; }
 
         public override async Task<T[]> GetAllAsync()
         {
@@ -72,7 +71,14 @@ namespace DataAccessLibrary.Internal
                 return res;
             try
             {
-                SqlCallParameters[] para = items.ToSqlCallParametersArray(CreateDefaultParameters);
+                SqlCallParameters[] para1 = new SqlCallParameters[items.Length];
+
+                for (int i = 0; i < items.Length; i++)
+                {
+                    para1[i] = CreateDefaultParameters(items[i].ParametersCount, Actions.InsertMany);
+                }
+
+                SqlCallParameters[] para = para1;
 
                 DataTable dt = para.ToDataTable();
 
@@ -155,8 +161,7 @@ namespace DataAccessLibrary.Internal
             try
             {
 
-                const string conStr = "Data Source=Local;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
-                using SqlConnection con = new(conStr);
+                using SqlConnection con = new(cConnectionString);
                 using SqlCommand cmd = new(sqlCallParameters.StoredProcedure, con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -219,15 +224,15 @@ namespace DataAccessLibrary.Internal
             return res;
         }
 
-        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action)
+        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, string storedProcedure)
         {
-            SqlCallParameters parameters = new(parametersCount, StoredProcedure, action);
+            SqlCallParameters parameters = new(parametersCount, storedProcedure, action);
             return parameters;
         }
 
-        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, int id)
+        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, string storedProcedure, int id)
         {
-            SqlCallParameters parameters = CreateDefaultParameters(parametersCount, action);
+            SqlCallParameters parameters = CreateDefaultParameters(parametersCount, action, storedProcedure);
             parameters.AddParameter(ParameterNames.cId, id, DataType.Int, Direction.InputOutput);
             return parameters;
         }

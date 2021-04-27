@@ -3,7 +3,7 @@ using System.Data;
 
 namespace DataAccessLibrary.Internal.SQL.Enums
 {
-    internal enum SQL_STORED_PROCEDURE
+    public enum Table
     {
 
     }

@@ -34,21 +34,5 @@ namespace DataAccessLibrary.Extensions
 
             return dt;
         }
-
-        internal static SqlCallParameters[] ToSqlCallParametersArray(this SqlDataTransferObject[] items,
-            Func<int, Actions, SqlCallParameters> factory)
-        {
-
-            if (factory is null)
-                throw new Exception("Factory cannot be null");
-            SqlCallParameters[] para = new SqlCallParameters[items.Length];
-
-            for (int i = 0; i < items.Length; i++)
-            {
-                para[i] = factory(items[i].ParametersCount, Actions.InsertMany);
-            }
-
-            return para;
-        }
     }
 }

@@ -59,4 +59,7 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="SQL_DB.publish.xml" />
+  </ItemGroup>
 </Project>

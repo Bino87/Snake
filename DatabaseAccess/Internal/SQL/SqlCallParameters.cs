@@ -17,7 +17,7 @@ namespace DataAccessLibrary.Internal.SQL
 
     internal class SqlCallParameters
     {
-        private readonly SQL_STORED_PROCEDURE _sqlStoredProcedureName;
+        private readonly string _sqlStoredProcedureName;
         private readonly SqlCallParameter[] _sqlCallParameters;
         internal int ParameterCount => _sqlCallParameters.Length;
         private int _currentParameterIndex;
@@ -26,12 +26,12 @@ namespace DataAccessLibrary.Internal.SQL
 
         internal string StoredProcedure => _sqlStoredProcedureName.ToString();
 
-        internal SqlCallParameters(int parametersCount, SQL_STORED_PROCEDURE sqlStoredProcedureName, Actions action) : this(parametersCount, sqlStoredProcedureName)
+        internal SqlCallParameters(int parametersCount, string sqlStoredProcedureName, Actions action) : this(parametersCount, sqlStoredProcedureName)
         {
             AddParameter(ParameterNames.ParameterNames.cAction, action, DataType.Int, Direction.Input);
         }
 
-        private SqlCallParameters(int parametersCount, SQL_STORED_PROCEDURE sqlStoredProcedureName)
+        private SqlCallParameters(int parametersCount, string sqlStoredProcedureName)
         {
             _sqlStoredProcedureName = sqlStoredProcedureName;
             _sqlCallParameters = new SqlCallParameter[parametersCount];

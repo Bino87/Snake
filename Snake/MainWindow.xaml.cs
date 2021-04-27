@@ -1,5 +1,10 @@
-﻿using System.Windows;
+﻿using System.Data;
+using System.Windows;
 using UserControls.Models;
+using DataAccessLibrary;
+using DataAccessLibrary.DataTransferObjects;
+using DataAccessLibrary.Internal;
+using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace Snake
 {
@@ -17,10 +22,10 @@ namespace Snake
             mvm = new MainViewModel();
             this.DataContext = mvm;
 
-           
 
         }
 
        
     }
+
 }
