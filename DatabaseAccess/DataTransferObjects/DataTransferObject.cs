@@ -1,11 +1,9 @@
-﻿using DatabaseAccess.Internal.Enums;
+﻿using DataAccessLibrary.Internal.Enums;
 
-namespace DatabaseAccess.DataTransferObjects
+namespace DataAccessLibrary.DataTransferObjects
 {
     public abstract class DataTransferObject
     {
         internal abstract DatabaseType DbType { get; }
-
-
     }
 }

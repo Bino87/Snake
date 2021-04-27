@@ -1,4 +1,4 @@
-﻿namespace DatabaseAccess.Internal.Enums
+﻿namespace DataAccessLibrary.Internal.Enums
 {
     internal enum DatabaseType  
     {

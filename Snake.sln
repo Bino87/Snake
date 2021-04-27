@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simulation", "Simulation\Si
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons", "Commons\Commons.csproj", "{F8185CEE-2B02-4BD2-A2CE-0D3E89052685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAccess", "DatabaseAccess\DatabaseAccess.csproj", "{838D3E99-A944-41D3-9232-B6015BC0B6C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DatabaseAccess\DataAccessLibrary.csproj", "{838D3E99-A944-41D3-9232-B6015BC0B6C8}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SQL_DB", "SQL_DB\SQL_DB.sqlproj", "{C6AEECA2-E792-4337-AB95-37DCAD62017B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,12 @@ Global
 		{838D3E99-A944-41D3-9232-B6015BC0B6C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{838D3E99-A944-41D3-9232-B6015BC0B6C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{838D3E99-A944-41D3-9232-B6015BC0B6C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6AEECA2-E792-4337-AB95-37DCAD62017B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6AEECA2-E792-4337-AB95-37DCAD62017B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6AEECA2-E792-4337-AB95-37DCAD62017B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C6AEECA2-E792-4337-AB95-37DCAD62017B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6AEECA2-E792-4337-AB95-37DCAD62017B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6AEECA2-E792-4337-AB95-37DCAD62017B}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
