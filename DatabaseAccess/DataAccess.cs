@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DatabaseAccess.Internal;
 using DatabaseAccess.Core;
+using DatabaseAccess.Internal.Enums;
 
 namespace DatabaseAccess
 {
@@ -20,14 +21,12 @@ namespace DatabaseAccess
 
         private DatabaseAccessAbstract CreateDatabaseAccessInstance(DatabaseType dbType)
         {
-            DatabaseAccessAbstract ret = dbType switch
+            return dbType switch
             {
                 DatabaseType.Sql => new SqlDatabaseAccessAbstract(),
                 DatabaseType.MongoDB => new MongoDbDatabaseAccessAbstract(),
                 _ => throw new ArgumentOutOfRangeException(nameof(dbType), dbType, null)
             };
-
-            return ret;
         }
     }
 }
