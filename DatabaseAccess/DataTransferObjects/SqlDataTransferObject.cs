@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Commons.Extensions;
 using DataAccessLibrary.Internal.Enums;
@@ -24,6 +25,17 @@ namespace DataAccessLibrary.DataTransferObjects
             parameters.AddParameter(ParameterNames.cId, Id, DataType.Int, Direction.InputOutput);
             return parameters;
         }
+
+        internal virtual void FillDataRow(DataRow dataRow)
+        {
+            dataRow[ParameterNames.cId] = Id;
+        }
+
+        internal virtual IEnumerable<string> ColumnNames()
+        {
+            yield return ParameterNames.cId;
+        }
+
     }
 
     public abstract class MongoDbDataTransferObject : DataTransferObject

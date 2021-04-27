@@ -6,28 +6,22 @@ using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Extensions
 {
-    public static class Extensions
+    internal static class Extensions
     {
-        internal static DataTable ToDataTable(this SqlCallParameters[] para)
+        internal static DataTable ToDataTable(this SqlDataTransferObject[] sqlDataTransferObjects)
         {
-            DataTable dt = new();
+            DataTable dt = new DataTable();
 
-            for (int i = 0; i < para.Length; i++)
+            foreach (string columnName in sqlDataTransferObjects[0].ColumnNames())
             {
-                if (i == 0)
-                {
-                    for (int x = 0; x < para[i].ParameterCount; x++)
-                    {
-                        if (!dt.Columns.Contains(para[i][x].ParameterName))
-                            dt.Columns.Add(para[i][x].ParameterName);
-                    }
-                }
+                dt.Columns.Add(columnName);
+            }
 
+            foreach (SqlDataTransferObject item in sqlDataTransferObjects)
+            {
                 DataRow row = dt.NewRow();
-                for (int x = 0; x < para[i].ParameterCount; x++)
-                {
-                    row[para[i][x].ParameterName] = para[i][x].Value;
-                }
+
+                item.FillDataRow(row);
 
                 dt.Rows.Add(row);
             }

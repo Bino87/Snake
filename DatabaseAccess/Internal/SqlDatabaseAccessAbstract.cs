@@ -71,16 +71,8 @@ namespace DataAccessLibrary.Internal
                 return res;
             try
             {
-                SqlCallParameters[] para1 = new SqlCallParameters[items.Length];
+                var dt = items.ToDataTable();
 
-                for (int i = 0; i < items.Length; i++)
-                {
-                    para1[i] = CreateDefaultParameters(items[i].ParametersCount, Actions.InsertMany);
-                }
-
-                SqlCallParameters[] para = para1;
-
-                DataTable dt = para.ToDataTable();
 
                 using SqlConnection con = new(cConnectionString);
                 using SqlCommand cmd = new("INSERT_MANY", con)
