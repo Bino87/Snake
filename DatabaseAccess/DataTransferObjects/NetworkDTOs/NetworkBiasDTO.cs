@@ -7,18 +7,16 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class NetworkBiasDto : SqlDataTransferObject
+    public class NetworkBiasDto : HasInternalIndexDto
     {
         public int LayerId { get; set; }
         public double Value { get; set; }
-        public int InternalIndex { get; set; }
 
-        internal override int ParametersCount => base.ParametersCount + 3;
+        internal override int ParametersCount => base.ParametersCount + 2;
 
         internal NetworkBiasDto(DataRow row) : base(row)
         {
             Value = row.GetAsDouble(ParameterNames.cValue);
-            InternalIndex = row.GetAsInt(ParameterNames.cInternalIndex);
             LayerId = row.GetAsInt(ParameterNames.cLayerID);
         }
 
@@ -27,7 +25,6 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
         {
             parameters.AddParameter(ParameterNames.cValue, Value, DataType.Double, Direction.Input);
             parameters.AddParameter(ParameterNames.cLayerID, LayerId, DataType.Int, Direction.Input);
-            parameters.AddParameter(ParameterNames.cInternalIndex, InternalIndex, DataType.Int, Direction.Input);
 
             return base.CreateParameters(parameters);
         }
@@ -37,8 +34,6 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
             base.FillDataRow(row);
             row[ParameterNames.cValue] = Value;
             row[ParameterNames.cLayerID] = LayerId;
-            row[ParameterNames.cInternalIndex] = InternalIndex;
-
         }
 
         internal override IEnumerable<string> ColumnNames()
@@ -48,7 +43,6 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
                 yield return columnName;
             }
 
-            yield return ParameterNames.cInternalIndex;
             yield return ParameterNames.cLayerID;
             yield return ParameterNames.cValue;
         }

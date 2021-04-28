@@ -7,24 +7,18 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class NetworkWeightDto : HasInternalIndexDto
+    public class HasInternalIndexDto : SqlDataTransferObject
     {
-        public int LayerId { get; set; }
-        public double Value { get; set; }
-
-        internal override int ParametersCount => base.ParametersCount + 2;
-
-        internal NetworkWeightDto(DataRow row) : base(row)
+        public int InternalIndex { get; }
+        internal override int ParametersCount => base.ParametersCount + 1;
+        protected  HasInternalIndexDto(DataRow row) : base(row)
         {
-            Value = row.GetAsDouble(ParameterNames.cValue);
-            LayerId = row.GetAsInt(ParameterNames.cLayerID);
+            InternalIndex = row.GetAsInt(ParameterNames.cInternalIndex);
         }
-
 
         internal override SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
-            parameters.AddParameter(ParameterNames.cValue, Value, DataType.Double, Direction.Input);
-            parameters.AddParameter(ParameterNames.cLayerID, LayerId, DataType.Int, Direction.Input);
+            parameters.AddParameter(ParameterNames.cInternalIndex, InternalIndex, DataType.Int, Direction.Input);
 
             return base.CreateParameters(parameters);
         }
@@ -32,9 +26,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
         internal override void FillDataRow(DataRow row)
         {
             base.FillDataRow(row);
-            row[ParameterNames.cValue] = Value;
-            row[ParameterNames.cLayerID] = LayerId;
-
+            row[ParameterNames.cInternalIndex] = InternalIndex;
         }
 
         internal override IEnumerable<string> ColumnNames()
@@ -44,8 +36,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
                 yield return columnName;
             }
 
-            yield return ParameterNames.cLayerID;
-            yield return ParameterNames.cValue;
+            yield return ParameterNames.cInternalIndex;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DataAccessLibrary.DataTransferObjects
         internal override DatabaseType DbType => DatabaseType.Sql;
         internal virtual int ParametersCount => 1;
 
-        internal SqlDataTransferObject(DataRow row)
+        protected SqlDataTransferObject(DataRow row)
         {
             Id = row.GetAsInt(ParameterNames.cId);
         }
