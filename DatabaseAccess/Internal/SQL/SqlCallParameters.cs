@@ -1,35 +1,22 @@
 ﻿using System;
 using System.Data.SqlClient;
+using DataAccessLibrary.Extensions;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Internal.SQL
 {
-    internal record SqlCallParameter(string ParameterName, object Value, DataType DataType, Direction Direction)
-    {
-        internal SqlParameter ToSqlParameter() => new()
-        {
-            Direction = Direction.ToParameterDirection(),
-            ParameterName = ParameterName,
-            Value = Value,
-            SqlDbType = DataType.ToSqlType()
-        };
-    }
-
     internal class SqlCallParameters
     {
-        private readonly string _sqlStoredProcedureName;
         private readonly SqlCallParameter[] _sqlCallParameters;
-        internal int ParameterCount => _sqlCallParameters.Length;
         private int _currentParameterIndex;
 
         public SqlCallParameter this[int index] => _sqlCallParameters[index];
 
-        internal string StoredProcedure => _sqlStoredProcedureName.ToString();
+        internal string StoredProcedure { get; }
 
         internal SqlCallParameters(int parametersCount, Table table, Actions action) : this(parametersCount)
         {
-            _sqlStoredProcedureName = table.CreateStoredProcedureName(action);
-            AddParameter(ParameterNames.ParameterNames.cAction, action, DataType.Int, Direction.Input);
+            StoredProcedure = table.CreateStoredProcedureName(action);
         }
 
         private SqlCallParameters(int parametersCount)
@@ -48,13 +35,6 @@ namespace DataAccessLibrary.Internal.SQL
                 new SqlCallParameter(parameterName, value, dataType, direction);
 
             _currentParameterIndex++;
-        }
-
-        internal bool Validate()
-        {
-            if (_currentParameterIndex == _sqlCallParameters.Length)
-                return true;
-            return false;
         }
 
         public void FillParameters(SqlParameterCollection cmdParameters)

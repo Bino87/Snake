@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using Commons.Extensions;
 using DataAccessLibrary.Internal.Enums;
@@ -12,45 +11,29 @@ namespace DataAccessLibrary.DataTransferObjects
     public class SqlDataTransferObject : DataTransferObject
     {
         internal int Id { get; }
-        internal  int Value { get; }
         internal override DatabaseType DbType => DatabaseType.Sql;
-        internal virtual int ParametersCount => 3;
+        internal virtual int ParametersCount => 1;
 
-        public SqlDataTransferObject(int id, int value)
-        {
-            Id = id;
-            Value = value;
-        }
 
-        public SqlDataTransferObject(DataRow row)
+        internal SqlDataTransferObject(DataRow row)
         {
             Id = row.GetAsInt(ParameterNames.cId);
         }
 
-        internal SqlCallParameters CreateParameters(SqlCallParameters parameters)
+        internal virtual SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
             parameters.AddParameter(ParameterNames.cId, Id, DataType.Int, Direction.InputOutput);
-            parameters.AddParameter("Value", Value, DataType.Int, Direction.Input);
             return parameters;
         }
 
-        internal virtual void FillDataRow(DataRow dataRow)
+        internal virtual void FillDataRow(DataRow row)
         {
-            dataRow[ParameterNames.cId] = Id;
-            dataRow["Value"] = Value;
+            row[ParameterNames.cId] = Id;
         }
 
         internal virtual IEnumerable<string> ColumnNames()
         {
             yield return ParameterNames.cId;
-            yield return "Value";
         }
-
-    }
-
-    public class MongoDbDataTransferObject : DataTransferObject
-    {
-        internal Guid Id { get; }
-        internal override DatabaseType DbType => DatabaseType.MongoDB;
     }
 }

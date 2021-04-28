@@ -1,10 +1,5 @@
-﻿using System.Data;
-using System.Windows;
+﻿using System.Windows;
 using UserControls.Models;
-using DataAccessLibrary;
-using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Internal;
-using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace Snake
 {

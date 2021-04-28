@@ -17,7 +17,7 @@ namespace DataAccessLibrary.Internal
     {
         private const string cDataTable = "DATA";
 
-        private static readonly string cConnectionString = ConfigurationManager.ConnectionStrings.GetConnectionString();
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings.GetConnectionString();
 
         private const string cShouldHaveOnlyOneRow = "Should have only one row!";
 
@@ -27,11 +27,7 @@ namespace DataAccessLibrary.Internal
             SqlCallParameters parameters = CreateDefaultParameters(1, Actions.GET_ALL);
             DataTable dataTable = GetDataTable(parameters);
 
-            T[] res = SetDataTransferObjectsFromDataTable(dataTable);
-
-
-
-            return res;
+            return  SetDataTransferObjectsFromDataTable(dataTable);
         }
 
         public override T GetById(int id)
@@ -47,7 +43,7 @@ namespace DataAccessLibrary.Internal
 
         public override int Insert(T item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.INSERT));
+            SqlCallParameters parameters = CreateParameters(item, Actions.INSERT);
 
             return ExecuteStoredProcedure(parameters);
         }
@@ -79,34 +75,9 @@ namespace DataAccessLibrary.Internal
             return ExecuteNonQuery(dt, Actions.UPSERT_MANY);
         }
 
-        private int ExecuteNonQuery(DataTable dt, Actions action)
-        {
-            int res;
-            try
-            {
-                using SqlConnection con = new(cConnectionString);
-                using SqlCommand cmd = new(Table.CreateStoredProcedureName(action), con)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue(cDataTable, dt);
-
-                con.Open();
-                res = cmd.ExecuteNonQuery();
-                con.Close();
-            }
-            catch (Exception e)
-            {
-                //TODO: do some sort of logging system, online db wouldnt be a bad idea too
-                throw;
-            }
-
-            return res;
-        }
-
         public override void DeleteItem(T item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.DELETE_ITEM));
+            SqlCallParameters parameters = CreateParameters(item, Actions.DELETE_ITEM);
             ExecuteStoredProcedure(parameters);
         }
 
@@ -118,13 +89,13 @@ namespace DataAccessLibrary.Internal
 
         public override int Update(T item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.UPDATE));
+            SqlCallParameters parameters = CreateParameters(item, Actions.UPDATE);
             return ExecuteStoredProcedure(parameters);
         }
 
         public override int Upsert(T item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.UPSERT));
+            SqlCallParameters parameters = CreateParameters(item, Actions.UPSERT);
             return ExecuteStoredProcedure(parameters);
         }
 
@@ -134,7 +105,7 @@ namespace DataAccessLibrary.Internal
             try
             {
 
-                using SqlConnection con = new(cConnectionString);
+                using SqlConnection con = new(ConnectionString);
                 using SqlCommand cmd = new(sqlCallParameters.StoredProcedure, con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -144,8 +115,9 @@ namespace DataAccessLibrary.Internal
 
                 con.Open();
 
-                res = cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
 
+                //this goes with the assumption that the ID is output or inputoutput value.
                 res = cmd.Parameters[ParameterNames.cId].Value;
 
                 con.Close();
@@ -180,13 +152,13 @@ namespace DataAccessLibrary.Internal
             return parameters;
         }
 
-        protected abstract T CreateFromRow(DataRow dataTableRow);
+        protected abstract T CreateFromRow(DataRow row);
 
         private static DataTable GetDataTable(SqlCallParameters parameters)
         {
             try
             {
-                using SqlConnection con = new(cConnectionString);
+                using SqlConnection con = new(ConnectionString);
                 using SqlCommand cmd = new(parameters.StoredProcedure)
                 {
                     Connection = con,
@@ -206,6 +178,37 @@ namespace DataAccessLibrary.Internal
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        private SqlCallParameters CreateParameters(T item, Actions action)
+        {
+
+            return item.CreateParameters(CreateDefaultParameters(item.ParametersCount, action));
+        }
+
+        private int ExecuteNonQuery(DataTable dt, Actions action)
+        {
+            int res;
+            try
+            {
+                using SqlConnection con = new(ConnectionString);
+                using SqlCommand cmd = new(Table.CreateStoredProcedureName(action), con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue(cDataTable, dt);
+
+                con.Open();
+                res = cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            catch (Exception e)
+            {
+                //TODO: do some sort of logging system, online db wouldnt be a bad idea too
+                throw;
+            }
+
+            return res;
         }
     }
 }
