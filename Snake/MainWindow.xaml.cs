@@ -21,7 +21,9 @@ namespace Snake
             InitializeComponent();
             mvm = new MainViewModel();
             this.DataContext = mvm;
+            Test t = new Test();
 
+            t.GetAll();
         }
 
        

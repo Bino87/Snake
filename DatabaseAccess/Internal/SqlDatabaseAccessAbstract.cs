@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 using Commons.Extensions;
 using DataAccessLibrary.Core;
 using DataAccessLibrary.DataTransferObjects;
@@ -9,6 +8,7 @@ using DataAccessLibrary.Extensions;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 using DataAccessLibrary.Internal.SQL.ParameterNames;
+using System.Configuration;
 // ReSharper disable CoVariantArrayConversion
 
 namespace DataAccessLibrary.Internal
@@ -17,7 +17,7 @@ namespace DataAccessLibrary.Internal
     {
         private const string cDataTable = "DATA";
 
-        private const string cConnectionString = @"Data Source=DESKTOP-D40UEJC\LOCALDB;Initial Catalog=SQL_DB;Integrated Security=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        private static readonly string cConnectionString = ConfigurationManager.ConnectionStrings.GetConnectionString();
 
         private const string cShouldHaveOnlyOneRow = "Should have only one row!";
 
@@ -28,6 +28,8 @@ namespace DataAccessLibrary.Internal
             DataTable dataTable = GetDataTable(parameters);
 
             T[] res = SetDataTransferObjectsFromDataTable(dataTable);
+
+
 
             return res;
         }
@@ -93,8 +95,9 @@ namespace DataAccessLibrary.Internal
                 res = cmd.ExecuteNonQuery();
                 con.Close();
             }
-            catch (Exception eeeee)
+            catch (Exception e)
             {
+                //TODO: do some sort of logging system, online db wouldnt be a bad idea too
                 throw;
             }
 
