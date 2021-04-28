@@ -8,13 +8,12 @@ AS
 
 		WHEN MATCHED THEN
 			UPDATE SET 
-						dbTest.Id = tblData.Id,
 						dbTest.Value = tblData.Value
 		
 
 		WHEN NOT MATCHED THEN
-			INSERT ([Id],[Value])
-			VALUES(tblData.Id, tblData.Value);
+			INSERT ([Value])
+			VALUES(tblData.Value);
 
 	END
 RETURN 0

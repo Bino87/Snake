@@ -23,7 +23,7 @@ namespace Snake
             this.DataContext = mvm;
             Test t = new Test();
 
-            t.GetAll();
+            var lol = t.Insert(new SqlDataTransferObject(123, 124));
         }
 
        

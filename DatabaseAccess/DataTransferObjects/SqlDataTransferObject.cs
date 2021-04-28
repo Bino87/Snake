@@ -30,7 +30,7 @@ namespace DataAccessLibrary.DataTransferObjects
         internal SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
             parameters.AddParameter(ParameterNames.cId, Id, DataType.Int, Direction.InputOutput);
-            parameters.AddParameter("Value", Value, DataType.Int, Direction.InputOutput);
+            parameters.AddParameter("Value", Value, DataType.Int, Direction.Input);
             return parameters;
         }
 

@@ -3,11 +3,11 @@
 	@ID int OUTPUT,
 	@Value int
 AS
+BEGIN 
+	SET NOCOUNT ON;
+	
+	INSERT INTO [dbo].TestTable	VALUES( @Value)
+	SET @ID =  SCOPE_IDENTITY();
+	RETURN @ID
 
-SET NOCOUNT ON;
-
-INSERT INTO [dbo].TestTable	VALUES(@ID, @Value)
-
-RETURN 1
-
-
+END

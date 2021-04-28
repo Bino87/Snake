@@ -146,6 +146,8 @@ namespace DataAccessLibrary.Internal
 
                 res = cmd.ExecuteNonQuery();
 
+                res = cmd.Parameters[ParameterNames.cId].Value;
+
                 con.Close();
             }
             catch (Exception e)

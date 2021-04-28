@@ -7,8 +7,8 @@ AS
 		ON (dbTest.Id = tblData.Id)
 
 		WHEN NOT MATCHED THEN
-			INSERT ([Id],[Value])
-			VALUES(tblData.Id, tblData.Value);
+			INSERT ([Value])
+			VALUES( tblData.Value);
 
 	END
 RETURN 0
