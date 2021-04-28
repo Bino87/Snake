@@ -21,21 +21,6 @@ namespace Snake
             InitializeComponent();
             mvm = new MainViewModel();
             this.DataContext = mvm;
-            Test t = new Test();
-
-            var lol = t.Insert(new SqlDataTransferObject(123, 124));
-        }
-
-       
-    }
-
-    public class Test : SqlDatabaseAccessAbstract<SqlDataTransferObject>
-    {
-        protected override Table Table => Table.TESTTABLE;
-        protected override SqlDataTransferObject CreateFromRow(DataRow dataTableRow)
-        {
-            return new SqlDataTransferObject(dataTableRow);
         }
     }
-
 }
