@@ -10,16 +10,16 @@ namespace DataAccessLibrary.Internal.SQL.Enums
 
     internal enum Actions
     {
-        SelectAll = 1,
-        SelectById = 2,
-        Insert = 3,
-        DeleteById = 4,
-        DeleteItem = 5,
-        Update = 6,
-        Upsert = 7,
-        InsertMany = 8,
-        UpdateMany = 9,
-        UpsertMany = 10,
+        SELECT_ALL = 1,
+        SELECT_BY_ID = 2,
+        INSERT = 3,
+        DELETE_BY_ID = 4,
+        DELETE_ITEM = 5,
+        UPDATE = 6,
+        UPSERT = 7,
+        INSERT_MANY = 8,
+        UPDATE_MANY = 9,
+        UPSERT_MANY = 10,
     }
 
     internal enum DataType
@@ -45,6 +45,9 @@ namespace DataAccessLibrary.Internal.SQL.Enums
         {
             return (int) action;
         }
+
+        internal static string CreateStoredProcedureName(this Table table, Actions action) =>
+            string.Join("_", table, action);
 
         internal static ParameterDirection ToParameterDirection(this Direction direction)
         {

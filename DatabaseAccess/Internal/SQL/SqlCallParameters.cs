@@ -26,14 +26,14 @@ namespace DataAccessLibrary.Internal.SQL
 
         internal string StoredProcedure => _sqlStoredProcedureName.ToString();
 
-        internal SqlCallParameters(int parametersCount, string sqlStoredProcedureName, Actions action) : this(parametersCount, sqlStoredProcedureName)
+        internal SqlCallParameters(int parametersCount, Table table, Actions action) : this(parametersCount)
         {
+            _sqlStoredProcedureName = table.CreateStoredProcedureName(action);
             AddParameter(ParameterNames.ParameterNames.cAction, action, DataType.Int, Direction.Input);
         }
 
-        private SqlCallParameters(int parametersCount, string sqlStoredProcedureName)
+        private SqlCallParameters(int parametersCount)
         {
-            _sqlStoredProcedureName = sqlStoredProcedureName;
             _sqlCallParameters = new SqlCallParameter[parametersCount];
         }
 

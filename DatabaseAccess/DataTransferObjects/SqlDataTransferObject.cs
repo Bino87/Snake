@@ -9,11 +9,11 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects
 {
-    public abstract class SqlDataTransferObject : DataTransferObject
+    public class SqlDataTransferObject : DataTransferObject
     {
         internal int Id { get; }
         internal override DatabaseType DbType => DatabaseType.Sql;
-        internal abstract int ParametersCount { get; }
+        internal virtual int ParametersCount { get; }
 
         internal SqlDataTransferObject(DataRow row)
         {
@@ -38,7 +38,7 @@ namespace DataAccessLibrary.DataTransferObjects
 
     }
 
-    public abstract class MongoDbDataTransferObject : DataTransferObject
+    public class MongoDbDataTransferObject : DataTransferObject
     {
         internal Guid Id { get; }
         internal override DatabaseType DbType => DatabaseType.MongoDB;

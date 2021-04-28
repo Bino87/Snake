@@ -12,33 +12,34 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.Internal
 {
-    public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T> where T : SqlDataTransferObject
+    public class SqlDatabaseAccessAbstract : DatabaseAccessAbstract<SqlDataTransferObject>
     {
-        private const string cConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
+        private const string CConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
 
+        internal Table Table { get; }
 
-        public override async Task<T[]> GetAllAsync()
+        public override async Task<SqlDataTransferObject[]> GetAllAsync()
         {
-            SqlCallParameters parameters = CreateDefaultParameters(1, Actions.SelectAll);
+            SqlCallParameters parameters = CreateDefaultParameters(1, Actions.SELECT_ALL);
             DataTable dt = await GetDataTableAsync(parameters);
-            T[] res = SetDataTransferObjectsFromDataTable(dt);
+            SqlDataTransferObject[] res = SetDataTransferObjectsFromDataTable(dt);
 
             return res;
         }
 
-        public override T[] GetAll()
+        public override SqlDataTransferObject[] GetAll()
         {
-            SqlCallParameters parameters = CreateDefaultParameters(1, Actions.SelectAll);
+            SqlCallParameters parameters = CreateDefaultParameters(1, Actions.SELECT_ALL);
             DataTable dataTable = GetDataTable(parameters);
 
-            T[] res = SetDataTransferObjectsFromDataTable(dataTable);
+            SqlDataTransferObject[] res = SetDataTransferObjectsFromDataTable(dataTable);
 
             return res;
         }
 
-        public override T GetById(int id)
+        public override SqlDataTransferObject GetById(int id)
         {
-            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.SelectById, id);
+            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.SELECT_BY_ID, id);
             DataTable dataTable = GetDataTable(parameters);
 
             if (dataTable.Rows.Count > 1)
@@ -47,9 +48,9 @@ namespace DataAccessLibrary.Internal
             return CreateFromRow(dataTable.Rows[0]);
         }
 
-        public override async Task<T> GetByIdAsync(int id)
+        public override async Task<SqlDataTransferObject> GetByIdAsync(int id)
         {
-            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.SelectById, id);
+            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.SELECT_BY_ID, id);
             DataTable dataTable = await GetDataTableAsync(parameters);
             if (dataTable.Rows.Count > 1)
                 throw new Exception("should have only one row!");
@@ -57,93 +58,86 @@ namespace DataAccessLibrary.Internal
             return CreateFromRow(dataTable.Rows[0]);
         }
 
-        public override int Insert(T item)
+        public override int Insert(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.Insert));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.INSERT));
 
             return ExecuteStoredProcedure(parameters);
         }
 
-        public override int InsertMany(T[] items)
+        public override int InsertMany(SqlDataTransferObject[] items)
         {
             int res = 0;
             if (items.IsEmpty())
                 return res;
-            try
-            {
-                var dt = items.ToDataTable();
+            DataTable dt = items.ToDataTable();
 
 
-                using SqlConnection con = new(cConnectionString);
-                using SqlCommand cmd = new("INSERT_MANY", con)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("DATA_TABLE", dt);
-                con.Open();
-                res = cmd.ExecuteNonQuery();
-                con.Close();
-            }
-            catch (Exception e)
+            using SqlConnection con = new(CConnectionString);
+            using SqlCommand cmd = new("INSERT_MANY", con)
             {
-                throw;
-            }
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("DATA_TABLE", dt);
+            con.Open();
+            res = cmd.ExecuteNonQuery();
+            con.Close();
 
             return res;
 
         }
 
-        public override async Task<int> InsertAsync(T item)
+        public override async Task<int> InsertAsync(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.Insert));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.INSERT));
             return await ExecuteStoredProcedureAsync(parameters);
         }
 
-        public override void DeleteItem(T item)
+        public override void DeleteItem(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.DeleteItem));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.DELETE_ITEM));
             ExecuteStoredProcedure(parameters);
         }
 
-        public override async Task DeleteItemAsync(T item)
+        public override async Task DeleteItemAsync(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.DeleteItem));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.DELETE_ITEM));
             await ExecuteStoredProcedureAsync(parameters);
         }
 
         public override void DeleteById(int id)
         {
-            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.DeleteById, id);
+            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.DELETE_BY_ID, id);
             ExecuteStoredProcedure(parameters);
         }
 
         public override async Task DeleteByIdAsync(int id)
         {
-            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.DeleteById, id);
+            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.DELETE_BY_ID, id);
             await ExecuteStoredProcedureAsync(parameters);
         }
 
-        public override int Update(T item)
+        public override int Update(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.Update));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.UPDATE));
             return ExecuteStoredProcedure(parameters);
         }
 
-        public override async Task<int> UpdateAsync(T item)
+        public override async Task<int> UpdateAsync(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.Update));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.UPDATE));
             return await ExecuteStoredProcedureAsync(parameters);
         }
 
-        public override int Upsert(T item)
+        public override int Upsert(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.Upsert));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.UPSERT));
             return ExecuteStoredProcedure(parameters);
         }
 
-        public override async Task<int> UpsertAsync(T item)
+        public override async Task<int> UpsertAsync(SqlDataTransferObject item)
         {
-            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.Upsert));
+            SqlCallParameters parameters = item.CreateParameters(CreateDefaultParameters(item.ParametersCount, Actions.UPSERT));
             return await ExecuteStoredProcedureAsync(parameters);
         }
 
@@ -153,7 +147,7 @@ namespace DataAccessLibrary.Internal
             try
             {
 
-                using SqlConnection con = new(cConnectionString);
+                using SqlConnection con = new(CConnectionString);
                 using SqlCommand cmd = new(sqlCallParameters.StoredProcedure, con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -181,7 +175,7 @@ namespace DataAccessLibrary.Internal
             object res;
             try
             {
-                await using SqlConnection con = new(cConnectionString);
+                await using SqlConnection con = new(CConnectionString);
                 await using SqlCommand cmd = new(parameters.StoredProcedure, con)
                 {
                     CommandType = CommandType.StoredProcedure
@@ -204,9 +198,9 @@ namespace DataAccessLibrary.Internal
             return res.TryParse(out int i) ? i : throw new Exception();
         }
 
-        private T[] SetDataTransferObjectsFromDataTable(DataTable dataTable)
+        private SqlDataTransferObject[] SetDataTransferObjectsFromDataTable(DataTable dataTable)
         {
-            T[] res = new T[dataTable.Rows.Count];
+            SqlDataTransferObject[] res = new SqlDataTransferObject[dataTable.Rows.Count];
 
             for (int i = 0; i < dataTable.Rows.Count; i++)
             {
@@ -216,26 +210,25 @@ namespace DataAccessLibrary.Internal
             return res;
         }
 
-        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, string storedProcedure)
-        {
-            SqlCallParameters parameters = new(parametersCount, storedProcedure, action);
-            return parameters;
-        }
+        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action) => new(parametersCount, Table, action);
 
-        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, string storedProcedure, int id)
+        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, int id)
         {
-            SqlCallParameters parameters = CreateDefaultParameters(parametersCount, action, storedProcedure);
+            SqlCallParameters parameters = CreateDefaultParameters(parametersCount, action);
             parameters.AddParameter(ParameterNames.cId, id, DataType.Int, Direction.InputOutput);
             return parameters;
         }
 
-        protected abstract T CreateFromRow(DataRow dataTableRow);
+        protected virtual SqlDataTransferObject CreateFromRow(DataRow dataTableRow)
+        {
+            return new(dataTableRow);
+        }
 
         private static async Task<DataTable> GetDataTableAsync(SqlCallParameters parameters)
         {
             try
             {
-                await using SqlConnection con = new(cConnectionString);
+                await using SqlConnection con = new(CConnectionString);
                 await using SqlCommand cmd = new(parameters.StoredProcedure)
                 {
                     Connection = con,
@@ -262,7 +255,7 @@ namespace DataAccessLibrary.Internal
 
             try
             {
-                using SqlConnection con = new(cConnectionString);
+                using SqlConnection con = new(CConnectionString);
                 using SqlCommand cmd = new(parameters.StoredProcedure)
                 {
                     Connection = con,
