@@ -182,7 +182,6 @@ namespace DataAccessLibrary.Internal
 
         private SqlCallParameters CreateParameters(T item, Actions action)
         {
-
             return item.CreateParameters(CreateDefaultParameters(item.ParametersCount, action));
         }
 
