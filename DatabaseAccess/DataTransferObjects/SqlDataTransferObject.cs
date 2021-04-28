@@ -12,10 +12,17 @@ namespace DataAccessLibrary.DataTransferObjects
     public class SqlDataTransferObject : DataTransferObject
     {
         internal int Id { get; }
+        internal  int Value { get; }
         internal override DatabaseType DbType => DatabaseType.Sql;
-        internal virtual int ParametersCount { get; }
+        internal virtual int ParametersCount => 3;
 
-        internal SqlDataTransferObject(DataRow row)
+        public SqlDataTransferObject(int id, int value)
+        {
+            Id = id;
+            Value = value;
+        }
+
+        public SqlDataTransferObject(DataRow row)
         {
             Id = row.GetAsInt(ParameterNames.cId);
         }
@@ -23,17 +30,20 @@ namespace DataAccessLibrary.DataTransferObjects
         internal SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
             parameters.AddParameter(ParameterNames.cId, Id, DataType.Int, Direction.InputOutput);
+            parameters.AddParameter("Value", Value, DataType.Int, Direction.InputOutput);
             return parameters;
         }
 
         internal virtual void FillDataRow(DataRow dataRow)
         {
             dataRow[ParameterNames.cId] = Id;
+            dataRow["Value"] = Value;
         }
 
         internal virtual IEnumerable<string> ColumnNames()
         {
             yield return ParameterNames.cId;
+            yield return "Value";
         }
 
     }

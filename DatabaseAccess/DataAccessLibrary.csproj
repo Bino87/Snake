@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DataTransferObjectCollection\" />
+    <Compile Remove="DataTransferObjectCollection\**" />
+    <EmbeddedResource Remove="DataTransferObjectCollection\**" />
+    <None Remove="DataTransferObjectCollection\**" />
   </ItemGroup>
 
   <ItemGroup>

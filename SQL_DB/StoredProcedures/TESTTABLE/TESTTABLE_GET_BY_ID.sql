@@ -1,0 +1,7 @@
+﻿CREATE PROCEDURE [dbo].[TESTTABLE_GET_BY_ID]
+	@ACTION int ,
+	@ID int OUTPUT
+AS
+	SELECT * FROM [dbo].TestTable 
+	WHERE Id = @ID
+RETURN 0

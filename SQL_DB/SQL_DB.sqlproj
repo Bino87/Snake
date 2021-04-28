@@ -58,8 +58,20 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
+    <Folder Include="StoredProcedures\TESTTABLE" />
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SQL_DB.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\TestTable.sql" />
+    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_INSERT.sql" />
+    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_GET_ALL.sql" />
+    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_GET_BY_ID.sql" />
+    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE.sql" />
+    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_INSERT_MANY.sql" />
+    <Build Include="StoredProcedures\TESTTABLE\UPDATE_MANY.sql" />
+    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_UPSERT_MANY.sql" />
   </ItemGroup>
 </Project>

@@ -22,10 +22,18 @@ namespace Snake
             mvm = new MainViewModel();
             this.DataContext = mvm;
 
-
         }
 
        
+    }
+
+    public class Test : SqlDatabaseAccessAbstract<SqlDataTransferObject>
+    {
+        protected override Table Table => Table.TESTTABLE;
+        protected override SqlDataTransferObject CreateFromRow(DataRow dataTableRow)
+        {
+            return new SqlDataTransferObject(dataTableRow);
+        }
     }
 
 }
