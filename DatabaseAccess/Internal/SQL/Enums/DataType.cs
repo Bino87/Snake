@@ -49,6 +49,7 @@ namespace DataAccessLibrary.Internal.SQL.Enums
         internal static string CreateStoredProcedureName(this Table table, Actions action) =>
             string.Join("_", table, action);
 
+       
         internal static ParameterDirection ToParameterDirection(this Direction direction)
         {
             return direction switch

@@ -12,5 +12,7 @@ namespace Commons.Extensions
         {
             return collection.Count == 0;
         }
+
+        public static bool IsNullOrEmpty<T>(this ICollection<T> collection) => collection is null || collection.IsEmpty();
     }
 }

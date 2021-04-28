@@ -34,5 +34,10 @@ namespace DataAccessLibrary.Core
         public abstract Task<int> UpdateAsync(T item);
 
         public abstract Task<int> UpsertAsync(T item);
+        public abstract Task<int> InsertManyAsync(T[] items);
+        public abstract int UpdateMany(T[] items);
+        public abstract int UpsertMany(T[] items);
+        public abstract Task<int> UpdateManyAsync(T[] items);
+        public abstract Task<int> UpsertManyAsync(T[] items);
     }
 }
