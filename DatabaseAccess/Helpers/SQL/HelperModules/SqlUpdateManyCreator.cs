@@ -14,22 +14,22 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateBody()
         {
-            sb.AppendLine("AS");
-            sb.AppendLine("BEGIN");
-            sb.AppendLine($"\tMERGE [dbo].{table} as dbTable");
-            sb.AppendLine($"\tUSING @{ParameterNames.cDataTable} as tbl");
-            sb.AppendLine("\tON (dbTable.Id = tbl.Id)");
-            sb.AppendLine();
-            this.WhenMatched(sb, access, item);
+            _sb.AppendLine("AS");
+            _sb.AppendLine("BEGIN");
+            _sb.AppendLine($"\tMERGE [dbo].{_table} as dbTable");
+            _sb.AppendLine($"\tUSING @{ParameterNames.cDataTable} as tbl");
+            _sb.AppendLine("\tON (dbTable.Id = tbl.Id)");
+            _sb.AppendLine();
+            this.WhenMatched(_sb, _access, _item);
 
-            sb.AppendLine(";");
-            sb.AppendLine("END");
-            sb.AppendLine("RETURN 0");
+            _sb.AppendLine(";");
+            _sb.AppendLine("END");
+            _sb.AppendLine("RETURN 0");
         }
 
         protected override void CreateParameters()
         {
-            sb.AppendLine($"\t@{ParameterNames.cDataTable} [dbo].{table}_TYPE READONLY");
+            _sb.AppendLine($"\t@{ParameterNames.cDataTable} [dbo].{_table}_TYPE READONLY");
         }
     }
 }

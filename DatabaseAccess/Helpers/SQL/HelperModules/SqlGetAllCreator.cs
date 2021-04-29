@@ -12,8 +12,8 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateBody()
         {
-            sb.AppendLine("AS");
-            sb.AppendLine($"SELECT * FROM [dbo].{table}");
+            _sb.AppendLine("AS");
+            _sb.AppendLine($"SELECT * FROM [dbo].{_table}");
         }
 
         protected override void CreateParameters()

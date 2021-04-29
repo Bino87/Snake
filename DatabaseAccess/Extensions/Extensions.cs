@@ -34,7 +34,7 @@ namespace DataAccessLibrary.Extensions
                 }
             }
 
-            sb.AppendLine(string.Join("," + Environment.NewLine, GetStuff()));
+            sb.AppendLine(string.Join(", " + Environment.NewLine, GetStuff()));
 
             sb.AppendLine();
             sb.AppendLine();

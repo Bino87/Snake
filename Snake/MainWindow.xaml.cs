@@ -10,12 +10,12 @@ namespace Snake
     /// </summary>
     public partial class MainWindow : Window
     {
-
-
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new MainViewModel();
+            SQLHelper.CreateStoredProcedures();
+            Environment.Exit(1);
         }
     }
 }

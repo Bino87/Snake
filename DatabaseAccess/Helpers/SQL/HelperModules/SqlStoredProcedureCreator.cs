@@ -9,36 +9,31 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
     internal abstract class SqlStoredProcedureCreator<T> : SqlCreator<T> where T : SqlDataTransferObject
     {
-        protected Actions action;
+        protected Actions _action;
         protected SqlStoredProcedureCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table, Actions action) : base(access, item, table)
         {
-            this.action = action;
+            this._action = action;
         }
 
         protected override void CreateName()
         {
-            sb.AppendLine($"CREATE PROCEDURE [dbo].[{table}_{action}]");
+            _sb.AppendLine($"CREATE PROCEDURE [dbo].[{_table}_{_action}]");
             CreateParameters();
         }
 
         protected abstract void CreateParameters();
-        protected override CreatorResult Return()
-        {
-            return new(sb.ToString(), string.Join("_", table, action));
-        }
+        protected override CreatorResult Return() =>new(_sb.ToString(), string.Join("_", _table, _action));
 
-        protected string GetParameterNames(bool includeId, string prefix)
-        {
-            return GetParameterNames(includeId, prefix, "");
-        }
+        protected string GetParameterNames(bool includeId, string prefix) =>GetParameterNames(includeId, prefix, "");
+
         protected string GetParameterNames(bool includeId, string prefix, string suffix)
         {
-            SqlCallParameters p = access.CreateDefaultParameters(item.ParametersCount, Actions.DELETE_BY_ID);
-            SqlCallParameters parameters = item.CreateParameters(p);
+            SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.DELETE_BY_ID);
+            SqlCallParameters parameters = _item.CreateParameters(p);
 
             StringBuilder sb = new();
 
-            for (int i = 0; i < item.ParametersCount; i++)
+            for (int i = 0; i < _item.ParametersCount; i++)
             {
                 SqlCallParameter parameter = parameters[i];
 
@@ -53,6 +48,13 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
             }
 
             return sb.ToString();
+        }
+
+        protected override string GetValue(SqlCallParameter parameter)
+        {
+            if (parameter.Direction == Direction.Output || parameter.Direction == Direction.InputOutput)
+                return "\t" + string.Join(" ", "@" + parameter.ParameterName, GetNameFromParameterType(parameter.DataType), "OUTPUT");
+            return "\t" + string.Join(" ", "@" + parameter.ParameterName, GetNameFromParameterType(parameter.DataType));
         }
     }
 }

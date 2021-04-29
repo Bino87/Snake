@@ -15,17 +15,17 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateBody()
         {
-            sb.AppendLine("AS");
-            sb.AppendLine("BEGIN");
-            sb.AppendLine($"IF EXISTS(SELECT * FROM {table} WHERE {ParameterNames.cId}=@{ParameterNames.cId})");
-            sb.AppendLine("BEGIN");
+            _sb.AppendLine("AS");
+            _sb.AppendLine("BEGIN");
+            _sb.AppendLine($"IF EXISTS(SELECT * FROM {_table} WHERE {ParameterNames.cId}=@{ParameterNames.cId})");
+            _sb.AppendLine("BEGIN");
 
             IEnumerable<string> GetStuff()
             {
-                SqlCallParameters p = access.CreateDefaultParameters(item.ParametersCount, Actions.DELETE_BY_ID);
-                SqlCallParameters parameters = item.CreateParameters(p);
+                SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.DELETE_BY_ID);
+                SqlCallParameters parameters = _item.CreateParameters(p);
 
-                for (int i = 0; i < item.ParametersCount; i++)
+                for (int i = 0; i < _item.ParametersCount; i++)
                 {
                     SqlCallParameter parameter = parameters[i];
 
@@ -36,30 +36,30 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
                 }
             }
 
-            sb.AppendLine($"\tUPDATE {table} SET ");
+            _sb.AppendLine($"\tUPDATE {_table} SET ");
 
-            sb.AppendLine("\t" + string.Join(", ", GetStuff()));
+            _sb.AppendLine("\t" + string.Join(", ", GetStuff()));
 
-            sb.AppendLine($"\tWHERE {ParameterNames.cId}=@{ParameterNames.cId}");
-            sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            sb.AppendLine("\tRETURN @ID");
+            _sb.AppendLine($"\tWHERE {ParameterNames.cId}=@{ParameterNames.cId}");
+            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            _sb.AppendLine("\tRETURN @ID");
 
-            sb.AppendLine("END");
-            sb.AppendLine("ELSE");
-            sb.AppendLine("BEGIN");
+            _sb.AppendLine("END");
+            _sb.AppendLine("ELSE");
+            _sb.AppendLine("BEGIN");
 
-            sb.AppendLine($"\tINSERT INTO {table} VALUES({GetParameterNames(false, "@")})");
-            sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            sb.AppendLine("\tRETURN @ID");
+            _sb.AppendLine($"\tINSERT INTO {_table} VALUES({GetParameterNames(false, "@")})");
+            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            _sb.AppendLine("\tRETURN @ID");
 
-            sb.AppendLine("END");
+            _sb.AppendLine("END");
 
-            sb.AppendLine("END");
+            _sb.AppendLine("END");
         }
 
         protected override void CreateParameters()
         {
-            sb.AppendLine(GetParametrized(false));
+            _sb.AppendLine(GetParametrized());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal;
+using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
@@ -12,21 +13,26 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override CreatorResult Return()
         {
-            return new(sb.ToString(), string.Join("_", table, "TYPE"));
+            return new(_sb.ToString(), string.Join("_", _table, "TYPE"));
+        }
+
+        protected override string GetValue(SqlCallParameter parameter)
+        {
+            return "\t" + string.Join(" ", parameter.ParameterName, GetNameFromParameterType(parameter.DataType));
         }
 
         protected override void CreateName()
         {
-            sb.AppendLine($"CREATE TYPE {table}_TYPE as TABLE");
+            _sb.AppendLine($"CREATE TYPE {_table}_TYPE as TABLE");
         }
 
         protected override void CreateBody()
         {
-            sb.AppendLine("(");
+            _sb.AppendLine("(");
 
-            sb.AppendLine(GetParametrized(true));
+            _sb.AppendLine(GetParametrized());
 
-            sb.AppendLine(")");
+            _sb.AppendLine(")");
         }
 
     }

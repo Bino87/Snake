@@ -11,16 +11,16 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
     internal record CreatorResult(string Data, string Name);
     internal abstract class SqlCreator<T> where T : SqlDataTransferObject
     {
-        protected readonly StringBuilder sb;
-        protected Table table;
-        protected SqlDatabaseAccessAbstract<T> access;
-        protected T item;
+        protected readonly StringBuilder _sb;
+        protected Table _table;
+        protected SqlDatabaseAccessAbstract<T> _access;
+        protected T _item;
         protected SqlCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table)
         {
-            this.access = access;
-            this.item = item;
-            this.table = table;
-            sb = new StringBuilder();
+            _access = access;
+            _item = item;
+            _table = table;
+            _sb = new StringBuilder();
         }
 
         internal CreatorResult Create()
@@ -36,32 +36,24 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected abstract CreatorResult Return();
 
-        protected string GetParametrized(bool isType) => string.Join("," + Environment.NewLine, GetValues(isType));
+        protected string GetParametrized() => string.Join("," + Environment.NewLine, GetParameterValues());
 
-        protected IEnumerable<string> GetValues(bool isType)
+        protected IEnumerable<string> GetParameterValues()
         {
-            SqlCallParameters p = access.CreateDefaultParameters(item.ParametersCount, Actions.DELETE_BY_ID);
-            SqlCallParameters parameters = item.CreateParameters(p);
+            SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.DELETE_BY_ID);
+            SqlCallParameters parameters = _item.CreateParameters(p);
 
-            for (int i = 0; i < item.ParametersCount; i++)
+            for (int i = 0; i < _item.ParametersCount; i++)
             {
                 SqlCallParameter parameter = parameters[i];
 
-                if (isType)
-                    yield return "\t" + string.Join(" ", parameter.ParameterName,
-                        GetNameFromParameterType(parameter.DataType));
-                else
-                    yield return "\t" + string.Join(" ", "@" + parameter.ParameterName,
-                        GetNameFromParameterType(parameter.DataType),
-                        parameter.Direction == Direction.Output || parameter.Direction == Direction.InputOutput
-                            ? "OUTPUT"
-                            : "");
-
-
+                yield return GetValue(parameter);
             }
         }
 
-        string GetNameFromParameterType(DataType parameterDataType)
+        protected abstract string GetValue(SqlCallParameter parameter);
+
+        protected static string GetNameFromParameterType(DataType parameterDataType)
         {
             return parameterDataType switch
             {

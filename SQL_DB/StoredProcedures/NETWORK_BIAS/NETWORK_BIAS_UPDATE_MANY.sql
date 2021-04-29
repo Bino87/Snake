@@ -8,8 +8,8 @@ BEGIN
 
 	WHEN MATCHED THEN
 		UPDATE SET  
-			dbTable.VALUE = tbl.VALUE,
-			dbTable.LAYER_ID = tbl.LAYER_ID,
+			dbTable.VALUE = tbl.VALUE, 
+			dbTable.LAYER_ID = tbl.LAYER_ID, 
 			dbTable.INTERNAL_INDEX = tbl.INTERNAL_INDEX
 
 

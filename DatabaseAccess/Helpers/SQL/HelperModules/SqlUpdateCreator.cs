@@ -15,14 +15,14 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateBody()
         {
-            sb.AppendLine("AS");
+            _sb.AppendLine("AS");
 
             IEnumerable<string> GetStuff()
             {
-                SqlCallParameters p = access.CreateDefaultParameters(item.ParametersCount, Actions.DELETE_BY_ID);
-                SqlCallParameters parameters = item.CreateParameters(p);
+                SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.DELETE_BY_ID);
+                SqlCallParameters parameters = _item.CreateParameters(p);
 
-                for (int i = 0; i < item.ParametersCount; i++)
+                for (int i = 0; i < _item.ParametersCount; i++)
                 {
                     SqlCallParameter parameter = parameters[i];
 
@@ -33,18 +33,18 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
                 }
             }
 
-            sb.AppendLine($"\tUPDATE {table} SET ");
+            _sb.AppendLine($"\tUPDATE {_table} SET ");
 
-            sb.AppendLine("\t" + string.Join(", ", GetStuff()));
+            _sb.AppendLine("\t" + string.Join(", ", GetStuff()));
 
-            sb.AppendLine($"\tWHERE {ParameterNames.cId}=@{ParameterNames.cId}");
-            sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            sb.AppendLine("\tRETURN @ID");
+            _sb.AppendLine($"\tWHERE {ParameterNames.cId}=@{ParameterNames.cId}");
+            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            _sb.AppendLine("\tRETURN @ID");
         }
 
         protected override void CreateParameters()
         {
-            sb.AppendLine(GetParametrized(false));
+            _sb.AppendLine(GetParametrized());
         }
     }
 }

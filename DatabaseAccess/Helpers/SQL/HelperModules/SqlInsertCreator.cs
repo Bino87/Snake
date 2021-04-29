@@ -12,20 +12,20 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateBody()
         {
-            sb.AppendLine("AS");
-            sb.AppendLine("BEGIN");
-            sb.AppendLine("\tSET NOCOUNT ON");
-            sb.AppendLine("");
-            sb.AppendLine($"\tINSERT INTO {table} VALUES({GetParameterNames(false, "@")})");
-            sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            sb.AppendLine("\tRETURN @ID");
+            _sb.AppendLine("AS");
+            _sb.AppendLine("BEGIN");
+            _sb.AppendLine("\tSET NOCOUNT ON");
+            _sb.AppendLine("");
+            _sb.AppendLine($"\tINSERT INTO {_table} VALUES({GetParameterNames(false, "@")})");
+            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            _sb.AppendLine("\tRETURN @ID");
 
-            sb.AppendLine("END");
+            _sb.AppendLine("END");
         }
 
         protected override void CreateParameters()
         {
-            sb.AppendLine(GetParametrized(false));
+            _sb.AppendLine(GetParametrized());
         }
     }
 }

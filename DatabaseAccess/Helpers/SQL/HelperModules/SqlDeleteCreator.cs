@@ -13,14 +13,14 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateBody()
         {
-            sb.AppendLine("AS");
+            _sb.AppendLine("AS");
 
-            sb.AppendLine($"\tDELETE FROM {table} WHERE {ParameterNames.cId} = @{ParameterNames.cId}");
+            _sb.AppendLine($"\tDELETE FROM {_table} WHERE {ParameterNames.cId} = @{ParameterNames.cId}");
         }
 
         protected override void CreateParameters()
         {
-            sb.AppendLine($"\t@{ParameterNames.cId} INT");
+            _sb.AppendLine($"\t@{ParameterNames.cId} INT");
         }
     }
 }

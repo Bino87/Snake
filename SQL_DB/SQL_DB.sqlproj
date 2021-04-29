@@ -58,7 +58,6 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
-    <Folder Include="StoredProcedures\TESTTABLE" />
     <Folder Include="StoredProcedures\NETWORK_BIAS" />
     <Folder Include="StoredProcedures\NETWORK_LAYER" />
     <Folder Include="StoredProcedures\NETWORK_WEIGHT" />
@@ -67,14 +66,6 @@
     <None Include="SQL_DB.publish.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\TestTable.sql" />
-    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_INSERT.sql" />
-    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_GET_ALL.sql" />
-    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_GET_BY_ID.sql" />
-    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE.sql" />
-    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_INSERT_MANY.sql" />
-    <Build Include="StoredProcedures\TESTTABLE\UPDATE_MANY.sql" />
-    <Build Include="StoredProcedures\TESTTABLE\TESTTABLE_UPSERT_MANY.sql" />
     <Build Include="Tables\NETWORK_WEIGHT.sql" />
     <Build Include="Tables\NETWORK_BIAS.sql" />
     <Build Include="Tables\NETWORK_LAYER.sql" />

@@ -13,16 +13,16 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateBody()
         {
-            sb.AppendLine("AS");
-            sb.AppendLine($"\tSELECT * FROM [dbo].{table}");
-            sb.AppendLine("\tWHERE Id = @ID");
+            _sb.AppendLine("AS");
+            _sb.AppendLine($"\tSELECT * FROM [dbo].{_table}");
+            _sb.AppendLine("\tWHERE Id = @ID");
 
-            sb.AppendLine("RETURN 0");
+            _sb.AppendLine("RETURN 0");
         }
 
         protected override void CreateParameters()
         {
-            sb.AppendLine($"\t@{ParameterNames.cId} INT");
+            _sb.AppendLine($"\t@{ParameterNames.cId} INT");
         }
     }
 }
