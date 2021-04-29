@@ -1,10 +1,53 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
 using DataAccessLibrary.DataTransferObjects;
+using DataAccessLibrary.Helpers.HelperModules;
+using DataAccessLibrary.Internal;
+using DataAccessLibrary.Internal.SQL;
+using DataAccessLibrary.Internal.SQL.Enums;
+using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.Extensions
 {
     internal static class Extensions
     {
+        internal static void WhenMatched<T>(this SqlStoredProcedureCreator<T> val, StringBuilder sb, SqlDatabaseAccessAbstract<T> access, T item) where T : SqlDataTransferObject
+        {
+            sb.AppendLine("\tWHEN MATCHED THEN");
+            sb.AppendLine("\t\tUPDATE SET  ");
+            
+            IEnumerable<string> GetStuff()
+            {
+                SqlCallParameters p = access.CreateDefaultParameters(item.ParametersCount, Actions.DELETE_BY_ID);
+                SqlCallParameters parameters = item.CreateParameters(p);
+
+                for (int i = 0; i < item.ParametersCount; i++)
+                {
+                    SqlCallParameter parameter = parameters[i];
+
+                    if (parameter.ParameterName == ParameterNames.cId)
+                        continue;
+
+                    yield return $"\t\t\tdbTable.{parameter.ParameterName} = tbl.{parameter.ParameterName}";
+                }
+            }
+
+            sb.AppendLine(string.Join("," + Environment.NewLine, GetStuff()));
+
+            sb.AppendLine();
+            sb.AppendLine();
+        }
+
+        internal static void WhenNotMatched<T>(this SqlStoredProcedureCreator<T> val, StringBuilder sb, Func<bool, string,string,string> getParameterNames) where T : SqlDataTransferObject
+        {
+            sb.AppendLine("\tWHEN NOT MATCHED THEN");
+            sb.AppendLine($"\t\tINSERT ({getParameterNames(false, "[", "]")})");
+            sb.AppendLine($"\t\tVALUES({getParameterNames(false, "tbl.","")});");
+            sb.AppendLine();
+        }
+
         internal static DataTable ToDataTable(this SqlDataTransferObject[] dtos)
         {
             DataTable dt = new();

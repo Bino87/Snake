@@ -12,6 +12,7 @@ BEGIN
 			dbTable.LAYER_ID = tbl.LAYER_ID,
 			dbTable.INTERNAL_INDEX = tbl.INTERNAL_INDEX
 
+
 ;
 END
 RETURN 0
