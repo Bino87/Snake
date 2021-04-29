@@ -16,8 +16,6 @@ namespace Snake
         {
             InitializeComponent();
             DataContext = new MainViewModel();
-            SQLHelper.CreateStoredProcedures();
-            Environment.Exit(1);
         }
     }
 }
