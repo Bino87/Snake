@@ -4,6 +4,8 @@
     {
         Int,
         String,
+        String25,
+        String50,
         Double,
         TimeStamp,
         DateTime,

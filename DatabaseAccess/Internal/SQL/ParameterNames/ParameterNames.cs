@@ -9,6 +9,7 @@
         internal const string cActivationFunctionId = "ACTIVATION_FUNCTION_ID";
         internal const string cNetworkId = "NETWORK_ID";
         internal const string cNumberOfNodes = "NUMBER_OF_NODES";
+        internal const string cDataTable = "DATA_TABLE";
 
 
     }

@@ -7,12 +7,17 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class NetworkBiasDto : HasInternalIndexDto
+    public class NetworkBiasDto : InternalyIndexedDto
     {
         public int LayerId { get; set; }
         public double Value { get; set; }
 
         internal override int ParametersCount => base.ParametersCount + 2;
+
+        internal NetworkBiasDto() :base()
+        {
+            
+        }
 
         internal NetworkBiasDto(DataRow row) : base(row)
         {

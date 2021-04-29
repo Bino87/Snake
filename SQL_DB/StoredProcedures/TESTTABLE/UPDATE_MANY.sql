@@ -8,7 +8,6 @@ AS
 
 		WHEN MATCHED THEN
 			UPDATE SET 
-						dbTest.Id = tblData.Id,
 						dbTest.Value = tblData.Value
 						;
 

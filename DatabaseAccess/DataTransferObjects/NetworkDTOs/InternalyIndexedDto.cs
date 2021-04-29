@@ -7,11 +7,17 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class HasInternalIndexDto : SqlDataTransferObject
+    public class InternalyIndexedDto : SqlDataTransferObject
     {
         public int InternalIndex { get; }
         internal override int ParametersCount => base.ParametersCount + 1;
-        protected  HasInternalIndexDto(DataRow row) : base(row)
+
+        internal InternalyIndexedDto() : base()
+        {
+            
+        }
+
+        protected  InternalyIndexedDto(DataRow row) : base(row)
         {
             InternalIndex = row.GetAsInt(ParameterNames.cInternalIndex);
         }

@@ -7,13 +7,18 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class NetworkLayerDto : HasInternalIndexDto
+    public class NetworkLayerDto : InternalyIndexedDto
     {
         public int ActivationFunctionId { get; }
         public int NetworkId { get; }
         public int NumberOfNodes { get; }
 
         internal override int ParametersCount => base.ParametersCount + 3;
+
+        internal NetworkLayerDto() : base()
+        {
+            
+        }
 
         internal NetworkLayerDto(DataRow row) : base(row)
         {

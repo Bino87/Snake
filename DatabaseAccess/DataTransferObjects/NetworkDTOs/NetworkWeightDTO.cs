@@ -7,13 +7,17 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class NetworkWeightDto : HasInternalIndexDto
+    public class NetworkWeightDto : InternalyIndexedDto
     {
         public int LayerId { get; set; }
         public double Value { get; set; }
 
         internal override int ParametersCount => base.ParametersCount + 2;
 
+        internal NetworkWeightDto() : base()
+        {
+
+        }
         internal NetworkWeightDto(DataRow row) : base(row)
         {
             Value = row.GetAsDouble(ParameterNames.cValue);

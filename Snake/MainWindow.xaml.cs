@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using DataAccessLibrary.DataAccessors.Network;
+using DataAccessLibrary.Helpers;
 using UserControls.Models;
 
 namespace Snake
@@ -8,14 +11,12 @@ namespace Snake
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MainViewModel mvm;
-        
-       
+
+
         public MainWindow()
         {
             InitializeComponent();
-            mvm = new MainViewModel();
-            this.DataContext = mvm;
+            DataContext = new MainViewModel();
         }
     }
 }

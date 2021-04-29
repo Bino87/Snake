@@ -15,7 +15,7 @@ namespace DataAccessLibrary.Internal
 {
     public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T> where T : SqlDataTransferObject
     {
-        private const string cDataTable = "DATA";
+        
 
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings.GetConnectionString();
 
@@ -24,7 +24,7 @@ namespace DataAccessLibrary.Internal
         protected abstract Table Table { get; }
         public override T[] GetAll()
         {
-            SqlCallParameters parameters = CreateDefaultParameters(1, Actions.GET_ALL);
+            SqlCallParameters parameters = CreateDefaultParameters(0, Actions.GET_ALL);
             DataTable dataTable = GetDataTable(parameters);
 
             return  SetDataTransferObjectsFromDataTable(dataTable);
@@ -32,7 +32,7 @@ namespace DataAccessLibrary.Internal
 
         public override T GetById(int id)
         {
-            SqlCallParameters parameters = CreateDefaultParameters(2, Actions.GET_BY_ID, id);
+            SqlCallParameters parameters = CreateDefaultParameters(1, Actions.GET_BY_ID, id);
             DataTable dataTable = GetDataTable(parameters);
 
             if (dataTable.Rows.Count > 1)
@@ -143,7 +143,7 @@ namespace DataAccessLibrary.Internal
             return res;
         }
 
-        private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action) => new(parametersCount, Table, action);
+        internal SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action) => new(parametersCount, Table, action);
 
         private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, int id)
         {
@@ -195,7 +195,7 @@ namespace DataAccessLibrary.Internal
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.AddWithValue(cDataTable, dt);
+                cmd.Parameters.AddWithValue(ParameterNames.cDataTable, dt);
 
                 con.Open();
                 res = cmd.ExecuteNonQuery();
