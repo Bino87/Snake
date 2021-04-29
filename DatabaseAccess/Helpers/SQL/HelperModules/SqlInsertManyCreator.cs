@@ -4,11 +4,11 @@ using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL.Enums;
 using DataAccessLibrary.Internal.SQL.ParameterNames;
 
-namespace DataAccessLibrary.Helpers.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
-    internal class SqlUpdateManyCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
+    internal class SqlInsertManyCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
     {
-        public SqlUpdateManyCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.UPDATE_MANY)
+        public SqlInsertManyCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.INSERT_MANY)
         {
         }
 
@@ -20,9 +20,10 @@ namespace DataAccessLibrary.Helpers.HelperModules
             sb.AppendLine($"\tUSING @{ParameterNames.cDataTable} as tbl");
             sb.AppendLine("\tON (dbTable.Id = tbl.Id)");
             sb.AppendLine();
-            this.WhenMatched(sb, access, item);
+            this.WhenNotMatched(sb, GetParameterNames);
 
             sb.AppendLine(";");
+
             sb.AppendLine("END");
             sb.AppendLine("RETURN 0");
         }

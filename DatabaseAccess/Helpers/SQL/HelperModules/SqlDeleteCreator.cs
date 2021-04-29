@@ -3,7 +3,7 @@ using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL.Enums;
 using DataAccessLibrary.Internal.SQL.ParameterNames;
 
-namespace DataAccessLibrary.Helpers.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
     internal class SqlDeleteCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
     {

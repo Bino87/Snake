@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Helpers.HelperModules;
+using DataAccessLibrary.Helpers.SQL.HelperModules;
 using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;

@@ -5,7 +5,7 @@ using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 using DataAccessLibrary.Internal.SQL.ParameterNames;
 
-namespace DataAccessLibrary.Helpers.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
     internal abstract class SqlStoredProcedureCreator<T> : SqlCreator<T> where T : SqlDataTransferObject
     {

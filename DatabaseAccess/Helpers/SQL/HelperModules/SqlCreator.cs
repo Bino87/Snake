@@ -6,7 +6,7 @@ using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
     internal record CreatorResult(string Data, string Name);
     internal abstract class SqlCreator<T> where T : SqlDataTransferObject

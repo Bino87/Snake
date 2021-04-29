@@ -3,11 +3,11 @@ using System.IO;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
-using DataAccessLibrary.Helpers.HelperModules;
+using DataAccessLibrary.Helpers.SQL.HelperModules;
 using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers
+namespace DataAccessLibrary.Helpers.SQL
 {
     public class SQLHelper
     {

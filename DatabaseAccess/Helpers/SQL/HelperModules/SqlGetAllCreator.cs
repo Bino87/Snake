@@ -2,7 +2,7 @@
 using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
     internal class SqlGetAllCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
     {

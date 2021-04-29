@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
-using DataAccessLibrary.DataAccessors.Network;
-using DataAccessLibrary.Helpers;
+using DataAccessLibrary.Helpers.SQL;
 using UserControls.Models;
 
 namespace Snake
