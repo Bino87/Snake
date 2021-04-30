@@ -1,10 +1,14 @@
 ﻿using System;
+using Commons;
 using Network.Enums;
 
 namespace Network
 {
     public class NetworkTemplate
     {
+        private const double cBiasRange = 10;
+        private const double cWeightRange = 1;
+
         public int[] BiasCount { get; set; }
 
         public int[] WeightsCount { get; set; }
@@ -45,6 +49,31 @@ namespace Network
                 WeightsCount[i - 1] = layerInfos[i - 1].NodeCount * layerInfos[i].NodeCount;
                 ActivationFunction[i - 1] = layerInfos[i].ActivationFunction;
             }
+        }
+
+        public NetworkData ToNetworkData()
+        {
+            double[][] bias = new double[Layers][];
+            double[][] weights = new double[Layers][];
+
+            for (int i = 0; i < Layers; i++)
+            {
+                bias[i] = new double[BiasCount[i]];
+                weights[i] = new double[WeightsCount[i]];
+
+                for (int x = 0; x < bias[i].Length; x++)
+                {
+                    bias[i][x] = RNG.Instance.NextDouble(-cBiasRange, cBiasRange);
+                }
+
+                for (int x = 0; x < weights[i].Length; x++)
+                {
+                    weights[i][x] = RNG.Instance.NextDouble(-cWeightRange, cWeightRange);
+                }
+            }
+
+
+            return new NetworkData(ActivationFunction, weights, bias, InputCount, OutputCount);
         }
     }
 }

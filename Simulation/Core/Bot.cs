@@ -30,17 +30,10 @@ namespace Simulation.Core
         private static int _idCounter;
         private readonly List<HashSet<int>> _uniqueCells;
 
-        public Bot(NetworkData networkData, int mapSize, int maxMovesWithoutFood, int generation) : this(mapSize, maxMovesWithoutFood, generation)
+        public Bot(NetworkData networkData, int mapSize, int maxMovesWithoutFood, int generation)
         {
             _networkAgent = new NetworkAgent(networkData);
-        }
 
-        public Bot(NetworkTemplate networkTemplate, int mapSize, int maxMovesWithoutFood, int generation) : this(mapSize, maxMovesWithoutFood, generation)
-        {
-            _networkAgent = new NetworkAgent(networkTemplate);
-        }
-        private Bot(int mapSize, int maxMovesWithoutFood, int generation)
-        {
             _takenCells = new Dictionary<(int, int), MapCellType>();
             Generation = generation;
             Id = _idCounter++;

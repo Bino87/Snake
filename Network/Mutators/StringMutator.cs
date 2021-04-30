@@ -23,8 +23,8 @@ namespace Network.Mutators
 
         public (NetworkData First, NetworkData Second) Get2Offsprings(BasicNeuralNetwork parent1, BasicNeuralNetwork parent2)
         {
-            NetworkData fNetworkData = parent1.CopyNetworkInfo();
-            NetworkData mNetworkData = parent2.CopyNetworkInfo();
+            NetworkData fNetworkData = parent1.CreateNetworkData();
+            NetworkData mNetworkData = parent2.CreateNetworkData();
 
             (string fBinaryString, int fArrLen) = ConvertToBinaryString(fNetworkData);
             (string mBinaryString, int mArrLen) = ConvertToBinaryString(mNetworkData);

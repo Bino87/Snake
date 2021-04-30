@@ -27,7 +27,7 @@ namespace Simulation.Core
             _agents = new Bot[_simStateParameters.NumberOfPairs * 2];
             for (int i = 0; i < _agents.Length; i++)
             {
-                _agents[i] = new Bot(networkTemplate, _simStateParameters.MapSize, _simStateParameters.MaxMoves, 1);
+                _agents[i] = new Bot(networkTemplate.ToNetworkData(), _simStateParameters.MapSize, _simStateParameters.MaxMoves, 1);
             }
         }
 

@@ -12,10 +12,6 @@ namespace Simulation.Core
         private readonly int _inputCount;
         private readonly BasicNeuralNetwork _basicNeuralNetwork;
         private double[][] _result;
-        internal NetworkAgent(NetworkTemplate networkTemplate) : this(networkTemplate.InputCount)
-        {
-            _basicNeuralNetwork = new BasicNeuralNetwork(networkTemplate);
-        }
 
         internal NetworkAgent(NetworkData networkData) : this(networkData.InputCount)
         {

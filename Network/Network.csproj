@@ -13,4 +13,8 @@
     <ProjectReference Include="..\DatabaseAccess\DataAccessLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Factory\" />
+  </ItemGroup>
+
 </Project>

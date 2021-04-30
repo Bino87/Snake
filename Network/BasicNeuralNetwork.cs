@@ -1,8 +1,8 @@
 ﻿using System;
 using Commons.Extensions;
 using Network.ActivationFunctions;
+using Network.Enums;
 using Network.Extensions;
-using Network.Factory;
 
 namespace Network
 {
@@ -17,14 +17,6 @@ namespace Network
 
         public double[][] Weights => _weights;
 
-        public BasicNeuralNetwork(NetworkTemplate networkTemplate) : this(networkTemplate.Layers, networkTemplate.InputCount)
-        {
-            (IActivationFunction[] activationFunctions, double[][] weights, double[][] bias) = NeuralNetFactory.CreateNew(networkTemplate);
-            _weights = weights;
-            _biases = bias;
-            _activationFunction = activationFunctions;
-        }
-
         private BasicNeuralNetwork(int layerCount, int inputCount)
         {
             _layerCount = layerCount;
@@ -38,7 +30,8 @@ namespace Network
             _activationFunction = networkData.ActivationFunction.InitializeFunctions();
         }
 
-        public NetworkData CopyNetworkInfo() => NeuralNetFactory.Copy(_inputCount, _biases, _weights, _activationFunction.ToActivationFunctionTypes());
+        public NetworkData CreateNetworkData() => new(_activationFunction.ToActivationFunctionTypes().MakeCopy(), _weights.MakeCopy(), _biases.MakeCopy(), _inputCount,
+            _biases[^1].Length);
 
         public double[][] Evaluate(double[] input)
         {
