@@ -19,10 +19,10 @@ namespace Network
 
         public BasicNeuralNetwork(NetworkTemplate networkTemplate) : this(networkTemplate.Layers, networkTemplate.InputCount)
         {
-            NeuralNetData data = NeuralNetFactory.CreateNew(networkTemplate);
-            _weights = data.Weights;
-            _biases = data.Bias;
-            _activationFunction = data.ActivationFunctions;
+            (IActivationFunction[] activationFunctions, double[][] weights, double[][] bias) = NeuralNetFactory.CreateNew(networkTemplate);
+            _weights = weights;
+            _biases = bias;
+            _activationFunction = activationFunctions;
         }
 
         private BasicNeuralNetwork(int layerCount, int inputCount)
