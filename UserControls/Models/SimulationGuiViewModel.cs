@@ -1,4 +1,5 @@
 ﻿using System;
+using Commons.Extensions;
 using Simulation.Enums;
 using Simulation.Interfaces;
 using UserControls.Core.Base;
@@ -21,8 +22,15 @@ namespace UserControls.Models
         private int _mapSize = 11;
         private bool _runInBackground = true;
         private int _currentIndividual;
+        private int _numberOfIterations = 10;
 
         public RelayCommand Run { get; set; }
+
+        public int NumberOfIterations
+        {
+            get => _numberOfIterations;
+            set => SetField(ref _numberOfIterations, value.Clamp(1,20));
+        }
 
         public int MaxMoves => MapSize * MapSize;
 
@@ -85,6 +93,8 @@ namespace UserControls.Models
             get => _points;
             set => SetField(ref _points, value);
         }
+
+        
 
         public static MutationTechnique[] MutationTechniques => Enum.GetValues<MutationTechnique>();
 

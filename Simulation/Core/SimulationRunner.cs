@@ -27,7 +27,7 @@ namespace Simulation.Core
             _agents = new Bot[_simStateParameters.NumberOfPairs * 2];
             for (int i = 0; i < _agents.Length; i++)
             {
-                _agents[i] = new Bot(networkTemplate.ToNetworkData(), _simStateParameters.MapSize, _simStateParameters.MaxMoves, 1);
+                _agents[i] = new Bot(networkTemplate.ToNetworkData(), _simStateParameters.MapSize, _simStateParameters.MaxMoves, 1,  _simStateParameters.NumberOfIterations);
             }
         }
 
@@ -52,8 +52,8 @@ namespace Simulation.Core
 
                 (NetworkData first, NetworkData second) = mutator.Get2Offsprings(parent1, parent2);
 
-                res[i + len] = new Bot(first, _simStateParameters.MapSize, _simStateParameters.MaxMoves, generation + 1);
-                res[x + len] = new Bot(second, _simStateParameters.MapSize, _simStateParameters.MaxMoves, generation + 1);
+                res[i + len] = new Bot(first, _simStateParameters.MapSize, _simStateParameters.MaxMoves, generation + 1,  _simStateParameters.NumberOfIterations);
+                res[x + len] = new Bot(second, _simStateParameters.MapSize, _simStateParameters.MaxMoves, generation + 1, _simStateParameters.NumberOfIterations);
             });
 
             _agents = res;

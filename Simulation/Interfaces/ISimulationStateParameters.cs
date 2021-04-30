@@ -16,5 +16,6 @@ namespace Simulation.Interfaces
         int Generation { get; set; }
         int Moves { get; set; }
         int Points { get; set; }
+        int NumberOfIterations { get; set; }
     }
 }

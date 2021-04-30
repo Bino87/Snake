@@ -31,6 +31,7 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" FontWeight="Bold" Text="Generation:"/>
         <TextBlock Grid.Column="0" Grid.Row="1" FontWeight="Bold" Text="Individual:"/>
@@ -43,6 +44,7 @@
         <TextBlock Grid.Column="0" Grid.Row="8" FontWeight="Bold" Text="Run In Background:"/>
         <TextBlock Grid.Column="0" Grid.Row="9" FontWeight="Bold" Text="Number of Pairs:"/>
         <TextBlock Grid.Column="0" Grid.Row="10" FontWeight="Bold" Text="Map Size:"/>
+        <TextBlock Grid.Column="0" Grid.Row="11" FontWeight="Bold" Text="Number of Iterations:"/>
 
 
         <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Generation, Mode=OneWay}" />
@@ -56,7 +58,8 @@
         <CheckBox Grid.Column="1" Grid.Row="8" IsChecked="{Binding RunInBackground, Mode=TwoWay}"/>
         <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding NumberOfPairs, Mode=TwoWay}" /> 
         <TextBox Grid.Column="1" Grid.Row="10" Text="{Binding MapSize, Mode=TwoWay}" /> 
-        <Button Grid.Column="1" Grid.Row="11" Command="{Binding Path=Run}" Content="Run"/>
+        <TextBox Grid.Column="1" Grid.Row="11" Text="{Binding NumberOfIterations, Mode=TwoWay}" /> 
+        <Button Grid.Column="1" Grid.Row="12" Command="{Binding Path=Run}" Content="Run"/>
 
     </Grid>
 </UserControl>

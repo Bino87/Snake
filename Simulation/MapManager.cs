@@ -15,7 +15,8 @@ namespace Simulation
         private readonly NetworkTemplate _networkTemplate;
         private readonly SimulationRunner _simulationRunner;
 
-        public MapManager(ISimulationStateParameters simStateParameters, NetworkTemplate networkTemplate, ISimulationUpdateManager updateManager)
+        public MapManager(ISimulationStateParameters simStateParameters, NetworkTemplate networkTemplate,
+            ISimulationUpdateManager updateManager)
         {
             _simStateParameters = simStateParameters;
             _networkTemplate = networkTemplate;

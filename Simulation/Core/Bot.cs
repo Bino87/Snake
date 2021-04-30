@@ -29,13 +29,15 @@ namespace Simulation.Core
         public int Id { get; }
         private static int _idCounter;
         private readonly List<HashSet<int>> _uniqueCells;
+        private readonly int _numberOfIterations;
 
-        public Bot(NetworkData networkData, int mapSize, int maxMovesWithoutFood, int generation)
+        public Bot(NetworkData networkData, int mapSize, int maxMovesWithoutFood, int generation, int numberOfIterations)
         {
             _networkAgent = new NetworkAgent(networkData);
 
             _takenCells = new Dictionary<(int, int), MapCellType>();
             Generation = generation;
+            _numberOfIterations = numberOfIterations;
             Id = _idCounter++;
             _mapSize = mapSize;
             _maxMovesWithoutFood = maxMovesWithoutFood;
@@ -47,7 +49,7 @@ namespace Simulation.Core
         {
             SimulationResult res = new();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < _numberOfIterations; i++)
             {
                 res += GetResultsFromSimulation(updater);
             }
