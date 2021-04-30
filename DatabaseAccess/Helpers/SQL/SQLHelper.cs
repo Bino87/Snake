@@ -66,7 +66,7 @@ namespace DataAccessLibrary.Helpers.SQL
 
         private static string GetBasePath() => Environment.MachineName switch
         {
-            "DESKTOP-D40UEJC" => "Home",
+            "DESKTOP-D40UEJC" => @"C:\Users\Kamil\Desktop\123",
             "DESKTOP-GIT7C0K" => @"C:\Users\Kamil.Binko\Desktop\123",
             _ => throw new Exception("Machine not recognized!")
         };
