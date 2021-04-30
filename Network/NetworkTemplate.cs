@@ -46,7 +46,5 @@ namespace Network
                 ActivationFunction[i - 1] = layerInfos[i].ActivationFunction;
             }
         }
-
-
     }
 }
