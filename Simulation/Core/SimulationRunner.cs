@@ -22,12 +22,12 @@ namespace Simulation.Core
         }
 
 
-        public void InitializeAgents(NetworkInfo networkInfo)
+        public void InitializeAgents(NetworkTemplate networkTemplate)
         {
             _agents = new Bot[_simStateParameters.NumberOfPairs * 2];
             for (int i = 0; i < _agents.Length; i++)
             {
-                _agents[i] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, networkInfo, 1);
+                _agents[i] = new Bot(networkTemplate, _simStateParameters.MapSize, _simStateParameters.MaxMoves, 1);
             }
         }
 
@@ -37,6 +37,7 @@ namespace Simulation.Core
 
             int len = res.Length / 2;
             IMutator mutator = _simStateParameters.MutationTechnique.GetMutator(_simStateParameters.MutationChance, _simStateParameters.MutationRate);
+
 
             Parallel.For(0, len / 2, (i) =>
             {
@@ -49,10 +50,10 @@ namespace Simulation.Core
                 BasicNeuralNetwork parent1 = res[i].GetNeuralNetwork();
                 BasicNeuralNetwork parent2 = res[x].GetNeuralNetwork();
 
-                (NetworkInfo first, NetworkInfo second) = mutator.Get2Offsprings(parent1, parent2);
+                (NetworkData first, NetworkData second) = mutator.Get2Offsprings(parent1, parent2);
 
-                res[i + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, first, generation + 1);
-                res[x + len] = new Bot(_simStateParameters.MapSize, _simStateParameters.MaxMoves, second, generation + 1);
+                res[i + len] = new Bot(first, _simStateParameters.MapSize, _simStateParameters.MaxMoves, generation + 1);
+                res[x + len] = new Bot(second, _simStateParameters.MapSize, _simStateParameters.MaxMoves, generation + 1);
             });
 
             _agents = res;

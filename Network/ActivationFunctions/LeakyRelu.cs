@@ -1,10 +1,10 @@
-﻿using Network.Const;
+﻿using Network.Enums;
 
 namespace Network.ActivationFunctions
 {
     public class LeakyRelu : IActivationFunction
     {
-        public int EvaluationFunctionId => ActivationFunctionIds.cLeakyReLu;
+        public ActivationFunctionType EvaluationFunctionId => ActivationFunctionType.LeakyReLu;
         public double Evaluate(double value)
         {
             if (value > 0)

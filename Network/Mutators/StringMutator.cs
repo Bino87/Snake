@@ -21,26 +21,26 @@ namespace Network.Mutators
             _maxSubstringLength = maxSubstringLen;
         }
 
-        public (NetworkInfo First, NetworkInfo Second) Get2Offsprings(BasicNeuralNetwork parent1, BasicNeuralNetwork parent2)
+        public (NetworkData First, NetworkData Second) Get2Offsprings(BasicNeuralNetwork parent1, BasicNeuralNetwork parent2)
         {
-            NetworkInfo fNetworkInfo = parent1.CopyNetworkInfo();
-            NetworkInfo mNetworkInfo = parent2.CopyNetworkInfo();
+            NetworkData fNetworkData = parent1.CopyNetworkInfo();
+            NetworkData mNetworkData = parent2.CopyNetworkInfo();
 
-            (string fBinaryString, int fArrLen) = ConvertToBinaryString(fNetworkInfo);
-            (string mBinaryString, int mArrLen) = ConvertToBinaryString(mNetworkInfo);
+            (string fBinaryString, int fArrLen) = ConvertToBinaryString(fNetworkData);
+            (string mBinaryString, int mArrLen) = ConvertToBinaryString(mNetworkData);
 
             byte[] firstBytes = CreateArray(Mutate(Mix(fBinaryString, mBinaryString)), fArrLen);
             byte[] secondBytes = CreateArray(Mutate(Mix(mBinaryString, fBinaryString)), mArrLen);
 
-            fNetworkInfo.FromByteArray(firstBytes);
-            mNetworkInfo.FromByteArray(secondBytes);
+            fNetworkData.FromByteArray(firstBytes);
+            mNetworkData.FromByteArray(secondBytes);
 
-            return (fNetworkInfo, mNetworkInfo);
+            return (fNetworkData, mNetworkData);
         }
 
-        private static (string Value, int byteArrLenght) ConvertToBinaryString(NetworkInfo networkInfo)
+        private static (string Value, int byteArrLenght) ConvertToBinaryString(NetworkData networkData)
         {
-            byte[] arr = networkInfo.ToByteArr();
+            byte[] arr = networkData.ToByteArr();
 
             return (arr.ToBinaryString(), arr.Length);
         }

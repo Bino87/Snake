@@ -1,9 +1,9 @@
-﻿using Network.Const;
+﻿using Network.Enums;
 namespace Network.ActivationFunctions
 {
     public class BinaryStep : IActivationFunction
     {
-        public int EvaluationFunctionId => ActivationFunctionIds.cBinaryStep;
+        public ActivationFunctionType EvaluationFunctionId => ActivationFunctionType.BinaryStep;
 
         public double Evaluate(double value)
         {

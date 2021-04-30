@@ -1,11 +1,11 @@
 ﻿using System;
-using Network.Const;
+using Network.Enums;
 
 namespace Network.ActivationFunctions
 {
     public class Sigmoid : IActivationFunction
     {
-        public int EvaluationFunctionId => ActivationFunctionIds.cSigmoid;
+        public ActivationFunctionType EvaluationFunctionId => ActivationFunctionType.Sigmoid;
         public double Evaluate(double value)
         {
             return 1d / (1d + Math.Pow(Math.E, -value));

@@ -29,7 +29,17 @@ namespace Simulation.Core
         public int Id { get; }
         private static int _idCounter;
         private readonly List<HashSet<int>> _uniqueCells;
-        public Bot(int mapSize, int maxMovesWithoutFood, NetworkInfo networkInfo, int generation)
+
+        public Bot(NetworkData networkData, int mapSize, int maxMovesWithoutFood, int generation) : this(mapSize, maxMovesWithoutFood, generation)
+        {
+            _networkAgent = new NetworkAgent(networkData);
+        }
+
+        public Bot(NetworkTemplate networkTemplate, int mapSize, int maxMovesWithoutFood, int generation) : this(mapSize, maxMovesWithoutFood, generation)
+        {
+            _networkAgent = new NetworkAgent(networkTemplate);
+        }
+        private Bot(int mapSize, int maxMovesWithoutFood, int generation)
         {
             _takenCells = new Dictionary<(int, int), MapCellType>();
             Generation = generation;
@@ -37,7 +47,6 @@ namespace Simulation.Core
             _mapSize = mapSize;
             _maxMovesWithoutFood = maxMovesWithoutFood;
             _snake = new List<SnakePart>();
-            _networkAgent = new NetworkAgent(networkInfo);
             _uniqueCells = new List<HashSet<int>>();
         }
 

@@ -1,11 +1,11 @@
 ﻿using Commons.Extensions;
-using Network.Const;
+using Network.Enums;
 
 namespace Network.ActivationFunctions
 {
     public class EliotSig : IActivationFunction
     {
-        public int EvaluationFunctionId => ActivationFunctionIds.cEliotSig;
+        public ActivationFunctionType EvaluationFunctionId => ActivationFunctionType.EliotSig;
         public double Evaluate(double value)
         {
             return value / (1 + value.Abs());

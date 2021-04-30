@@ -44,7 +44,6 @@ namespace Simulation.Extensions
             return technique switch
             {
                 MutationTechnique.String => new StringMutator(mutationChance, mutationRate, 2,12),
-                MutationTechnique.BitArr => new BitMutator(mutationChance, mutationRate),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

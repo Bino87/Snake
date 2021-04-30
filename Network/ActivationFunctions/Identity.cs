@@ -1,10 +1,10 @@
-﻿using Network.Const;
+﻿using Network.Enums;
 
 namespace Network.ActivationFunctions
 {
     public class Identity : IActivationFunction
     {
-        public int EvaluationFunctionId => ActivationFunctionIds.cIdentity;
+        public ActivationFunctionType EvaluationFunctionId => ActivationFunctionType.Identity;
         public double Evaluate(double value)
         {
             return value;

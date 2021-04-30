@@ -1,8 +1,10 @@
-﻿namespace Network.ActivationFunctions
+﻿using Network.Enums;
+
+namespace Network.ActivationFunctions
 {
     public interface IActivationFunction
     {
-        int EvaluationFunctionId { get; }
+        ActivationFunctionType EvaluationFunctionId { get; }
         double Evaluate(double value);
     }
 }

@@ -12,13 +12,13 @@ namespace Simulation
 
         private readonly ISimulationUpdateManager _updateManager;
         private readonly ISimulationStateParameters _simStateParameters;
-        private readonly NetworkInfo _networkInfo;
+        private readonly NetworkTemplate _networkTemplate;
         private readonly SimulationRunner _simulationRunner;
 
-        public MapManager(ISimulationStateParameters simStateParameters, NetworkInfo networkInfo, ISimulationUpdateManager updateManager)
+        public MapManager(ISimulationStateParameters simStateParameters, NetworkTemplate networkTemplate, ISimulationUpdateManager updateManager)
         {
             _simStateParameters = simStateParameters;
-            _networkInfo = networkInfo;
+            _networkTemplate = networkTemplate;
             _simulationRunner = new SimulationRunner(simStateParameters, updateManager);
             _updateManager = updateManager;
         }
@@ -28,7 +28,7 @@ namespace Simulation
         public void Run()
         {
             _updateManager.OnGeneration.Data.Generation = 0;
-            _simulationRunner.InitializeAgents(_networkInfo);
+            _simulationRunner.InitializeAgents(_networkTemplate);
             RunSimulation();
         }
 

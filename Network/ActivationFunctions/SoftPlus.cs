@@ -1,11 +1,11 @@
 ﻿using System;
-using Network.Const;
+using Network.Enums;
 
 namespace Network.ActivationFunctions
 {
     public class SoftPlus : IActivationFunction
     {
-        public int EvaluationFunctionId => ActivationFunctionIds.cSoftPlus;
+        public ActivationFunctionType EvaluationFunctionId => ActivationFunctionType.SoftPlus;
         public double Evaluate(double value)
         {
             return Math.Log(1 + Math.Pow(Math.E, value));

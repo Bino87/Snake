@@ -1,13 +1,15 @@
 ﻿using System;
 using Commons.Extensions;
 using Network.ActivationFunctions;
+using Network.Extensions;
+using Network.Factory;
 
 namespace Network
 {
     public class BasicNeuralNetwork
     {
         private readonly int _inputCount;
-        private readonly int _numLayers;
+        private readonly int _layerCount;
 
         private readonly double[][] _biases;
         private readonly double[][] _weights;
@@ -15,22 +17,34 @@ namespace Network
 
         public double[][] Weights => _weights;
 
-        public BasicNeuralNetwork(NetworkInfo networkInfo)
+        public BasicNeuralNetwork(NetworkTemplate networkTemplate) : this(networkTemplate.Layers, networkTemplate.InputCount)
         {
-            (_weights, _biases) = networkInfo.GetWeightsAndBiases();
-
-            _numLayers = networkInfo.Layers;
-            _inputCount = networkInfo.InputCount;
-            _activationFunction = networkInfo.ActivationFunction;
+            NeuralNetData data = NeuralNetFactory.CreateNew(networkTemplate);
+            _weights = data.Weights;
+            _biases = data.Bias;
+            _activationFunction = data.ActivationFunctions;
         }
 
-        public NetworkInfo CopyNetworkInfo() => new(_activationFunction, _weights, _biases, _inputCount, _biases[^1].Length);
+        private BasicNeuralNetwork(int layerCount, int inputCount)
+        {
+            _layerCount = layerCount;
+            _inputCount = inputCount;
+        }
+
+        public BasicNeuralNetwork(NetworkData networkData) : this(networkData.Layers, networkData.InputCount)
+        {
+            _weights = networkData.Weights;
+            _biases = networkData.Bias;
+            _activationFunction = networkData.ActivationFunction.InitializeFunctions();
+        }
+
+        public NetworkData CopyNetworkInfo() => NeuralNetFactory.Copy(_inputCount, _biases, _weights, _activationFunction.ToActivationFunctionTypes());
 
         public double[][] Evaluate(double[] input)
         {
             if (input.Length != _inputCount) throw new Exception();
 
-            double[][] output = new double[1 + _numLayers][];
+            double[][] output = new double[1 + _layerCount][];
             output[0] = input;
             int layerIndex = 0;
 
@@ -51,7 +65,7 @@ namespace Network
                 input = output[layerIndex + 1];
                 layerIndex++;
 
-            } while (layerIndex < _numLayers);
+            } while (layerIndex < _layerCount);
 
             return output;
         }

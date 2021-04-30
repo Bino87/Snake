@@ -1,14 +1,15 @@
 ﻿using Network.ActivationFunctions;
+using Network.Enums;
 
 namespace Network
 {
     public class LayerInfo
     {
-        public IActivationFunction ActivationFunction { get; }
+        public ActivationFunctionType ActivationFunction { get; }
         public int NodeCount { get; }
 
 
-        public LayerInfo(IActivationFunction activationFunction, int nodeCount)
+        public LayerInfo(ActivationFunctionType activationFunction, int nodeCount)
         {
             ActivationFunction = activationFunction;
             NodeCount = nodeCount;

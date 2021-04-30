@@ -3,6 +3,5 @@
     public enum MutationTechnique
     {
         String,
-        BitArr
     }
 }

@@ -13,39 +13,39 @@ namespace UserControls.Models
 
         private readonly PrimitiveShapeValueProvider[][] _lineValueProviders;
         private readonly PrimitiveShapeValueProvider[][] _circleValueProviders;
-        private readonly NetworkInfo _networkInfo;
+        private readonly NetworkTemplate _networkData;
         private const double cRadius = 10;
 
         public ObservableCollection<PrimitiveShape> DisplayItems { get; set; }
 
         
-        public NeuralNetDisplayViewModel(NetworkInfo networkInfo)
+        public NeuralNetDisplayViewModel(NetworkTemplate networkData)
         {
             DisplayItems = new ObservableCollection<PrimitiveShape>();
-            _lineValueProviders = new PrimitiveShapeValueProvider[networkInfo.Layers][];
-            _circleValueProviders = new PrimitiveShapeValueProvider[networkInfo.Layers + 1][];
-            _networkInfo = networkInfo;
+            _lineValueProviders = new PrimitiveShapeValueProvider[networkData.Layers][];
+            _circleValueProviders = new PrimitiveShapeValueProvider[networkData.Layers + 1][];
+            _networkData = networkData;
             CreateConnections();
         }
 
         private void CreateConnections()
         {
-            double offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkInfo.Layers;
+            double offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkData.Layers;
             double start = Cons.cNetWidthPadding;
 
-            for (int i = 1; i < _networkInfo.LayerSetup.Length; i++)
+            for (int i = 1; i < _networkData.LayerSetup.Length; i++)
             {
-                CreateConnections(start, start + offset, _networkInfo.LayerSetup[i - 1], _networkInfo.LayerSetup[i], i - 1);
+                CreateConnections(start, start + offset, _networkData.LayerSetup[i - 1], _networkData.LayerSetup[i], i - 1);
                 start += offset;
             }
 
-            offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkInfo.Layers;
+            offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkData.Layers;
             start = Cons.cNetWidthPadding;
 
 
-            for (int i = 0; i < _networkInfo.LayerSetup.Length; i++)
+            for (int i = 0; i < _networkData.LayerSetup.Length; i++)
             {
-                CreateNeuronLayer(start, _networkInfo.LayerSetup[i], i);
+                CreateNeuronLayer(start, _networkData.LayerSetup[i], i);
                 start += offset;
             }
         }

@@ -1,11 +1,11 @@
 ﻿using System;
-using Network.Const;
+using Network.Enums;
 
 namespace Network.ActivationFunctions
 {
     public class Tanh : IActivationFunction
     {
-        public int EvaluationFunctionId => ActivationFunctionIds.cTanH;
+        public ActivationFunctionType EvaluationFunctionId => ActivationFunctionType.TanH;
         public double Evaluate(double value)
         {
             double eToMinusX = Math.Pow(Math.E, -value);
