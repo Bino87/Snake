@@ -70,29 +70,60 @@ namespace DataAccessLibrary.Internal
                     def.Set(element.Name, element.Value);
             }
 
+            UpdateResult res = _collection.UpdateOne(filter, def, new UpdateOptions() { IsUpsert = true });
 
-            UpdateResult res =  _collection.UpdateOne(filter, def, new UpdateOptions());
-            return item.Id;
+            return res.UpsertedId?.AsGuid ?? item.Id;
         }
 
         public override Guid Upsert(T item)
         {
-            return item.Id == default ? Insert(item) : Update(item);
+            FilterDefinition<T> filter = Builders<T>.Filter.Eq("Id", item.Id);
+
+            MongoDbCallParameters parameters = item.CreateParameters();
+
+            UpdateDefinitionBuilder<T> updateDefinitionBuilder = Builders<T>.Update;
+            UpdateDefinition<T> def = null;
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                MongoDbCallParameter element = parameters[i];
+                if (def is null)
+                    def = updateDefinitionBuilder.Set(element.Name, element.Value);
+                else
+                    def.Set(element.Name, element.Value);
+            }
+
+
+            ReplaceOneResult res = _collection.ReplaceOne(filter, item, new ReplaceOptions() { IsUpsert = true });
+
+            return res.UpsertedId?.AsGuid ?? item.Id;
         }
 
-        public override Guid InsertMany(T[] items)
+        public override void InsertMany(T[] items)
         {
-            return default;
+            _collection.InsertMany(items);
         }
 
-        public override Guid UpdateMany(T[] items)
+        public override void UpdateMany(T[] items, Guid id)
         {
-            return default;
+            FilterDefinition<T> filter = Builders<T>.Filter.Eq("Id", id);
+
+            MongoDbCallParameters parameters = items[0].CreateParameters();
+
+            UpdateDefinitionBuilder<T> updateDefinitionBuilder = Builders<T>.Update;
+            UpdateDefinition<T> def = null;
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                MongoDbCallParameter element = parameters[i];
+                if (def is null)
+                    def = updateDefinitionBuilder.Set(element.Name, element.Value);
+                else
+                    def.Set(element.Name, element.Value);
+            }
+
+
+            _collection.UpdateMany(filter, def);
         }
 
-        public override Guid UpsertMany(T[] items)
-        {
-            return default;
-        }
+
     }
 }

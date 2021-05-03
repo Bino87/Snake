@@ -13,21 +13,21 @@ using System.Configuration;
 
 namespace DataAccessLibrary.Internal
 {
-    public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T,int> where T : SqlDataTransferObject
+    public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T, int> where T : SqlDataTransferObject
     {
-        
+
 
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings.GetConnectionString();
 
         private const string cShouldHaveOnlyOneRow = "Should have only one row!";
 
-       
+
         public override T[] GetAll()
         {
             SqlCallParameters parameters = CreateDefaultParameters(0, Actions.GET_ALL);
             DataTable dataTable = GetDataTable(parameters);
 
-            return  SetDataTransferObjectsFromDataTable(dataTable);
+            return SetDataTransferObjectsFromDataTable(dataTable);
         }
 
         public override T GetById(int id)
@@ -48,31 +48,22 @@ namespace DataAccessLibrary.Internal
             return ExecuteStoredProcedure(parameters);
         }
 
-        public override int InsertMany(T[] items)
+        public override void InsertMany(T[] items)
         {
             if (items.IsNullOrEmpty())
-                return -1;
+                return;
             DataTable dt = items.ToDataTable();
 
-            return ExecuteNonQuery(dt, Actions.INSERT_MANY);
+            ExecuteNonQuery(dt, Actions.INSERT_MANY);
         }
 
-        public override int UpdateMany(T[] items)
+        public override void UpdateMany(T[] items, int id)
         {
             if (items.IsNullOrEmpty())
-                return -1;
+                return;
             DataTable dt = items.ToDataTable();
 
-            return ExecuteNonQuery(dt, Actions.UPDATE_MANY);
-        }
-
-        public override int UpsertMany(T[] items)
-        {
-            if (items.IsNullOrEmpty())
-                return -1;
-            DataTable dt = items.ToDataTable();
-
-            return ExecuteNonQuery(dt, Actions.UPSERT_MANY);
+            ExecuteNonQuery(dt, Actions.UPDATE_MANY);
         }
 
         public override void DeleteItem(T item)

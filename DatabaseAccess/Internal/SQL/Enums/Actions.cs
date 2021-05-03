@@ -11,6 +11,5 @@
         UPSERT = 7,
         INSERT_MANY = 8,
         UPDATE_MANY = 9,
-        UPSERT_MANY = 10,
     }
 }
