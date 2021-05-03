@@ -13,14 +13,13 @@ namespace DataAccessLibrary.Internal
     {
         private const string cDataBase = "MongoDatabase";
 
-        private readonly IMongoDatabase _database;
         private readonly IMongoCollection<T> _collection;
 
         protected MongoDbDatabaseAccessAbstract()
         {
             MongoClient client = new MongoClient();
-            _database = client.GetDatabase(cDataBase);
-            _collection = _database.GetCollection<T>(Table.ToString());
+            IMongoDatabase database = client.GetDatabase(cDataBase);
+            _collection = database.GetCollection<T>(Table.ToString());
         }
         public override T[] GetAll()
         {
