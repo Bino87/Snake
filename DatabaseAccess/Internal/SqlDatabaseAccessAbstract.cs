@@ -13,7 +13,7 @@ using System.Configuration;
 
 namespace DataAccessLibrary.Internal
 {
-    public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T> where T : SqlDataTransferObject
+    public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T,int> where T : SqlDataTransferObject
     {
         
 
@@ -21,7 +21,7 @@ namespace DataAccessLibrary.Internal
 
         private const string cShouldHaveOnlyOneRow = "Should have only one row!";
 
-        protected abstract Table Table { get; }
+       
         public override T[] GetAll()
         {
             SqlCallParameters parameters = CreateDefaultParameters(0, Actions.GET_ALL);

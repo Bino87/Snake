@@ -8,9 +8,8 @@ using DataAccessLibrary.Internal.SQL.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects
 {
-    public class SqlDataTransferObject : DataTransferObject
+    public class SqlDataTransferObject : DataTransferObject<int>
     {
-        internal int Id { get; }
         internal override DatabaseType DbType => DatabaseType.Sql;
         internal virtual int ParametersCount => 1;
 

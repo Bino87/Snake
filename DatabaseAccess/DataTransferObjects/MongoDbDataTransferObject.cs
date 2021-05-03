@@ -1,11 +1,17 @@
 ﻿using System;
 using DataAccessLibrary.Internal.Enums;
+using DataAccessLibrary.Internal.MongoDB;
 
 namespace DataAccessLibrary.DataTransferObjects
 {
-    public class MongoDbDataTransferObject : DataTransferObject
+    public abstract class MongoDbDataTransferObject : DataTransferObject<Guid>
     {
-        internal Guid Id { get; }
         internal override DatabaseType DbType => DatabaseType.MongoDB;
+        protected virtual int ParametersCount => 0;
+
+        public virtual MongoDbCallParameters CreateParameters()
+        {
+            return new(ParametersCount);
+        }
     }
 }
