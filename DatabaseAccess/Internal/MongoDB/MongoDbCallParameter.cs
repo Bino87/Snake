@@ -1,32 +1,13 @@
-﻿using System;
+﻿using DataAccessLibrary.DataTransferObjects;
+using MongoDB.Driver;
 
 namespace DataAccessLibrary.Internal.MongoDB
 {
-    public record MongoDbCallParameter(string Name, object Value);
-
-    public class MongoDbCallParameters
+    internal record MongoDbCallParameter(string Name, object Value)
     {
-        public int Count => _callParameters.Length;
-
-        public MongoDbCallParameter this[int index] => _callParameters[index];
-
-        private readonly MongoDbCallParameter[] _callParameters;
-        private int _current = 0;
-        internal MongoDbCallParameters(int count)
+        public UpdateDefinition<T> Set<T>(UpdateDefinitionBuilder<T> updateDefinitionBuilder, UpdateDefinition<T> def) where T : MongoDbDataTransferObject
         {
-            _callParameters = new MongoDbCallParameter[count];
-        }
-
-        public MongoDbCallParameters Add(string name, object value)
-        {
-            if (_current < _callParameters.Length)
-            {
-                _callParameters[_current] = new MongoDbCallParameter(name, value);
-                _current++;
-                return this;
-            }
-
-            throw new Exception("too many parameters");
+            return def is null ? updateDefinitionBuilder.Set(Name, Value) : def.Set(Name, Value);
         }
     }
 }

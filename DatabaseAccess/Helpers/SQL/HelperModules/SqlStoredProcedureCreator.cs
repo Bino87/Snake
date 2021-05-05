@@ -1,9 +1,10 @@
 ﻿using System.Text;
+using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Internal;
+using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-using DataAccessLibrary.Internal.SQL.ParameterNames;
+
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
@@ -37,7 +38,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
             {
                 SqlCallParameter parameter = parameters[i];
 
-                if (!includeId && parameter.ParameterName == ParameterNames.cId)
+                if (!includeId && parameter.ParameterName == ParameterNames.cSqlId)
                     continue;
 
                 if (sb.Length > 0)

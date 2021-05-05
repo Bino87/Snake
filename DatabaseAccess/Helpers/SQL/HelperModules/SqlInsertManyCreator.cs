@@ -1,8 +1,9 @@
-﻿using DataAccessLibrary.DataTransferObjects;
+﻿using DataAccessLibrary.DataAccessors;
+using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Extensions;
-using DataAccessLibrary.Internal;
+using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL.Enums;
-using DataAccessLibrary.Internal.SQL.ParameterNames;
+
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {

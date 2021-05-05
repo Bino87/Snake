@@ -1,7 +1,8 @@
-﻿using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Internal;
+﻿using DataAccessLibrary.DataAccessors;
+using DataAccessLibrary.DataTransferObjects;
+using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL.Enums;
-using DataAccessLibrary.Internal.SQL.ParameterNames;
+
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
@@ -22,7 +23,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.cId} INT");
+            _sb.AppendLine($"\t@{ParameterNames.cSqlId} INT");
         }
     }
 }

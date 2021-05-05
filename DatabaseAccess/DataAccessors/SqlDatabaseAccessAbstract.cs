@@ -7,11 +7,12 @@ using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Extensions;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-using DataAccessLibrary.Internal.SQL.ParameterNames;
 using System.Configuration;
+using DataAccessLibrary.Internal.ParameterNames;
+
 // ReSharper disable CoVariantArrayConversion
 
-namespace DataAccessLibrary.Internal
+namespace DataAccessLibrary.DataAccessors
 {
     public abstract class SqlDatabaseAccessAbstract<T> : DatabaseAccessAbstract<T, int> where T : SqlDataTransferObject
     {
@@ -109,7 +110,7 @@ namespace DataAccessLibrary.Internal
                 cmd.ExecuteNonQuery();
 
                 //this goes with the assumption that the ID is output or inputoutput value.
-                res = cmd.Parameters[ParameterNames.cId].Value;
+                res = cmd.Parameters[ParameterNames.cSqlId].Value;
 
                 con.Close();
             }
@@ -139,7 +140,7 @@ namespace DataAccessLibrary.Internal
         private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, int id)
         {
             SqlCallParameters parameters = CreateDefaultParameters(parametersCount, action);
-            parameters.AddParameter(ParameterNames.cId, id, DataType.Int, Direction.InputOutput);
+            parameters.AddParameter(ParameterNames.cSqlId, id, DataType.Int, Direction.InputOutput);
             return parameters;
         }
 

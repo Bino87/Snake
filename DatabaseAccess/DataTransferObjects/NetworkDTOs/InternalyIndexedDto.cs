@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using Commons.Extensions;
+using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-using DataAccessLibrary.Internal.SQL.ParameterNames;
+
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {

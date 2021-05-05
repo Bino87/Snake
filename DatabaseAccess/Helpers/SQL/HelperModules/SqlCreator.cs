@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 

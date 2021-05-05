@@ -1,5 +1,5 @@
-﻿using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Internal;
+﻿using DataAccessLibrary.DataAccessors;
+using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules

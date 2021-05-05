@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Helpers.SQL.HelperModules;
-using DataAccessLibrary.Internal;
+using DataAccessLibrary.Internal.MongoDB;
+using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-using DataAccessLibrary.Internal.SQL.ParameterNames;
+
+using MongoDB.Driver;
 
 namespace DataAccessLibrary.Extensions
 {
@@ -27,7 +30,7 @@ namespace DataAccessLibrary.Extensions
                 {
                     SqlCallParameter parameter = parameters[i];
 
-                    if (parameter.ParameterName == ParameterNames.cId)
+                    if (parameter.ParameterName == ParameterNames.cSqlId)
                         continue;
 
                     yield return $"\t\t\tdbTable.{parameter.ParameterName} = tbl.{parameter.ParameterName}";
@@ -38,6 +41,20 @@ namespace DataAccessLibrary.Extensions
 
             sb.AppendLine();
             sb.AppendLine();
+        }
+
+        internal static UpdateDefinition<T> GetUpdateDefinition<T>(this MongoDbDataTransferObject callParameters) where T : MongoDbDataTransferObject
+        {
+            MongoDbCallParameters parameters = callParameters.CreateParameters();
+
+            UpdateDefinitionBuilder<T> updateDefinitionBuilder = Builders<T>.Update;
+            UpdateDefinition<T> def = null;
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                def = parameters[i].Set(updateDefinitionBuilder, def);
+            }
+
+            return def;
         }
 
         internal static void WhenNotMatched<T>(this SqlStoredProcedureCreator<T> val, StringBuilder sb, Func<bool, string,string,string> getParameterNames) where T : SqlDataTransferObject

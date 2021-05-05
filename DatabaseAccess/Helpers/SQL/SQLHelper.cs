@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using DataAccessLibrary.Helpers.SQL.HelperModules;
-using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Helpers.SQL

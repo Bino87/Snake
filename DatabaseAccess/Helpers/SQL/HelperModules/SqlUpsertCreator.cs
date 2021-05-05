@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Internal;
+using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-using DataAccessLibrary.Internal.SQL.ParameterNames;
+
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
@@ -17,7 +18,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
         {
             _sb.AppendLine("AS");
             _sb.AppendLine("BEGIN");
-            _sb.AppendLine($"IF EXISTS(SELECT * FROM {_table} WHERE {ParameterNames.cId}=@{ParameterNames.cId})");
+            _sb.AppendLine($"IF EXISTS(SELECT * FROM {_table} WHERE {ParameterNames.cSqlId}=@{ParameterNames.cSqlId})");
             _sb.AppendLine("BEGIN");
 
             IEnumerable<string> GetStuff()
@@ -29,7 +30,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
                 {
                     SqlCallParameter parameter = parameters[i];
 
-                    if (parameter.ParameterName == ParameterNames.cId)
+                    if (parameter.ParameterName == ParameterNames.cSqlId)
                         continue;
 
                     yield return $"{parameter.ParameterName} = @{parameter.ParameterName}";
@@ -40,7 +41,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
             _sb.AppendLine("\t" + string.Join(", ", GetStuff()));
 
-            _sb.AppendLine($"\tWHERE {ParameterNames.cId}=@{ParameterNames.cId}");
+            _sb.AppendLine($"\tWHERE {ParameterNames.cSqlId}=@{ParameterNames.cSqlId}");
             _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
             _sb.AppendLine("\tRETURN @ID");
 

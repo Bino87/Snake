@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
-using DataAccessLibrary.Internal;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.DataAccessors.Network
