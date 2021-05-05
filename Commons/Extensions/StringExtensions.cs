@@ -2,6 +2,11 @@
 
 namespace Commons.Extensions
 {
+    public static class EnumExtensions
+    {
+        public static T CastTo<T>(this Enum value) where T : Enum => value is T @enum ? @enum : throw new Exception("Unable to cast to enum");
+
+    }
     public static class StringExtensions
     {
         public static byte ToByte(this string str, int fromBase) => Convert.ToByte(str, fromBase);
@@ -17,5 +22,7 @@ namespace Commons.Extensions
         public static bool TryParse(this string str, out double value) => double.TryParse(str, out value);
 
         public static bool TryParse(this string str, out bool b) => bool.TryParse(str, out b);
+
+        public static T TryParse<T>(this string str) where T : struct, Enum => Enum.TryParse(str, out T @enum) ? @enum : throw new Exception("Unable to parse enum");
     }
 }

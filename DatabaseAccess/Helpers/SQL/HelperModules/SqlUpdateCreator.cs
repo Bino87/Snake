@@ -27,7 +27,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
                 {
                     SqlCallParameter parameter = parameters[i];
 
-                    if (parameter.ParameterName == ParameterNames.cSqlId)
+                    if (parameter.ParameterName == ParameterNames.SQL.cId)
                         continue;
 
                     yield return $"{parameter.ParameterName} = @{parameter.ParameterName}";
@@ -38,7 +38,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
             _sb.AppendLine("\t" + string.Join(", ", GetStuff()));
 
-            _sb.AppendLine($"\tWHERE {ParameterNames.cSqlId}=@{ParameterNames.cSqlId}");
+            _sb.AppendLine($"\tWHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId}");
             _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
             _sb.AppendLine("\tRETURN @ID");
         }

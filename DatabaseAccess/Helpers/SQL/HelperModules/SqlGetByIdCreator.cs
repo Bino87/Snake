@@ -23,7 +23,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.cSqlId} INT");
+            _sb.AppendLine($"\t@{ParameterNames.SQL.cId} INT");
         }
     }
 }

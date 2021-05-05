@@ -16,12 +16,12 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
         {
             _sb.AppendLine("AS");
 
-            _sb.AppendLine($"\tDELETE FROM {_table} WHERE {ParameterNames.cSqlId} = @{ParameterNames.cSqlId}");
+            _sb.AppendLine($"\tDELETE FROM {_table} WHERE {ParameterNames.SQL.cId} = @{ParameterNames.SQL.cId}");
         }
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.cSqlId} INT");
+            _sb.AppendLine($"\t@{ParameterNames.SQL.cId} INT");
         }
     }
 }

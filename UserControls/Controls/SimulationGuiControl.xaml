@@ -15,9 +15,9 @@
             <converters:ValueTupleIntIntToStringConverter x:Key="IndividualConverter"/>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*"/>
-              <ColumnDefinition Width="*"/>
-          </Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="20"/>
@@ -32,34 +32,44 @@
             <RowDefinition Height="20"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Grid.Row="0" FontWeight="Bold" Text="Generation:"/>
-        <TextBlock Grid.Column="0" Grid.Row="1" FontWeight="Bold" Text="Individual:"/>
-        <TextBlock Grid.Column="0" Grid.Row="2" FontWeight="Bold" Text="Moves: "/>
-        <TextBlock Grid.Column="0" Grid.Row="3" FontWeight="Bold" Text="Points:"/>
-        <TextBlock Grid.Column="0" Grid.Row="4" FontWeight="Bold" Text="Mutation Technique:"/>
-        <TextBlock Grid.Column="0" Grid.Row="5" FontWeight="Bold" Text="Mutation Chance:"/>
-        <TextBlock Grid.Column="0" Grid.Row="6" FontWeight="Bold" Text="Mutation Rate:"/>
-        <TextBlock Grid.Column="0" Grid.Row="7" FontWeight="Bold" Text="Update Delay:"/>
-        <TextBlock Grid.Column="0" Grid.Row="8" FontWeight="Bold" Text="Run In Background:"/>
-        <TextBlock Grid.Column="0" Grid.Row="9" FontWeight="Bold" Text="Number of Pairs:"/>
-        <TextBlock Grid.Column="0" Grid.Row="10" FontWeight="Bold" Text="Map Size:"/>
-        <TextBlock Grid.Column="0" Grid.Row="11" FontWeight="Bold" Text="Number of Iterations:"/>
+        <TextBlock Grid.Column="0" Grid.Row="00" FontWeight="Bold" Text="Generation:"/>
+        <TextBlock Grid.Column="0" Grid.Row="01" FontWeight="Bold" Text="Individual:"/>
+        <TextBlock Grid.Column="0" Grid.Row="02" FontWeight="Bold" Text="Moves: "/>
+        <TextBlock Grid.Column="0" Grid.Row="03" FontWeight="Bold" Text="Points:"/>
+        <TextBlock Grid.Column="0" Grid.Row="04" FontWeight="Bold" Text="Preset:"/>
+        <TextBlock Grid.Column="0" Grid.Row="05" FontWeight="Bold" Text="Mutation Technique:"/>
+        <TextBlock Grid.Column="0" Grid.Row="06" FontWeight="Bold" Text="Mutation Chance:"/>
+        <TextBlock Grid.Column="0" Grid.Row="07" FontWeight="Bold" Text="Mutation Rate:"/>
+        <TextBlock Grid.Column="0" Grid.Row="08" FontWeight="Bold" Text="Update Delay:"/>
+        <TextBlock Grid.Column="0" Grid.Row="09" FontWeight="Bold" Text="Run In Background:"/>
+        <TextBlock Grid.Column="0" Grid.Row="10" FontWeight="Bold" Text="Number of Pairs:"/>
+        <TextBlock Grid.Column="0" Grid.Row="11" FontWeight="Bold" Text="Map Size:"/>
+        <TextBlock Grid.Column="0" Grid.Row="12" FontWeight="Bold" Text="Number of Iterations:"/>
+        <TextBlock Grid.Column="0" Grid.Row="13" FontWeight="Bold" Text="Preset Name:"/>
 
 
-        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Generation, Mode=OneWay}" />
-        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Individual, Mode=OneWay,Converter={StaticResource IndividualConverter}}" />
-        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding Moves, Mode=OneWay}" />
-        <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding Points, Mode=OneWay}" /> 
-        <ComboBox Grid.Column="1" Grid.Row="4" ItemsSource="{Binding MutationTechniques, Mode=OneTime}" SelectedItem="{Binding MutationTechnique, Mode=TwoWay}" />
-        <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding MutationChance, Mode=TwoWay}" />
-        <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding MutationRate, Mode=TwoWay}" />
-        <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding UpdateDelay, Mode=TwoWay}" /> 
-        <CheckBox Grid.Column="1" Grid.Row="8" IsChecked="{Binding RunInBackground, Mode=TwoWay}"/>
-        <TextBox Grid.Column="1" Grid.Row="9" Text="{Binding NumberOfPairs, Mode=TwoWay}" /> 
-        <TextBox Grid.Column="1" Grid.Row="10" Text="{Binding MapSize, Mode=TwoWay}" /> 
-        <TextBox Grid.Column="1" Grid.Row="11" Text="{Binding NumberOfIterations, Mode=TwoWay}" /> 
-        <Button Grid.Column="1" Grid.Row="12" Command="{Binding Path=Run}" Content="Run"/>
+        <TextBlock Grid.Column="1" Grid.Row="00" Text="{Binding Generation, Mode=OneWay}" />
+        <TextBlock Grid.Column="1" Grid.Row="01" Text="{Binding Individual, Mode=OneWay,Converter={StaticResource IndividualConverter}}" />
+        <TextBlock Grid.Column="1" Grid.Row="02" Text="{Binding Moves, Mode=OneWay}" />
+        <TextBlock Grid.Column="1" Grid.Row="03" Text="{Binding Points, Mode=OneWay}" />
+        <ComboBox Grid.Column="1"  Grid.Row="04" DisplayMemberPath="Name" ItemsSource="{Binding Presets, Mode=OneTime}" SelectedItem="{Binding Preset, Mode=TwoWay}" />
+        <ComboBox Grid.Column="1"  Grid.Row="05" ItemsSource="{Binding MutationTechniques, Mode=OneTime}" SelectedItem="{Binding MutationTechnique, Mode=TwoWay}" />
+        <TextBox Grid.Column="1"   Grid.Row="06" Text="{Binding MutationChance, Mode=TwoWay}" />
+        <TextBox Grid.Column="1"   Grid.Row="07" Text="{Binding MutationRate, Mode=TwoWay}" />
+        <TextBox Grid.Column="1"   Grid.Row="08" Text="{Binding UpdateDelay, Mode=TwoWay}" />
+        <CheckBox Grid.Column="1"  Grid.Row="09" IsChecked="{Binding RunInBackground, Mode=TwoWay}"/>
+        <TextBox Grid.Column="1"   Grid.Row="10" Text="{Binding NumberOfPairs, Mode=TwoWay}" />
+        <TextBox Grid.Column="1"   Grid.Row="11" Text="{Binding MapSize, Mode=TwoWay}" />
+        <TextBox Grid.Column="1"   Grid.Row="12" Text="{Binding NumberOfIterations, Mode=TwoWay}" />
+        <TextBox Grid.Column="1"   Grid.Row="13" Text="{Binding Name, Mode=TwoWay}" />
+        <Button Grid.Column="1"    Grid.Row="14" Command="{Binding Path=Save}" Content="Save"/>
+        <Button Grid.Column="1"    Grid.Row="15" Command="{Binding Path=Delete}" Content="Delete"/>
+        <Button Grid.Column="1"    Grid.Row="16" Command="{Binding Path=Run}" Content="Run"/>
 
     </Grid>
 </UserControl>

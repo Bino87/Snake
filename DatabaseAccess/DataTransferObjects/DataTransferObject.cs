@@ -6,8 +6,7 @@ namespace DataAccessLibrary.DataTransferObjects
     public abstract class DataTransferObject<T>
     {
         [BsonId]
-        //[BsonElement(ParameterNames.cSqlId)]
-        internal T Id { get; set; }
+        public T Id { get; set; }
         [BsonIgnore]
         internal abstract DatabaseType DbType { get; }
     }

@@ -23,9 +23,9 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
         }
 
         protected abstract void CreateParameters();
-        protected override CreatorResult Return() =>new(_sb.ToString(), string.Join("_", _table, _action));
+        protected override CreatorResult Return() => new(_sb.ToString(), string.Join("_", _table, _action));
 
-        protected string GetParameterNames(bool includeId, string prefix) =>GetParameterNames(includeId, prefix, "");
+        protected string GetParameterNames(bool includeId, string prefix) => GetParameterNames(includeId, prefix, "");
 
         protected string GetParameterNames(bool includeId, string prefix, string suffix)
         {
@@ -38,7 +38,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
             {
                 SqlCallParameter parameter = parameters[i];
 
-                if (!includeId && parameter.ParameterName == ParameterNames.cSqlId)
+                if (!includeId && parameter.ParameterName == ParameterNames.SQL.cId)
                     continue;
 
                 if (sb.Length > 0)

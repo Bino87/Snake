@@ -110,7 +110,7 @@ namespace DataAccessLibrary.DataAccessors
                 cmd.ExecuteNonQuery();
 
                 //this goes with the assumption that the ID is output or inputoutput value.
-                res = cmd.Parameters[ParameterNames.cSqlId].Value;
+                res = cmd.Parameters[ParameterNames.SQL.cId].Value;
 
                 con.Close();
             }
@@ -140,7 +140,7 @@ namespace DataAccessLibrary.DataAccessors
         private SqlCallParameters CreateDefaultParameters(int parametersCount, Actions action, int id)
         {
             SqlCallParameters parameters = CreateDefaultParameters(parametersCount, action);
-            parameters.AddParameter(ParameterNames.cSqlId, id, DataType.Int, Direction.InputOutput);
+            parameters.AddParameter(ParameterNames.SQL.cId, id, DataType.Int, Direction.InputOutput);
             return parameters;
         }
 
@@ -187,7 +187,7 @@ namespace DataAccessLibrary.DataAccessors
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.AddWithValue(ParameterNames.cDataTable, dt);
+                cmd.Parameters.AddWithValue(ParameterNames.SQL.cDataTable, dt);
 
                 con.Open();
                 res = cmd.ExecuteNonQuery();

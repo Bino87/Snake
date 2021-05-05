@@ -17,23 +17,23 @@ namespace DataAccessLibrary.DataTransferObjects
         protected SqlDataTransferObject() { }
         protected SqlDataTransferObject(DataRow row)
         {
-            Id = row.GetAsInt(ParameterNames.cSqlId);
+            Id = row.GetAsInt(ParameterNames.SQL.cId);
         }
 
         internal virtual SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
-            parameters.AddParameter(ParameterNames.cSqlId, Id, DataType.Int, Direction.InputOutput);
+            parameters.AddParameter(ParameterNames.SQL.cId, Id, DataType.Int, Direction.InputOutput);
             return parameters;
         }
 
         internal virtual void FillDataRow(DataRow row)
         {
-            row[ParameterNames.cSqlId] = Id;
+            row[ParameterNames.SQL.cId] = Id;
         }
 
         internal virtual IEnumerable<string> ColumnNames()
         {
-            yield return ParameterNames.cSqlId;
+            yield return ParameterNames.SQL.cId;
         }
     }
 }

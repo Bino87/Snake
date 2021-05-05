@@ -18,7 +18,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
             _sb.AppendLine("AS");
             _sb.AppendLine("BEGIN");
             _sb.AppendLine($"\tMERGE [dbo].{_table} as dbTable");
-            _sb.AppendLine($"\tUSING @{ParameterNames.cDataTable} as tbl");
+            _sb.AppendLine($"\tUSING @{ParameterNames.SQL.cDataTable} as tbl");
             _sb.AppendLine("\tON (dbTable.Id = tbl.Id)");
             _sb.AppendLine();
             this.WhenNotMatched(_sb, GetParameterNames);
@@ -31,7 +31,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.cDataTable} [dbo].{_table}_TYPE READONLY");
+            _sb.AppendLine($"\t@{ParameterNames.SQL.cDataTable} [dbo].{_table}_TYPE READONLY");
         }
     }
 }

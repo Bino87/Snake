@@ -21,15 +21,15 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
         }
         internal NetworkWeightDto(DataRow row) : base(row)
         {
-            Value = row.GetAsDouble(ParameterNames.cValue);
-            LayerId = row.GetAsInt(ParameterNames.cLayerID);
+            Value = row.GetAsDouble(ParameterNames.SQL.cValue);
+            LayerId = row.GetAsInt(ParameterNames.SQL.cLayerID);
         }
 
 
         internal override SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
-            parameters.AddParameter(ParameterNames.cValue, Value, DataType.Double, Direction.Input);
-            parameters.AddParameter(ParameterNames.cLayerID, LayerId, DataType.Int, Direction.Input);
+            parameters.AddParameter(ParameterNames.SQL.cValue, Value, DataType.Double, Direction.Input);
+            parameters.AddParameter(ParameterNames.SQL.cLayerID, LayerId, DataType.Int, Direction.Input);
 
             return base.CreateParameters(parameters);
         }
@@ -37,8 +37,8 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
         internal override void FillDataRow(DataRow row)
         {
             base.FillDataRow(row);
-            row[ParameterNames.cValue] = Value;
-            row[ParameterNames.cLayerID] = LayerId;
+            row[ParameterNames.SQL.cValue] = Value;
+            row[ParameterNames.SQL.cLayerID] = LayerId;
 
         }
 
@@ -49,8 +49,8 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
                 yield return columnName;
             }
 
-            yield return ParameterNames.cLayerID;
-            yield return ParameterNames.cValue;
+            yield return ParameterNames.SQL.cLayerID;
+            yield return ParameterNames.SQL.cValue;
         }
     }
 }

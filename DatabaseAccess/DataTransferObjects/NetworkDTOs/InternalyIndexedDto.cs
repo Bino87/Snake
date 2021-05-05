@@ -20,12 +20,12 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 
         protected  InternalyIndexedDto(DataRow row) : base(row)
         {
-            InternalIndex = row.GetAsInt(ParameterNames.cInternalIndex);
+            InternalIndex = row.GetAsInt(ParameterNames.SQL.cInternalIndex);
         }
 
         internal override SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
-            parameters.AddParameter(ParameterNames.cInternalIndex, InternalIndex, DataType.Int, Direction.Input);
+            parameters.AddParameter(ParameterNames.SQL.cInternalIndex, InternalIndex, DataType.Int, Direction.Input);
 
             return base.CreateParameters(parameters);
         }
@@ -33,7 +33,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
         internal override void FillDataRow(DataRow row)
         {
             base.FillDataRow(row);
-            row[ParameterNames.cInternalIndex] = InternalIndex;
+            row[ParameterNames.SQL.cInternalIndex] = InternalIndex;
         }
 
         internal override IEnumerable<string> ColumnNames()
@@ -43,7 +43,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
                 yield return columnName;
             }
 
-            yield return ParameterNames.cInternalIndex;
+            yield return ParameterNames.SQL.cInternalIndex;
         }
     }
 }

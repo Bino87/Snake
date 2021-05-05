@@ -39,7 +39,7 @@ namespace DataAccessLibrary.DataAccessors
 
         public override T GetById(Guid id)
         {
-            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cSqlId, id);
+            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.MongoDb.cId, id);
 
             return Collection.Find(filter).First();
         }
@@ -53,19 +53,19 @@ namespace DataAccessLibrary.DataAccessors
 
         public override void DeleteItem(T item)
         {
-            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cSqlId, item.Id);
+            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.MongoDb.cId, item.Id);
             Collection.DeleteOne(filter);
         }
 
         public override void DeleteById(Guid id)
         {
-            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cSqlId, id);
+            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.MongoDb.cId, id);
             Collection.DeleteOne(filter);
         }
 
         public override Guid Update(T item)
         {
-            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cMongoDbId, item.Id);
+            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.MongoDb.cId, item.Id);
 
             UpdateDefinition<T> def = item.GetUpdateDefinition<T>();
 
@@ -74,9 +74,11 @@ namespace DataAccessLibrary.DataAccessors
             return res.UpsertedId?.AsGuid ?? item.Id;
         }
 
+        public abstract FilterDefinition<T> GetUpsertFilterDefinition(T mongoDbDataTransferObject);
+
         public override Guid Upsert(T item)
         {
-            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cMongoDbId, item.Id);
+            FilterDefinition<T> filter = GetUpsertFilterDefinition(item);
 
             ReplaceOneResult res = Collection.ReplaceOne(filter, item, new ReplaceOptions { IsUpsert = true });
 
@@ -90,7 +92,7 @@ namespace DataAccessLibrary.DataAccessors
 
         public override void UpdateMany(T[] items, Guid id)
         {
-            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cMongoDbId, id);
+            FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.MongoDb.cId, id);
 
             MongoDbCallParameters parameters = items[0].CreateParameters();
 

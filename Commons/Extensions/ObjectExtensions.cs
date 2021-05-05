@@ -13,5 +13,8 @@
             integer = int.MinValue;
             return false;
         }
+
+        public static bool IsNull<T>(this T obj) where T : class => obj is null;
+        public static bool IsNotNull<T>(this T obj) where T : class => obj is not null;
     }
 }

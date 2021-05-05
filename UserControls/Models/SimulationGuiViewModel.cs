@@ -1,22 +1,27 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Windows;
 using Commons.Extensions;
+using DataAccessLibrary.DataAccessors.SimulationGui;
+using DataAccessLibrary.DataTransferObjects.SimulationGuiDTOs;
 using Simulation.Enums;
 using Simulation.Interfaces;
 using UserControls.Core.Base;
 using UserControls.Core.Commands.Base;
+using UserControls.Core.Objects.SimulationGui;
 
 namespace UserControls.Models
 {
-
-
     public class SimulationGuiViewModel : Observable, ISimulationStateParameters
     {
+        private SimulationGuiPreset _preset;
         private int _generation;
         private int _moves;
         private int _points;
         private MutationTechnique _mutationTechnique;
         private double _mutationChance = .03;
         private double _mutationRate = .005;
+        public string _name;
         private int _updateDelay = 25;
         private int _numberOfPairs = 1000;
         private int _mapSize = 11;
@@ -25,11 +30,13 @@ namespace UserControls.Models
         private int _numberOfIterations = 10;
 
         public RelayCommand Run { get; set; }
+        public RelayCommand Save { get; set; }
+        public RelayCommand Delete { get; set; }
 
         public int NumberOfIterations
         {
             get => _numberOfIterations;
-            set => SetField(ref _numberOfIterations, value.Clamp(1,20));
+            set => SetField(ref _numberOfIterations, value.Clamp(1, 20));
         }
 
         public int MaxMoves => MapSize * MapSize;
@@ -57,7 +64,7 @@ namespace UserControls.Models
             get => _numberOfPairs;
             set
             {
-                if(SetField(ref _numberOfPairs, value))
+                if (SetField(ref _numberOfPairs, value))
                     OnPropertyChanged(nameof(Individual));
             }
         }
@@ -94,9 +101,32 @@ namespace UserControls.Models
             set => SetField(ref _points, value);
         }
 
-        
 
-        public static MutationTechnique[] MutationTechniques => Enum.GetValues<MutationTechnique>();
+        public ObservableCollection<SimulationGuiPreset> Presets
+        {
+            get;
+            set;
+        }
+
+        public SimulationGuiPreset Preset
+        {
+            get => _preset;
+            set
+            {
+
+                if (SetField(ref _preset, value) && value.IsNotNull())
+                {
+                    Name = value.Name;
+                    MapSize = value.MapSize;
+                    MutationChance = value.MutationChance;
+                    MutationRate = value.MutationRate;
+                    NumberOfPairs = value.NumberOfPairs;
+                    NumberOfIterations = value.NumberOfIterations;
+                    RunInBackground = value.RunInBackGround;
+                }
+            }
+        }
+        public MutationTechnique[] MutationTechniques => Enum.GetValues<MutationTechnique>();
 
         public MutationTechnique MutationTechnique
         {
@@ -116,9 +146,69 @@ namespace UserControls.Models
             set => SetField(ref _mutationRate, value);
         }
 
+        public string Name
+        {
+            get => _name;
+            set => SetField(ref _name, value);
+        }
+
+        private void SavePreset()
+        {
+            SimulationGuiPreset preset = new()
+            {
+                Name = Name,
+                MapSize = MapSize,
+                MutationChance = MutationChance,
+                MutationRate = MutationRate,
+                NumberOfPairs = NumberOfPairs,
+                NumberOfIterations = NumberOfIterations,
+                RunInBackGround = RunInBackground,
+                Technique = MutationTechnique,
+            };
+
+            preset.Id = preset.Save();
+
+            Presets.Add(preset);
+        }
+
+        private void DeletePreset()
+        {
+            SimulationGuiPreset preset = new()
+            {
+                Id = Preset.Id,
+            };
+
+            preset.Delete();
+            Presets.Remove(Preset);
+        }
+
         public SimulationGuiViewModel(Action startSim)
         {
+
+            SimulationGuiPresetDataAccess presetDataAccess = new();
+            SimulationGuiPresetDto[] all = presetDataAccess.GetAll();
+
+            Presets = new ObservableCollection<SimulationGuiPreset>();
+
+            foreach (SimulationGuiPresetDto presetDto in all)
+            {
+                Presets.Add(new SimulationGuiPreset()
+                {
+                    Technique = presetDto.Technique.TryParse<MutationTechnique>(),
+                    MutationRate = presetDto.MutationRate,
+                    RunInBackGround = presetDto.RunInBackGround,
+                    Name = presetDto.Name,
+                    MutationChance = presetDto.MutationChance,
+                    NumberOfPairs = presetDto.NumberOfPairs,
+                    NumberOfIterations = presetDto.NumberOfIterations,
+                    MapSize = presetDto.MapSize,
+                    Id = presetDto.Id
+                });
+            }
+
             Run = new RelayCommand(startSim);
+            Save = new RelayCommand(SavePreset, () => !Name.IsNullOrWhiteSpace());
+            Delete = new RelayCommand(DeletePreset, () => Preset.IsNotNull());
         }
 
     }

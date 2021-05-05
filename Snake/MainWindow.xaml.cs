@@ -1,9 +1,4 @@
 ﻿using System.Windows;
-using DataAccessLibrary.DataAccessors;
-using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Internal;
-using DataAccessLibrary.Internal.MongoDB;
-using DataAccessLibrary.Internal.SQL.Enums;
 using UserControls.Models;
 
 namespace Snake

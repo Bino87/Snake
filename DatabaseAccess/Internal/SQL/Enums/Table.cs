@@ -6,6 +6,7 @@
         NETWORK_WEIGHT = 2,
         NETWORK_BIAS = 3,
         NETWORK_LAYER = 4,
+        SIMULATION_GUI_PRESET = 5,
         
         
     }
