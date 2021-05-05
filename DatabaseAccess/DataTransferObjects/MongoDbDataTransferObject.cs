@@ -9,7 +9,7 @@ namespace DataAccessLibrary.DataTransferObjects
         internal override DatabaseType DbType => DatabaseType.MongoDB;
         protected virtual int ParametersCount => 0;
 
-        public virtual MongoDbCallParameters CreateParameters()
+        public MongoDbCallParameters CreateParameters()
         {
             return new(ParametersCount);
         }

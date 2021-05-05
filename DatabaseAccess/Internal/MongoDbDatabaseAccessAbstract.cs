@@ -13,29 +13,24 @@ namespace DataAccessLibrary.Internal
     {
         private const string cDataBase = "MongoDatabase";
 
-        private readonly IMongoCollection<T> _collection;
+        private IMongoCollection<T> _c;
+        private IMongoCollection<T> Collection => _c ??= new MongoClient().GetDatabase(cDataBase).GetCollection<T>(Table.ToString());
 
-        protected MongoDbDatabaseAccessAbstract()
-        {
-            MongoClient client = new MongoClient();
-            IMongoDatabase database = client.GetDatabase(cDataBase);
-            _collection = database.GetCollection<T>(Table.ToString());
-        }
         public override T[] GetAll()
         {
-            return _collection.Find(new BsonDocument()).ToList().ToArray();
+            return Collection.Find(new BsonDocument()).ToList().ToArray();
         }
 
         public override T GetById(Guid id)
         {
             FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cId, id);
 
-            return _collection.Find(filter).First();
+            return Collection.Find(filter).First();
         }
 
         public override Guid Insert(T item)
         {
-            _collection.InsertOne(item);
+            Collection.InsertOne(item);
 
             return item.Id;
         }
@@ -43,13 +38,13 @@ namespace DataAccessLibrary.Internal
         public override void DeleteItem(T item)
         {
             FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cId, item.Id);
-            _collection.DeleteOne(filter);
+            Collection.DeleteOne(filter);
         }
 
         public override void DeleteById(Guid id)
         {
             FilterDefinition<T> filter = Builders<T>.Filter.Eq(ParameterNames.cId, id);
-            _collection.DeleteOne(filter);
+            Collection.DeleteOne(filter);
         }
 
         public override Guid Update(T item)
@@ -69,7 +64,7 @@ namespace DataAccessLibrary.Internal
                     def.Set(element.Name, element.Value);
             }
 
-            UpdateResult res = _collection.UpdateOne(filter, def, new UpdateOptions() { IsUpsert = true });
+            UpdateResult res = Collection.UpdateOne(filter, def, new UpdateOptions() { IsUpsert = true });
 
             return res.UpsertedId?.AsGuid ?? item.Id;
         }
@@ -92,14 +87,14 @@ namespace DataAccessLibrary.Internal
             }
 
 
-            ReplaceOneResult res = _collection.ReplaceOne(filter, item, new ReplaceOptions() { IsUpsert = true });
+            ReplaceOneResult res = Collection.ReplaceOne(filter, item, new ReplaceOptions() { IsUpsert = true });
 
             return res.UpsertedId?.AsGuid ?? item.Id;
         }
 
         public override void InsertMany(T[] items)
         {
-            _collection.InsertMany(items);
+            Collection.InsertMany(items);
         }
 
         public override void UpdateMany(T[] items, Guid id)
@@ -120,7 +115,7 @@ namespace DataAccessLibrary.Internal
             }
 
 
-            _collection.UpdateMany(filter, def);
+            Collection.UpdateMany(filter, def);
         }
 
 
