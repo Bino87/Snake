@@ -41,7 +41,7 @@ namespace Network
 
                 for (int j = 0; j < item.Length; j++)
                 {
-                    NetworkWeightDto dto = new NetworkWeightDto(i, item[j], j);
+                    NetworkWeightDto dto = new(i, item[j], j);
                     dtos.Add(dto);
                 }
             }
