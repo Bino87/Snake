@@ -84,7 +84,6 @@ namespace DataAccessLibrary.Helpers.SQL
             yield return new SqlDeleteCreator<T>(access, item, table);
             yield return new SqlInsertManyCreator<T>(access, item, table);
             yield return new SqlUpdateManyCreator<T>(access, item, table);
-            yield return new SqlUpsertManyCreator<T>(access, item, table);
         }
     }
 }

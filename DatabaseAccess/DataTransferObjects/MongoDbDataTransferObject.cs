@@ -7,9 +7,9 @@ namespace DataAccessLibrary.DataTransferObjects
     public abstract class MongoDbDataTransferObject : DataTransferObject<Guid>
     {
         internal override DatabaseType DbType => DatabaseType.MongoDB;
-        protected virtual int ParametersCount => 0;
+        protected abstract int ParametersCount { get; }
 
-        public MongoDbCallParameters CreateParameters()
+        public virtual MongoDbCallParameters CreateParameters()
         {
             return new(ParametersCount);
         }
