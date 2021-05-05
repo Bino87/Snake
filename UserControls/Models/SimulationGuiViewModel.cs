@@ -118,6 +118,7 @@ namespace UserControls.Models
                 {
                     Name = value.Name;
                     MapSize = value.MapSize;
+                    MutationTechnique = value.Technique;
                     MutationChance = value.MutationChance;
                     MutationRate = value.MutationRate;
                     NumberOfPairs = value.NumberOfPairs;
@@ -194,7 +195,7 @@ namespace UserControls.Models
             {
                 Presets.Add(new SimulationGuiPreset()
                 {
-                    Technique = presetDto.Technique.TryParse<MutationTechnique>(),
+                    Technique = presetDto.Technique.Parse<MutationTechnique>(),
                     MutationRate = presetDto.MutationRate,
                     RunInBackGround = presetDto.RunInBackGround,
                     Name = presetDto.Name,

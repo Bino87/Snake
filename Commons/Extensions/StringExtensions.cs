@@ -23,6 +23,6 @@ namespace Commons.Extensions
 
         public static bool TryParse(this string str, out bool b) => bool.TryParse(str, out b);
 
-        public static T TryParse<T>(this string str) where T : struct, Enum => Enum.TryParse(str, out T @enum) ? @enum : throw new Exception("Unable to parse enum");
+        public static T Parse<T>(this string str) where T : struct, Enum => Enum.TryParse(str, out T @enum) ? @enum : throw new Exception("Unable to parse enum");
     }
 }

@@ -3,5 +3,6 @@
     public enum MutationTechnique
     {
         String,
+        Bit
     }
 }
