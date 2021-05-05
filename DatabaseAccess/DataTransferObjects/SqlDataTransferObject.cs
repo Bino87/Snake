@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Commons.Extensions;
 using DataAccessLibrary.Internal.Enums;
@@ -31,9 +32,9 @@ namespace DataAccessLibrary.DataTransferObjects
             row[ParameterNames.SQL.cId] = Id;
         }
 
-        internal virtual IEnumerable<string> ColumnNames()
+        internal virtual IEnumerable<ColumnDefinition> ColumnNames()
         {
-            yield return ParameterNames.SQL.cId;
+            yield return new(ParameterNames.SQL.cId, typeof(int));
         }
     }
 }

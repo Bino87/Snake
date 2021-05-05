@@ -1,9 +1,12 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 using DataAccessLibrary.Extensions;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Internal.SQL
 {
+    internal record ColumnDefinition(string Name, Type Type);
+
     internal record SqlCallParameter(string ParameterName, object Value, DataType DataType, Direction Direction)
     {
         internal SqlParameter ToSqlParameter() => new()

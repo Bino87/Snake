@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Commons.Extensions;
+using DataAccessLibrary.DataAccessors.Network;
+using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using Network.Enums;
 
 namespace Network
@@ -23,6 +26,29 @@ namespace Network
 
             InputCount = inputCount;
             OutputCount = outputCount;
+            SaveToDB();
+        }
+
+        void SaveToDB()
+        {
+
+            NetworkWeightAccess nwa = new NetworkWeightAccess();
+            List<NetworkWeightDto> dtos = new List<NetworkWeightDto>();
+
+            for (int i = 0; i < Weights.Length; i++)
+            {
+                var item = Weights[i];
+
+                for (int j = 0; j < item.Length; j++)
+                {
+                    NetworkWeightDto dto = new NetworkWeightDto(i, item[j], j);
+                    dtos.Add(dto);
+                }
+            }
+
+            var arrIn = dtos.ToArray();
+            nwa.InsertMany(arrIn);
+
         }
 
 

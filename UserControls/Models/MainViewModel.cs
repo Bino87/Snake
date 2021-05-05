@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DataAccessLibrary.DataAccessors.Network;
+using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using Network;
 using Network.ActivationFunctions;
 using Network.Enums;
@@ -34,7 +36,9 @@ namespace UserControls.Models
             NeuralNetDisplay = new NeuralNetDisplayViewModel(networkTemplate);
             _mm = new MapManager(SimulationGuiViewModel, networkTemplate, new SimulationUpdateManager(NeuralNetDisplay, SimulationGuiViewModel, SnakeMapViewModel, ProgressGraph));
 
+
         }
+
 
         private void StartSimulation()
         {

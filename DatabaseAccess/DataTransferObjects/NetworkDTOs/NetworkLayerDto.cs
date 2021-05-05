@@ -18,7 +18,14 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 
         internal NetworkLayerDto() : base()
         {
-            
+
+        }
+
+        public NetworkLayerDto(int networkId, int activationFunctionId, int numberOfNodes, int index) : base(index)
+        {
+            NetworkId = networkId;
+            ActivationFunctionId = activationFunctionId;
+            NumberOfNodes = numberOfNodes;
         }
 
         internal NetworkLayerDto(DataRow row) : base(row)
@@ -45,16 +52,16 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
             row[ParameterNames.SQL.cNumberOfNodes] = NumberOfNodes;
         }
 
-        internal override IEnumerable<string> ColumnNames()
+        internal override IEnumerable<ColumnDefinition> ColumnNames()
         {
-            foreach (string columnName in base.ColumnNames())
+            foreach (ColumnDefinition cd in base.ColumnNames())
             {
-                yield return columnName;
+                yield return cd;
             }
 
-            yield return ParameterNames.SQL.cActivationFunctionId;
-            yield return ParameterNames.SQL.cNetworkId;
-            yield return ParameterNames.SQL.cNumberOfNodes;
+            yield return new(ParameterNames.SQL.cActivationFunctionId, typeof(int));
+            yield return new(ParameterNames.SQL.cNetworkId, typeof(int));
+            yield return new(ParameterNames.SQL.cNumberOfNodes, typeof(int));
         }
     }
 }

@@ -19,7 +19,7 @@ namespace DataAccessLibrary.Extensions
         {
             sb.AppendLine("\tWHEN MATCHED THEN");
             sb.AppendLine("\t\tUPDATE SET  ");
-            
+
             IEnumerable<string> GetStuff()
             {
                 SqlCallParameters p = access.CreateDefaultParameters(item.ParametersCount, Actions.DELETE_BY_ID);
@@ -68,12 +68,12 @@ namespace DataAccessLibrary.Extensions
         {
             DataTable dt = new();
 
-            foreach (string columnName in dataTransferObjects[0].ColumnNames())
+            foreach (ColumnDefinition cd in dataTransferObjects[0].ColumnNames())
             {
-                dt.Columns.Add(columnName);
+                dt.Columns.Add(new DataColumn(cd.Name, cd.Type));
             }
 
-            foreach (SqlDataTransferObject dto in  dataTransferObjects)
+            foreach (SqlDataTransferObject dto in dataTransferObjects)
             {
                 DataRow row = dt.NewRow();
 

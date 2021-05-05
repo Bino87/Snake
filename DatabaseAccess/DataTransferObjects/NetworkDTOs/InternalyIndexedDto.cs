@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Commons.Extensions;
 using DataAccessLibrary.Internal.ParameterNames;
@@ -15,10 +16,15 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 
         internal InternalyIndexedDto() : base()
         {
-            
+
         }
 
-        protected  InternalyIndexedDto(DataRow row) : base(row)
+        public InternalyIndexedDto(int index)
+        {
+            InternalIndex = index;
+        }
+
+        protected InternalyIndexedDto(DataRow row) : base(row)
         {
             InternalIndex = row.GetAsInt(ParameterNames.SQL.cInternalIndex);
         }
@@ -36,14 +42,14 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
             row[ParameterNames.SQL.cInternalIndex] = InternalIndex;
         }
 
-        internal override IEnumerable<string> ColumnNames()
+        internal override IEnumerable<ColumnDefinition> ColumnNames()
         {
-            foreach(string columnName in base.ColumnNames())
+            foreach (ColumnDefinition cd in base.ColumnNames())
             {
-                yield return columnName;
+                yield return cd;
             }
 
-            yield return ParameterNames.SQL.cInternalIndex;
+            yield return new(ParameterNames.SQL.cInternalIndex, typeof(int));
         }
     }
 }

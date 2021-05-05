@@ -19,6 +19,12 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
         {
 
         }
+
+        public NetworkWeightDto(int layerId, double value, int index) : base(index)
+        {
+            LayerId = layerId;
+            Value = value;
+        }
         internal NetworkWeightDto(DataRow row) : base(row)
         {
             Value = row.GetAsDouble(ParameterNames.SQL.cValue);
@@ -42,15 +48,15 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 
         }
 
-        internal override IEnumerable<string> ColumnNames()
+        internal override IEnumerable<ColumnDefinition> ColumnNames()
         {
-            foreach(string columnName in base.ColumnNames())
+            foreach (ColumnDefinition cd in base.ColumnNames())
             {
-                yield return columnName;
+                yield return cd;
             }
 
-            yield return ParameterNames.SQL.cLayerID;
-            yield return ParameterNames.SQL.cValue;
+            yield return new ColumnDefinition(ParameterNames.SQL.cLayerID, typeof(int));
+            yield return new ColumnDefinition(ParameterNames.SQL.cValue, typeof(double));
         }
     }
 }

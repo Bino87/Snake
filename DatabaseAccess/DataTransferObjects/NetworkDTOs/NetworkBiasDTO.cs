@@ -42,15 +42,15 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
             row[ParameterNames.SQL.cLayerID] = LayerId;
         }
 
-        internal override IEnumerable<string> ColumnNames()
+        internal override IEnumerable<ColumnDefinition> ColumnNames()
         {
-            foreach(string columnName in base.ColumnNames())
+            foreach(ColumnDefinition cd in base.ColumnNames())
             {
-                yield return columnName;
+                yield return cd;
             }
 
-            yield return ParameterNames.SQL.cLayerID;
-            yield return ParameterNames.SQL.cValue;
+            yield return new ColumnDefinition(ParameterNames.SQL.cLayerID, typeof(int));
+            yield return new ColumnDefinition(ParameterNames.SQL.cValue, typeof(double));
         }
     }
 }
