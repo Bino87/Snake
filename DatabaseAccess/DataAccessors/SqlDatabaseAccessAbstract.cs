@@ -49,13 +49,15 @@ namespace DataAccessLibrary.DataAccessors
             return ExecuteStoredProcedure(parameters);
         }
 
-        public override void InsertMany(T[] items)
+        public override T[] InsertMany(T[] items)
         {
             if (items.IsNullOrEmpty())
-                return;
+                return Array.Empty<T>();
             DataTable dt = items.ToDataTable();
 
-            ExecuteNonQuery(dt, Actions.INSERT_MANY);
+            DataTable inserted = ExecuteNonQuery(dt, Actions.INSERT_MANY);
+
+            return SetDataTransferObjectsFromDataTable(inserted);
         }
 
         public override void UpdateMany(T[] items, int id)
@@ -177,9 +179,8 @@ namespace DataAccessLibrary.DataAccessors
             return item.CreateParameters(CreateDefaultParameters(item.ParametersCount, action));
         }
 
-        private int ExecuteNonQuery(DataTable dt, Actions action)
+        private DataTable ExecuteNonQuery(DataTable dataTablet, Actions action)
         {
-            int res;
             try
             {
                 using SqlConnection con = new(ConnectionString);
@@ -187,19 +188,20 @@ namespace DataAccessLibrary.DataAccessors
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.AddWithValue(ParameterNames.SQL.cDataTable, dt);
+                cmd.Parameters.AddWithValue(ParameterNames.SQL.cDataTable, dataTablet);
 
-                con.Open();
-                res = cmd.ExecuteNonQuery();
-                con.Close();
+                DataTable result = new();
+
+                using SqlDataAdapter adapter = new(cmd);
+                adapter.Fill(result);
+
+                return result;
             }
             catch (Exception e)
             {
                 //TODO: do some sort of logging system, online db wouldnt be a bad idea too
                 throw;
             }
-
-            return res;
         }
     }
 }

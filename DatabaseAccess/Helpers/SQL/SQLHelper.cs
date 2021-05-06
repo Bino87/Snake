@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using Commons.Extensions;
 using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using DataAccessLibrary.Helpers.SQL.HelperModules;
+using DataAccessLibrary.Internal.Enums;
 using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Helpers.SQL
@@ -15,11 +18,31 @@ namespace DataAccessLibrary.Helpers.SQL
 
         public static void CreateStoredProcedures()
         {
+            foreach (Table table in GetSqlTables())
+            {
+                CreateFiles(table);
+            }
+        }
+
+        static IEnumerable<Table> GetSqlTables()
+        {
             Table[] values = Enum.GetValues<Table>();
 
             foreach (Table table in values)
             {
-                CreateFiles(table);
+                MemberInfo[] memberInfo = typeof(Table).GetMember(table.ToString());
+
+                for(int i = 0; i < memberInfo.Length; i++)
+                {
+                    TableAttribute attribute = memberInfo[i].GetCustomAttribute<TableAttribute>();
+                    if (attribute.IsNotNull() && attribute.DatabaseType == DatabaseType.Sql)
+                    {
+                        yield return table;
+                        break;
+                    }
+                }
+
+                
             }
         }
 
@@ -50,7 +73,7 @@ namespace DataAccessLibrary.Helpers.SQL
                 Directory.CreateDirectory(path);
 
 
-            foreach (SqlCreator <T> creator in GetFilesData(table, access, item))
+            foreach (SqlCreator<T> creator in GetFilesData(table, access, item))
             {
                 (string data, string name) = creator.Create();
                 string p = Path.Combine(path, name) + ".sql";

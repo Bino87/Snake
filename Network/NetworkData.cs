@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using Commons.Extensions;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
@@ -48,6 +47,13 @@ namespace Network
 
             var arrIn = dtos.ToArray();
             nwa.InsertMany(arrIn);
+
+            foreach(NetworkWeightDto dto in arrIn)
+            {
+                dto.Value = dto.Value.Pow2();
+            }
+
+            nwa.UpdateMany(arrIn,0);
 
         }
 

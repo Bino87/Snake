@@ -85,9 +85,11 @@ namespace DataAccessLibrary.DataAccessors
             return res.UpsertedId?.AsGuid ?? item.Id;
         }
 
-        public override void InsertMany(T[] items)
+        public override T[] InsertMany(T[] items)
         {
             Collection.InsertMany(items);
+
+            return items;
         }
 
         public override void UpdateMany(T[] items, Guid id)

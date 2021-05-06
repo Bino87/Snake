@@ -29,13 +29,6 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
             InternalIndex = row.GetAsInt(ParameterNames.SQL.cInternalIndex);
         }
 
-        internal override SqlCallParameters CreateParameters(SqlCallParameters parameters)
-        {
-            parameters.AddParameter(ParameterNames.SQL.cInternalIndex, InternalIndex, DataType.Int, Direction.Input);
-
-            return base.CreateParameters(parameters);
-        }
-
         internal override void FillDataRow(DataRow row)
         {
             base.FillDataRow(row);
@@ -49,7 +42,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
                 yield return cd;
             }
 
-            yield return new(ParameterNames.SQL.cInternalIndex, typeof(int));
+            yield return new(ParameterNames.SQL.cInternalIndex, InternalIndex, DataType.Int, Direction.Input);
         }
     }
 }

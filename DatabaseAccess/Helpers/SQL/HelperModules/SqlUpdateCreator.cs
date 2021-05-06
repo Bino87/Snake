@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿
+
+using System.Collections.Generic;
 using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {

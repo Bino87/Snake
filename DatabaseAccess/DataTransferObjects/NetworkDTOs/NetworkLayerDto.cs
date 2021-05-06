@@ -35,15 +35,6 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
             NumberOfNodes = row.GetAsInt(ParameterNames.SQL.cNumberOfNodes);
         }
 
-        internal override SqlCallParameters CreateParameters(SqlCallParameters parameters)
-        {
-            parameters.AddParameter(ParameterNames.SQL.cActivationFunctionId, ActivationFunctionId, DataType.Int, Direction.Input);
-            parameters.AddParameter(ParameterNames.SQL.cNetworkId, NetworkId, DataType.Int, Direction.Input);
-            parameters.AddParameter(ParameterNames.SQL.cNumberOfNodes, NumberOfNodes, DataType.Int, Direction.Input);
-
-            return base.CreateParameters(parameters);
-        }
-
         internal override void FillDataRow(DataRow row)
         {
             base.FillDataRow(row);
@@ -59,9 +50,9 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
                 yield return cd;
             }
 
-            yield return new(ParameterNames.SQL.cActivationFunctionId, typeof(int));
-            yield return new(ParameterNames.SQL.cNetworkId, typeof(int));
-            yield return new(ParameterNames.SQL.cNumberOfNodes, typeof(int));
+            yield return new(ParameterNames.SQL.cActivationFunctionId, ActivationFunctionId, DataType.Int, Direction.Input);
+            yield return new(ParameterNames.SQL.cNetworkId, NetworkId, DataType.Int, Direction.Input);
+            yield return new(ParameterNames.SQL.cNumberOfNodes, NumberOfNodes, DataType.Int, Direction.Input);
         }
     }
 }

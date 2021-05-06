@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using Commons.Extensions;
 using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
@@ -8,6 +9,7 @@ using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
+    [DebuggerDisplay("Lid: {LayerId} II: {InternalIndex} V:{Value}")]
     public class NetworkWeightDto : InternalyIndexedDto
     {
         public int LayerId { get; set; }
@@ -31,15 +33,6 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
             LayerId = row.GetAsInt(ParameterNames.SQL.cLayerID);
         }
 
-
-        internal override SqlCallParameters CreateParameters(SqlCallParameters parameters)
-        {
-            parameters.AddParameter(ParameterNames.SQL.cValue, Value, DataType.Double, Direction.Input);
-            parameters.AddParameter(ParameterNames.SQL.cLayerID, LayerId, DataType.Int, Direction.Input);
-
-            return base.CreateParameters(parameters);
-        }
-
         internal override void FillDataRow(DataRow row)
         {
             base.FillDataRow(row);
@@ -55,8 +48,8 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
                 yield return cd;
             }
 
-            yield return new ColumnDefinition(ParameterNames.SQL.cLayerID, typeof(int));
-            yield return new ColumnDefinition(ParameterNames.SQL.cValue, typeof(double));
+            yield return new ColumnDefinition(ParameterNames.SQL.cLayerID, LayerId, DataType.Int, Direction.Input);
+            yield return new ColumnDefinition(ParameterNames.SQL.cValue, Value, DataType.Double, Direction.Input);
         }
     }
 }

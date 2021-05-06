@@ -21,9 +21,13 @@ namespace DataAccessLibrary.DataTransferObjects
             Id = row.GetAsInt(ParameterNames.SQL.cId);
         }
 
-        internal virtual SqlCallParameters CreateParameters(SqlCallParameters parameters)
+        internal SqlCallParameters CreateParameters(SqlCallParameters parameters)
         {
-            parameters.AddParameter(ParameterNames.SQL.cId, Id, DataType.Int, Direction.InputOutput);
+            foreach (ColumnDefinition columnDefinition in ColumnNames())
+            {
+                parameters.AddParameter(columnDefinition.ToSqlCallParameter());
+            }
+
             return parameters;
         }
 
@@ -34,7 +38,7 @@ namespace DataAccessLibrary.DataTransferObjects
 
         internal virtual IEnumerable<ColumnDefinition> ColumnNames()
         {
-            yield return new(ParameterNames.SQL.cId, typeof(int));
+            yield return new(ParameterNames.SQL.cId, Id, DataType.Int, Direction.InputOutput);
         }
     }
 }

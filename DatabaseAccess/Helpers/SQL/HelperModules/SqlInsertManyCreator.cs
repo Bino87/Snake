@@ -1,9 +1,7 @@
 ﻿using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Extensions;
 using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL.Enums;
-
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
@@ -17,11 +15,14 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
         {
             _sb.AppendLine("AS");
             _sb.AppendLine("BEGIN");
-            _sb.AppendLine($"\tMERGE [dbo].{_table} as dbTable");
-            _sb.AppendLine($"\tUSING @{ParameterNames.SQL.cDataTable} as tbl");
-            _sb.AppendLine("\tON (dbTable.Id = tbl.Id)");
+
+            _sb.AppendLine($"\tDECLARE @RETURN_VALUE [dbo].{_table}_TYPE");
             _sb.AppendLine();
-            this.WhenNotMatched(_sb, GetParameterNames);
+            _sb.AppendLine($"\tINSERT INTO [dbo].{_table}");
+            _sb.AppendLine($"\tOUTPUT {GetParameterNames(true, "inserted.")} INTO @RETURN_VALUE");
+            _sb.AppendLine($"\tSELECT {GetParameterNames(false, "")} FROM @{ParameterNames.SQL.cDataTable}");
+            _sb.AppendLine();
+            _sb.AppendLine("\tSELECT * FROM @RETURN_VALUE");
 
             _sb.AppendLine(";");
 

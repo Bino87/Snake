@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
@@ -13,7 +14,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
     {
         protected readonly StringBuilder _sb;
         protected Table _table;
-        protected SqlDatabaseAccessAbstract<T> _access;
+        protected SqlDatabaseAccessAbstract<T>  _access;
         protected T _item;
         protected SqlCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table)
         {
@@ -36,9 +37,9 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected abstract CreatorResult Return();
 
-        protected string GetParametrized() => string.Join("," + Environment.NewLine, GetParameterValues());
+        protected string GetParametrized(bool includeType = true) => string.Join("," + Environment.NewLine, GetParameterValues(includeType));
 
-        protected IEnumerable<string> GetParameterValues()
+        protected IEnumerable<string> GetParameterValues(bool includeType)
         {
             SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.DELETE_BY_ID);
             SqlCallParameters parameters = _item.CreateParameters(p);

@@ -20,35 +20,12 @@ namespace DataAccessLibrary.Extensions
             sb.AppendLine("\tWHEN MATCHED THEN");
             sb.AppendLine("\t\tUPDATE SET  ");
 
-            IEnumerable<string> GetStuff()
-            {
-                SqlCallParameters p = access.CreateDefaultParameters(item.ParametersCount, Actions.DELETE_BY_ID);
-                SqlCallParameters parameters = item.CreateParameters(p);
-
-                for (int i = 0; i < item.ParametersCount; i++)
-                {
-                    SqlCallParameter parameter = parameters[i];
-
-                    if (parameter.ParameterName == ParameterNames.SQL.cId)
-                        continue;
-
-                    yield return $"\t\t\tdbTable.{parameter.ParameterName} = tbl.{parameter.ParameterName}";
-                }
-            }
-
-            sb.AppendLine(string.Join(", " + Environment.NewLine, GetStuff()));
+           
 
             sb.AppendLine();
             sb.AppendLine();
         }
 
-        internal static void WhenNotMatched<T>(this SqlStoredProcedureCreator<T> val, StringBuilder sb, Func<bool, string, string, string> getParameterNames) where T : SqlDataTransferObject
-        {
-            sb.AppendLine("\tWHEN NOT MATCHED THEN");
-            sb.AppendLine($"\t\tINSERT ({getParameterNames(false, "[", "]")})");
-            sb.AppendLine($"\t\tVALUES({getParameterNames(false, "tbl.", "")});");
-            sb.AppendLine();
-        }
 
         internal static UpdateDefinition<T> GetUpdateDefinition<T>(this MongoDbDataTransferObject callParameters) where T : MongoDbDataTransferObject
         {
@@ -70,7 +47,7 @@ namespace DataAccessLibrary.Extensions
 
             foreach (ColumnDefinition cd in dataTransferObjects[0].ColumnNames())
             {
-                dt.Columns.Add(new DataColumn(cd.Name, cd.Type));
+                dt.Columns.Add(new DataColumn(cd.Name, cd.DataType.ToUnderlyingType()));
             }
 
             foreach (SqlDataTransferObject dto in dataTransferObjects)

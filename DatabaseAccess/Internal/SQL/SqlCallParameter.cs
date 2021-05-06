@@ -5,7 +5,10 @@ using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Internal.SQL
 {
-    internal record ColumnDefinition(string Name, Type Type);
+    internal record ColumnDefinition(string Name, object Value, DataType DataType, Direction Direction)
+    {
+        internal SqlCallParameter ToSqlCallParameter() => new(Name, Value, DataType, Direction);
+    }
 
     internal record SqlCallParameter(string ParameterName, object Value, DataType DataType, Direction Direction)
     {

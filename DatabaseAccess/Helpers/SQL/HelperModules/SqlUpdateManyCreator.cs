@@ -1,9 +1,11 @@
-﻿using DataAccessLibrary.DataAccessors;
+﻿
+using System;
+using System.Collections.Generic;
+using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Extensions;
 using DataAccessLibrary.Internal.ParameterNames;
+using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
@@ -17,16 +19,36 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
         {
             _sb.AppendLine("AS");
             _sb.AppendLine("BEGIN");
-            _sb.AppendLine($"\tMERGE [dbo].{_table} as dbTable");
-            _sb.AppendLine($"\tUSING @{ParameterNames.SQL.cDataTable} as tbl");
-            _sb.AppendLine("\tON (dbTable.Id = tbl.Id)");
+
             _sb.AppendLine();
-            this.WhenMatched(_sb, _access, _item);
+            _sb.AppendLine("\tUPDATE AT");
+            _sb.AppendLine($"\tSET {string.Join(",",GetStuff())}");
+            _sb.AppendLine($"\tFROM {_table} tbl");
+            _sb.AppendLine($"\tINNER JOIN @{ParameterNames.SQL.cDataTable} dt");
+            _sb.AppendLine($"\t\tON tbl.ID = dt.ID");
+            _sb.AppendLine();
 
             _sb.AppendLine(";");
             _sb.AppendLine("END");
             _sb.AppendLine("RETURN 0");
         }
+
+        IEnumerable<string> GetStuff()
+        {
+            SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.UPDATE_MANY);
+            SqlCallParameters parameters = _item.CreateParameters(p);
+
+            for (int i = 0; i < _item.ParametersCount; i++)
+            {
+                SqlCallParameter parameter = parameters[i];
+
+                if (parameter.ParameterName == ParameterNames.SQL.cId)
+                    continue;
+
+                yield return $"\t{parameter.ParameterName} = dt.{parameter.ParameterName}";
+            }
+        }
+
 
         protected override void CreateParameters()
         {

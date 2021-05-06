@@ -1,10 +1,10 @@
-﻿using System.Text;
+﻿
+using System.Text;
 using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
-
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules
 {
@@ -31,7 +31,6 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
         {
             SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.DELETE_BY_ID);
             SqlCallParameters parameters = _item.CreateParameters(p);
-
             StringBuilder sb = new();
 
             for (int i = 0; i < _item.ParametersCount; i++)
@@ -45,7 +44,6 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
                     sb.Append(", ");
 
                 sb.Append(prefix + parameter.ParameterName + suffix);
-
             }
 
             return sb.ToString();

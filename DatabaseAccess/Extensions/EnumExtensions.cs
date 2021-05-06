@@ -22,6 +22,17 @@ namespace DataAccessLibrary.Extensions
             };
         }
 
+        internal static Type ToUnderlyingType(this DataType dataType) => dataType switch {
+                DataType.Int => typeof(int),
+                DataType.String => typeof(string),
+                DataType.String25 => typeof(string),
+                DataType.String50 => typeof(string),
+                DataType.Double => typeof(double),
+                DataType.TimeStamp => typeof(TimeSpan),
+                DataType.DateTime => typeof(DateTime),
+                _ => throw new ArgumentOutOfRangeException(nameof(dataType), dataType, null)
+            };
+
         internal static SqlDbType ToSqlType(this DataType dt)
         {
             return dt switch

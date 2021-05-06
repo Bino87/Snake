@@ -24,17 +24,20 @@ namespace DataAccessLibrary.Internal.SQL
             _sqlCallParameters = new SqlCallParameter[parametersCount];
         }
 
-        internal void AddParameter(string parameterName, object value, DataType dataType, Direction direction)
+        internal void AddParameter(SqlCallParameter callParameter)
         {
             if (_currentParameterIndex >= _sqlCallParameters.Length)
             {
                 throw new Exception("Parameters are full, double check what you're doing.");
             }
 
-            _sqlCallParameters[_currentParameterIndex] =
-                new SqlCallParameter(parameterName, value, dataType, direction);
+            _sqlCallParameters[_currentParameterIndex] = callParameter;
 
             _currentParameterIndex++;
+        }
+        internal void AddParameter(string parameterName, object value, DataType dataType, Direction direction)
+        {
+            AddParameter(new SqlCallParameter(parameterName, value, dataType, direction));
         }
 
         public void FillParameters(SqlParameterCollection cmdParameters)
