@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using DataAccessLibrary.Helpers.SQL;
 using UserControls.Models;
 
 namespace Snake
@@ -12,6 +13,7 @@ namespace Snake
         {
             InitializeComponent();
             DataContext = new MainDisplayHandlerViewModel();
+            SQLHelper.CreateStoredProcedures();
         }
     }
 }

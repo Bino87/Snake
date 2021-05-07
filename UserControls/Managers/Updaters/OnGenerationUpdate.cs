@@ -27,5 +27,10 @@ namespace UserControls.Managers.Updaters
                 }
             );
         }
+
+        public override void Clear()
+        {
+            _progressGraphValueRegister.Clear();
+        }
     }
 }

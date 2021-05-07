@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using Simulation.Interfaces;
-using UserControls.Models;
 using UserControls.Models.NeuralNetDisplay;
 using UserControls.Models.SimulationRunner;
 
@@ -26,6 +25,11 @@ namespace UserControls.Managers.Updaters
 
             Data.Clear();
             DelaySim();
+        }
+
+        public override void Clear()
+        {
+            Data.Clear();
         }
 
         public OnMoveUpdate(ISimulationUpdateManager simulationUpdateManager, SnakeMapViewModel snakeMapViewModel, NeuralNetDisplayViewModel neuralNetDisplayViewModel, ISimulationStateParameters simulationGuiViewModel) : base(simulationUpdateManager,simulationGuiViewModel)

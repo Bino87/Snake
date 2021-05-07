@@ -6,6 +6,8 @@
         IUpdate<IOnGenerationUpdateParameters> OnGeneration { get; }
         IUpdate<IOnMoveUpdateParameters> OnMove { get; }
         IUpdate<IOnIndividualUpdateParameters> OnIndividual { get; }
-        
+
+        void Clear();
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Commons.Extensions;
 using UserControls.Core.Base;
 using UserControls.Core.Commands.Base;
 using UserControls.Core.Enums;
@@ -8,12 +8,18 @@ namespace UserControls.Core.Commands.MainViewCommands
 {
     internal class GetViewCommand : RelayCommand<ViewModel>
     {
-        internal GetViewCommand(MainDisplayHandlerViewModel viewModel) : base(model => viewModel.CurrentView = MainView.GetView(model))
+        internal GetViewCommand(MainDisplayHandlerViewModel viewModel) : base(model => TryExecute(viewModel, model))
         {
         }
 
-        private GetViewCommand(MainDisplayHandlerViewModel viewModel, Predicate<ViewModel> canExecute) : base(model => viewModel.CurrentView = MainView.GetView(model), canExecute)
+        private static void TryExecute(MainDisplayHandlerViewModel viewModel, ViewModel model)
         {
+            if (viewModel.CurrentView.IsNotNull() && viewModel.CurrentView.IsBusy )
+            {
+                viewModel.CurrentView.Abort();
+            }
+
+            viewModel.CurrentView = MainView.GetView(model);
         }
     }
 }

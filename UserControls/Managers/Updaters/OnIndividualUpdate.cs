@@ -32,5 +32,10 @@ namespace UserControls.Managers.Updaters
             Data.Clear();
             DelaySim();
         }
+
+        public override void Clear()
+        {
+            Data.Clear();
+        }
     }
 }

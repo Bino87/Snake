@@ -5,5 +5,7 @@
         bool ShouldUpdate { get; }
         T Data { get; }
         void Update();
+
+        void Clear();
     }
 }

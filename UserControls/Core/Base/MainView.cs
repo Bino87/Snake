@@ -14,5 +14,9 @@ namespace UserControls.Core.Base
                 ViewModel.SimulationRunner => new SimulationRunnerViewModel(),
                 _ => throw new ArgumentOutOfRangeException(nameof(viewModel), viewModel, null)
             };
+
+        public virtual bool IsBusy { get; set; }
+
+        public abstract void Abort();
     }
 }

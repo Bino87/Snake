@@ -19,6 +19,7 @@ namespace UserControls.Managers.Updaters
 
         public abstract T Data { get; }
         public abstract void Update();
+        public abstract void Clear();
 
         protected void DelaySim()
         {

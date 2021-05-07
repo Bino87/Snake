@@ -71,6 +71,7 @@
         <Button Grid.Column="1"    Grid.Row="14" Command="{Binding Path=Save}" Content="Save"/>
         <Button Grid.Column="1"    Grid.Row="15" Command="{Binding Path=Delete}" Content="Delete"/>
         <Button Grid.Column="1"    Grid.Row="16" Command="{Binding Path=Run}" Content="Run"/>
+        <Button Grid.Column="0"    Grid.Row="16" Command="{Binding Path=Stop}" Content="Stop"/>
 
     </Grid>
 </UserControl>

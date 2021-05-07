@@ -12,6 +12,12 @@ namespace UserControls.Managers
         public IUpdate<IOnGenerationUpdateParameters> OnGeneration { get; }
         public IUpdate<IOnMoveUpdateParameters> OnMove { get; }
         public IUpdate<IOnIndividualUpdateParameters> OnIndividual { get; }
+        public void Clear()
+        {
+            OnIndividual.Clear();
+            OnMove.Clear();
+            OnGeneration.Clear();
+        }
 
 
         public SimulationUpdateManager(NeuralNetDisplayViewModel neuralNetDisplayViewModel, ISimulationStateParameters simulationGuiViewModel, SnakeMapViewModel snakeMapViewModel, IProgressGraphValueRegister progressGraphViewModel)
@@ -20,6 +26,5 @@ namespace UserControls.Managers
             OnIndividual = new OnIndividualUpdate(this, neuralNetDisplayViewModel, simulationGuiViewModel);
             OnGeneration = new OnGenerationUpdate(this, progressGraphViewModel, simulationGuiViewModel);
         }
-
     }
 }

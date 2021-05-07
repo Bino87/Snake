@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using Simulation.Interfaces;
 using Simulation.SimResults;
 
@@ -9,7 +10,7 @@ namespace Simulation.Core.Internal
         private readonly ISimulationStateParameters _simStateParameters;
 
         public LinearGenerationSimulator(Bot[] agents, ISimulationUpdateManager updateManager,
-            ISimulationStateParameters simulationStateParameters) : base(agents, updateManager)
+            ISimulationStateParameters simulationStateParameters, CancellationToken cancellationToken) : base(agents, updateManager, cancellationToken)
         {
             _simStateParameters = simulationStateParameters;
         }
@@ -18,7 +19,8 @@ namespace Simulation.Core.Internal
         {
             for (int i = 0; i < _agents.Length; i++)
             {
-                RunAgentSimulation(i);
+                if(RunAgentSimulation(i))
+                    break;
 
                 if (_simStateParameters.RunInBackground && _updateManager.ShouldUpdate)
                     _updateManager.ShouldUpdate = false;

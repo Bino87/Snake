@@ -10,6 +10,7 @@ namespace UserControls.Models.SimulationRunner
     public interface IProgressGraphValueRegister
     {
         void Register(double value);
+        void Clear();
     }
 
     public class ProgressGraphViewModel : Observable, IProgressGraphValueRegister
@@ -50,5 +51,9 @@ namespace UserControls.Models.SimulationRunner
             }
         }
 
+        public void Clear()
+        {
+            _results.Clear();
+        }
     }
 }

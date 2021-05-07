@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Network;
 using Network.Mutators;
@@ -60,11 +61,18 @@ namespace Simulation.Core
         }
 
 
-        public IEnumerable<FitnessResults> GetFitnessResults()
+        public IEnumerable<FitnessResults> GetFitnessResults(CancellationToken cancellationToken)
         {
-            GenerationSimulator gs = _simStateParameters.RunInBackground ? new ParallelGenerationSimulator(_agents, _updateManager) : new LinearGenerationSimulator(_agents, _updateManager, _simStateParameters);
+            GenerationSimulator gs = _simStateParameters.RunInBackground ? 
+                new ParallelGenerationSimulator(_agents, _updateManager, cancellationToken) : 
+                new LinearGenerationSimulator(_agents, _updateManager, _simStateParameters, cancellationToken);
 
             return gs.SimulateGeneration();
+        }
+
+        public void Abort()
+        {
+            _updateManager.Clear();
         }
     }
 }

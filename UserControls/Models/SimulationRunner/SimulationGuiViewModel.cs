@@ -29,6 +29,7 @@ namespace UserControls.Models.SimulationRunner
         private int _numberOfIterations = 10;
 
         public RelayCommand Run { get; set; }
+        public RelayCommand Stop { get; set; }
         public RelayCommand Save { get; set; }
         public RelayCommand Delete { get; set; }
 
@@ -182,7 +183,7 @@ namespace UserControls.Models.SimulationRunner
             Presets.Remove(Preset);
         }
 
-        public SimulationGuiViewModel(Action startSim)
+        public SimulationGuiViewModel(RelayCommand startSim, RelayCommand stopSim)
         {
 
             SimulationGuiPresetDataAccess presetDataAccess = new();
@@ -206,7 +207,8 @@ namespace UserControls.Models.SimulationRunner
                 });
             }
 
-            Run = new RelayCommand(startSim);
+            Run = startSim;
+            Stop = stopSim;
             Save = new RelayCommand(SavePreset, () => !Name.IsNullOrWhiteSpace());
             Delete = new RelayCommand(DeletePreset, () => Preset.IsNotNull());
         }

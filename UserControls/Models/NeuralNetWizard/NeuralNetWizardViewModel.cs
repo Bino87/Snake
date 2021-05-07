@@ -11,5 +11,10 @@ namespace UserControls.Models.NeuralNetWizard
         {
             NeuralNetDisplay = new NeuralNetDisplayViewModel();
         }
+
+        public override void Abort()
+        {
+            
+        }
     }
 }

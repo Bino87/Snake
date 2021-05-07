@@ -10,6 +10,7 @@ namespace Simulation.Interfaces
         IList<CellUpdateData> CellUpdateData { get; }
         int Points { get; set; }
         int Moves { get; set; }
+        void Clear();
 
     }
 }
