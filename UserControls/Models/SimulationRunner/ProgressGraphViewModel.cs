@@ -5,7 +5,7 @@ using UserControls.Constants;
 using UserControls.Core.Base;
 using UserControls.Core.Objects.NeuralNetDisplay;
 
-namespace UserControls.Models
+namespace UserControls.Models.SimulationRunner
 {
     public interface IProgressGraphValueRegister
     {

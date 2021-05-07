@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace UserControls.Controls
+namespace UserControls.Controls.NeuralNetDisplay
 {
     /// <summary>
     /// Interaction logic for NeuralNetDisplayControl.xaml

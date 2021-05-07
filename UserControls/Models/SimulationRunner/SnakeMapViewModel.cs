@@ -6,7 +6,7 @@ using UserControls.Constants;
 using UserControls.Core.Base;
 using UserControls.Core.Objects.SnakeDisplay;
 
-namespace UserControls.Models
+namespace UserControls.Models.SimulationRunner
 {
     public class SnakeMapViewModel : Observable
     {

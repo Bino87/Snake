@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using Commons.Extensions;
 using DataAccessLibrary.DataAccessors.SimulationGui;
 using DataAccessLibrary.DataTransferObjects.SimulationGuiDTOs;
@@ -10,7 +9,7 @@ using UserControls.Core.Base;
 using UserControls.Core.Commands.Base;
 using UserControls.Core.Objects.SimulationGui;
 
-namespace UserControls.Models
+namespace UserControls.Models.SimulationRunner
 {
     public class SimulationGuiViewModel : Observable, ISimulationStateParameters
     {

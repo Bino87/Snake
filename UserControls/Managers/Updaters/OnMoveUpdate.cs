@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using Simulation.Interfaces;
 using UserControls.Models;
+using UserControls.Models.NeuralNetDisplay;
+using UserControls.Models.SimulationRunner;
 
 namespace UserControls.Managers.Updaters
 {

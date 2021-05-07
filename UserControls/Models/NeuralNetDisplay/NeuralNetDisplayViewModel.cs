@@ -5,47 +5,56 @@ using UserControls.Constants;
 using UserControls.Core.Base;
 using UserControls.Core.Objects.NeuralNetDisplay;
 
-namespace UserControls.Models
+namespace UserControls.Models.NeuralNetDisplay
 {
     public class NeuralNetDisplayViewModel : Observable
     {
         private const double cAvailible = Cons.cNetHeight - (2 * Cons.cNetHeightPadding);
 
-        private readonly PrimitiveShapeValueProvider[][] _lineValueProviders;
-        private readonly PrimitiveShapeValueProvider[][] _circleValueProviders;
-        private readonly NetworkTemplate _networkData;
+        private  PrimitiveShapeValueProvider[][] _lineValueProviders;
+        private  PrimitiveShapeValueProvider[][] _circleValueProviders;
+        private  NetworkTemplate _networkTemplate;
         private const double cRadius = 10;
 
         public ObservableCollection<PrimitiveShape> DisplayItems { get; set; }
 
-        
-        public NeuralNetDisplayViewModel(NetworkTemplate networkData)
+
+        public NeuralNetDisplayViewModel()
         {
             DisplayItems = new ObservableCollection<PrimitiveShape>();
-            _lineValueProviders = new PrimitiveShapeValueProvider[networkData.Layers][];
-            _circleValueProviders = new PrimitiveShapeValueProvider[networkData.Layers + 1][];
-            _networkData = networkData;
+        }
+
+        public NeuralNetDisplayViewModel(NetworkTemplate networkData) : this()
+        {
+            Initialize(networkData);
+        }
+
+        public void Initialize(NetworkTemplate networkTemplate)
+        {
+            _lineValueProviders = new PrimitiveShapeValueProvider[networkTemplate.Layers][];
+            _circleValueProviders = new PrimitiveShapeValueProvider[networkTemplate.Layers + 1][];
+            _networkTemplate = networkTemplate;
             CreateConnections();
         }
 
         private void CreateConnections()
         {
-            double offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkData.Layers;
+            double offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkTemplate.Layers;
             double start = Cons.cNetWidthPadding;
 
-            for (int i = 1; i < _networkData.LayerSetup.Length; i++)
+            for (int i = 1; i < _networkTemplate.LayerSetup.Length; i++)
             {
-                CreateConnections(start, start + offset, _networkData.LayerSetup[i - 1], _networkData.LayerSetup[i], i - 1);
+                CreateConnections(start, start + offset, _networkTemplate.LayerSetup[i - 1], _networkTemplate.LayerSetup[i], i - 1);
                 start += offset;
             }
 
-            offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkData.Layers;
+            offset = (Cons.cNetWidth - 2 * Cons.cNetWidthPadding) / _networkTemplate.Layers;
             start = Cons.cNetWidthPadding;
 
 
-            for (int i = 0; i < _networkData.LayerSetup.Length; i++)
+            for (int i = 0; i < _networkTemplate.LayerSetup.Length; i++)
             {
-                CreateNeuronLayer(start, _networkData.LayerSetup[i], i);
+                CreateNeuronLayer(start, _networkTemplate.LayerSetup[i], i);
                 start += offset;
             }
         }
@@ -56,11 +65,13 @@ namespace UserControls.Models
             double verticalSpacingA = cAvailible / (upper - 1);
             double verticalSpacingB = cAvailible / (lower - 1);
             _lineValueProviders[layerIndex] = new PrimitiveShapeValueProvider[lower * upper];
+
             for (int j = 0; j < upper; j++)
             {
                 for (int i = 0; i < lower; i++)
                 {
                     PrimitiveShapeValueProvider provider = new();
+                    provider.Value = 0;
                     _lineValueProviders[layerIndex][j * lower + i] = provider;
                     DisplayItems.Add(new PrimitiveLine(provider, start, end, j * verticalSpacingA + Cons.cNetHeightPadding, i * verticalSpacingB + Cons.cNetHeightPadding));
                 }

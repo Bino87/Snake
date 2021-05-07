@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:simRunnerModel="clr-namespace:UserControls.Models.SimulationRunner"
+                    xmlns:simulationRunner="clr-namespace:UserControls.Controls.SimulationRunner"
+                    xmlns:neuralNetWizard="clr-namespace:UserControls.Models.NeuralNetWizard"
+                    xmlns:neuralNetWizard1="clr-namespace:UserControls.Controls.NeuralNetWizard">
+
+
+    <DataTemplate  DataType="{x:Type simRunnerModel:SimulationRunnerViewModel}">
+        <simulationRunner:SimulationRunnerControl />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type neuralNetWizard:NeuralNetWizardViewModel}">
+        <neuralNetWizard1:NeuralNetWizardControl/>
+    </DataTemplate>
+</ResourceDictionary>

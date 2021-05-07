@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="UserControls.Controls.MainDisplayHandlerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:models="clr-namespace:UserControls.Models"
+             xmlns:simRunnerModel="clr-namespace:UserControls.Models.SimulationRunner"
+             xmlns:controls="clr-namespace:UserControls.Controls"
+             xmlns:simRunnerControl="clr-namespace:UserControls.Controls.SimulationRunner"
+             xmlns:enums="clr-namespace:UserControls.Core.Enums"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance models:MainDisplayHandlerViewModel}"
+>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/EditDataTemplates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <!--
+            we need menu here
+        
+        ads-->
+        <Menu>
+            <MenuItem Header="Views">
+                <MenuItem Header="Neural Net Wizard" Command="{Binding Path=ChangeContent}" CommandParameter="{x:Static enums:ViewModel.NeuralNetWizard}"/>
+                <MenuItem Header="Simulation Runner" Command="{Binding Path=ChangeContent}" CommandParameter="{x:Static enums:ViewModel.SimulationRunner}"/>
+            </MenuItem>
+        </Menu>
+
+        <ContentControl Content="{Binding Path=CurrentView}" />
+    </StackPanel>
+</UserControl>
