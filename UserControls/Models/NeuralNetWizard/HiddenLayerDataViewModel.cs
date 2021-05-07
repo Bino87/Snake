@@ -8,7 +8,7 @@ namespace UserControls.Models.NeuralNetWizard
 {
     public class HiddenLayerDataViewModel : Observable
     {
-        private int _numberOfNodes;
+        private int _numberOfNodes = 1;
 
         public int NumberOfNodes
         {
@@ -22,7 +22,7 @@ namespace UserControls.Models.NeuralNetWizard
             set;
         }
 
-        public ActivationFunctionType[] ActivationFunctionTypes => Enum.GetValues<ActivationFunctionType>();
+        public static ActivationFunctionType[] ActivationFunctionTypes => Enum.GetValues<ActivationFunctionType>();
 
         public RelayCommand Remove { get; set; }
 

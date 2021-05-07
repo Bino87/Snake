@@ -31,6 +31,7 @@ namespace UserControls.Models.NeuralNetDisplay
 
         public void Initialize(NetworkTemplate networkTemplate)
         {
+            Clear();
             _lineValueProviders = new PrimitiveShapeValueProvider[networkTemplate.Layers][];
             _circleValueProviders = new PrimitiveShapeValueProvider[networkTemplate.Layers + 1][];
             _networkTemplate = networkTemplate;

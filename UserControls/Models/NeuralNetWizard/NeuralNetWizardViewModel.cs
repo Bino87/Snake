@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using Network;
 using Network.Enums;
 using UserControls.Core.Base;
@@ -11,10 +10,10 @@ namespace UserControls.Models.NeuralNetWizard
 {
     public class NeuralNetWizardViewModel : MainView
     {
-        private int _numberOfInputs;
-        private int _numberOfOutputs;
+        private int _numberOfInputs  = 1;
+        private int _numberOfOutputs = 1;
 
-        public ActivationFunctionType[] ActivationFunctionTypes => Enum.GetValues<ActivationFunctionType>();
+        public static ActivationFunctionType[] ActivationFunctionTypes => Enum.GetValues<ActivationFunctionType>();
 
         public NeuralNetDisplayViewModel NeuralNetDisplay { get; set; }
 
@@ -65,15 +64,11 @@ namespace UserControls.Models.NeuralNetWizard
 
         private void OnCreateTemplate()
         {
-            if (Validate())
-            {
-                NetworkTemplate nt = new(NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
-                NeuralNetDisplay.Clear();
-                NeuralNetDisplay.Initialize(nt);
-            }
+            NetworkTemplate nt = new(NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
+            NeuralNetDisplay.Initialize(nt);
         }
 
-        LayerInfo[] GetLayerInfos()
+        private LayerInfo[] GetLayerInfos()
         {
             LayerInfo[] res = new LayerInfo[HiddenLayers.Count];
 
@@ -83,33 +78,6 @@ namespace UserControls.Models.NeuralNetWizard
             }
 
             return res;
-        }
-
-        private bool Validate()
-        {
-            if (NumberOfInputs <= 0)
-            {
-                MessageBox.Show("Input must have at least 1 node!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
-            if (NumberOfOutputs <= 0)
-            {
-                MessageBox.Show("Output must have at least 1 node!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
-            foreach (HiddenLayerDataViewModel layer in HiddenLayers)
-            {
-                if (layer.NumberOfNodes <= 0)
-                {
-                    MessageBox.Show("Layer must have at least 1 node!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return false;
-                }
-
-            }
-
-            return true;
         }
 
         private void OnAddLayer()

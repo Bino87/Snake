@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:models="clr-namespace:UserControls.Models"
              xmlns:enums="clr-namespace:UserControls.Core.Enums"
+             xmlns:menu="clr-namespace:UserControls.Controls.Menu"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance models:MainDisplayHandlerViewModel}"
@@ -17,17 +18,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel>
-        <!--
-            we need menu here
-        
-        ads-->
-        <Menu>
-            <MenuItem Header="Views">
-                <MenuItem Header="Neural Net Wizard" Command="{Binding Path=ChangeContent}" CommandParameter="{x:Static enums:ViewModel.NeuralNetWizard}"/>
-                <MenuItem Header="Simulation Runner" Command="{Binding Path=ChangeContent}" CommandParameter="{x:Static enums:ViewModel.SimulationRunner}"/>
-            </MenuItem>
-        </Menu>
-
+       <menu:MenuControl/>
         <ContentControl Content="{Binding Path=CurrentView}" />
     </StackPanel>
 </UserControl>
