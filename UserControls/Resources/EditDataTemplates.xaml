@@ -13,4 +13,8 @@
     <DataTemplate DataType="{x:Type neuralNetWizard:NeuralNetWizardViewModel}">
         <neuralNetWizard1:NeuralNetWizardControl/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type neuralNetWizard:HiddenLayerDataViewModel}">
+        <neuralNetWizard1:HiddenLayerDataControl/>
+    </DataTemplate>
 </ResourceDictionary>

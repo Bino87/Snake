@@ -23,6 +23,38 @@ namespace Network
 
         public int[] LayerSetup { get; set; }
 
+        public NetworkTemplate(int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers)
+        {
+            LayerSetup = new int[hiddenLayers.Length + 2];
+            InputCount = inputCount;
+            OutputCount = output.NodeCount;
+            Layers = hiddenLayers.Length + 1;
+
+            LayerSetup[0] = inputCount;
+            LayerSetup[^1] = output.NodeCount;
+
+            for (int i = 0; i < hiddenLayers.Length; i++)
+            {
+                LayerSetup[i + 1] = hiddenLayers[i].NodeCount;
+            }
+
+            ActivationFunction = new ActivationFunctionType[Layers];
+            WeightsCount = new int[Layers];
+            BiasCount = new int[Layers];
+
+            for (int i = 0; i < hiddenLayers.Length; i++)
+            {
+                ActivationFunction[i] = hiddenLayers[i].ActivationFunction;
+                BiasCount[i] = hiddenLayers[i].NodeCount;
+
+                WeightsCount[i] = i > 0 ? hiddenLayers[i - 1].NodeCount * hiddenLayers[i].NodeCount : inputCount * hiddenLayers[i].NodeCount;
+            }
+
+            ActivationFunction[^1] = output.ActivationFunction;
+            BiasCount[^1] = output.NodeCount;
+            WeightsCount[^1] = (hiddenLayers.Length > 0 ? hiddenLayers[^1].NodeCount : inputCount) * output.NodeCount;
+        }
+
         public NetworkTemplate(params LayerInfo[] layerInfos)
         {
             if (layerInfos.Length < 2)

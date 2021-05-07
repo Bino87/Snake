@@ -3,8 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:UserControls.Controls"
-             xmlns:models="clr-namespace:UserControls.Models"
              xmlns:neuralNetWizard="clr-namespace:UserControls.Models.NeuralNetWizard"
              xmlns:neuralNetDisplay="clr-namespace:UserControls.Controls.NeuralNetDisplay"
              mc:Ignorable="d" 
@@ -13,19 +11,31 @@
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
         <GroupBox Header=" Neural Net Display">
             <neuralNetDisplay:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
+        </GroupBox>
+        <GroupBox Header="Settings">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                <GroupBox Header="Input">
+                    <TextBox Margin="2" Text="{Binding NumberOfInputs}"/>
+                </GroupBox>
+                <GroupBox Header="Hidden Layers">
+                    <StackPanel Orientation="Vertical">
+                        <ListView ItemsSource="{Binding HiddenLayers}"/>
+                        <Button Margin="2" Content="Add Layer" HorizontalAlignment="Right" Command="{Binding AddLayer}"></Button>
+                    </StackPanel>
+                </GroupBox>
 
-            <!--
-            Things i need:
-                - number of inputs
-                - number of outputs
-                - layer info 
-                    - number of neurons
-                    - activation function
-                
-            
-            -->
-            
+                <GroupBox Header="Output" >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBox MinWidth="50" Margin="2" Text="{Binding NumberOfOutputs}"/>
+                        <ComboBox HorizontalAlignment="Right" Margin="2" SelectedIndex="0" SelectedItem="{Binding SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}"/>
+                    </StackPanel>
+                </GroupBox>
+            <Button HorizontalAlignment="Right" Content="Create Template" Command="{Binding CreateTemplate}"/>
+            </StackPanel>
         </GroupBox>
         
+
+
+
     </StackPanel>
 </UserControl>
