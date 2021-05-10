@@ -12,6 +12,7 @@
     <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
         <neuralNetDisplay:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
         <neuralNetWizard1:NeuralNetWizardSettingsControl DataContext="{Binding Path=NeuralNetWizardSettingsViewModel}"/>
+        <neuralNetWizard1:NeuralNetWizardNetworkTemplateListControl DataContext="{Binding NeuralNetWizardNetworkTemplateListViewModel}"/>
 
     </StackPanel>
 </UserControl>

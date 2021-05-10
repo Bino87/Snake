@@ -5,7 +5,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
     public class NetworkTemplateDto : MongoDbDataTransferObject
     {
-        protected override int ParametersCount => 7;
+        protected override int ParametersCount => 8;
 
         public int[] BiasCount { get; set; }
 

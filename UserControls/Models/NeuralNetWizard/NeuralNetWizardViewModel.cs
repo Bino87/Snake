@@ -3,11 +3,6 @@ using UserControls.Models.NeuralNetDisplay;
 
 namespace UserControls.Models.NeuralNetWizard
 {
-    public class NeuralNetWizardNetworkTemplateListViewModel : Observable
-    {
-
-    }
-
     public class NeuralNetWizardViewModel : MainView
     {
         public NeuralNetDisplayViewModel NeuralNetDisplay { get; set; }
