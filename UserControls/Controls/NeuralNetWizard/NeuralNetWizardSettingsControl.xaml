@@ -1,0 +1,59 @@
+﻿<UserControl x:Class="UserControls.Controls.NeuralNetWizard.NeuralNetWizardSettingsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:validators="clr-namespace:UserControls.WpfOverrides.Validators"
+             xmlns:neuralNetWizard="clr-namespace:UserControls.Models.NeuralNetWizard"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance neuralNetWizard:NeuralNetWizardSettingsViewModel}">
+   <GroupBox Header="Settings">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                <GroupBox >
+                    <GroupBox.Header>
+                        <CheckBox Content="Override Name" IsChecked="{Binding OverrideName}"/>
+                    </GroupBox.Header>
+
+                    <TextBox IsEnabled="{Binding OverrideName}"  Text="{Binding Path=Name}"/>
+                </GroupBox>
+
+                <GroupBox Header="Input">
+                    <TextBox Margin="2" MinWidth="50" HorizontalAlignment="Stretch">
+                        <TextBox.Text>
+                            <Binding Path="NumberOfInputs" >
+                                <Binding.ValidationRules>
+                                    <validators:NeuralNetWizardNodeCountValidator/>
+                                </Binding.ValidationRules>
+
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </GroupBox>
+                <GroupBox Header="Hidden Layers">
+                    <StackPanel Orientation="Vertical">
+                        <ListView ItemsSource="{Binding HiddenLayers}"/>
+                        <Button Margin="2" Content="Add Layer" HorizontalAlignment="Right" Command="{Binding  AddLayer}"></Button>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Output" >
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <TextBox Margin="2" MinWidth="50" HorizontalAlignment="Stretch">
+                            <TextBox.Text>
+                                <Binding Path="NumberOfOutputs">
+                                    <Binding.ValidationRules>
+                                        <validators:NeuralNetWizardNodeCountValidator/>
+                                    </Binding.ValidationRules>
+
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <ComboBox HorizontalAlignment="Right" Margin="2" SelectedIndex="0" SelectedItem="{Binding SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}"/>
+                    </StackPanel>
+                </GroupBox>
+                <Button HorizontalAlignment="Right" Content="Create Template" Command="{Binding CreateTemplate}"/>
+                <Button HorizontalAlignment="Right" Content="Save Template" Command="{Binding Path=SaveToDataBase}"/>
+            </StackPanel>
+        </GroupBox>
+</UserControl>

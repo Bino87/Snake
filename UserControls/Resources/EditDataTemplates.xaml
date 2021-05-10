@@ -3,9 +3,11 @@
                     xmlns:simRunnerModel="clr-namespace:UserControls.Models.SimulationRunner"
                     xmlns:simulationRunner="clr-namespace:UserControls.Controls.SimulationRunner"
                     xmlns:neuralNetWizard="clr-namespace:UserControls.Models.NeuralNetWizard"
-                    xmlns:neuralNetWizard1="clr-namespace:UserControls.Controls.NeuralNetWizard">
+                    xmlns:neuralNetWizard1="clr-namespace:UserControls.Controls.NeuralNetWizard"
+                    xmlns:neuralNetDisplay="clr-namespace:UserControls.Models.NeuralNetDisplay"
+                    xmlns:neuralNetDisplay1="clr-namespace:UserControls.Controls.NeuralNetDisplay">
 
-
+   
     <DataTemplate  DataType="{x:Type simRunnerModel:SimulationRunnerViewModel}">
         <simulationRunner:SimulationRunnerControl />
     </DataTemplate>

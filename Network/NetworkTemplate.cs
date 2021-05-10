@@ -60,7 +60,7 @@ namespace Network
             WeightsCount[^1] = (hiddenLayers.Length > 0 ? hiddenLayers[^1].NodeCount : inputCount) * output.NodeCount;
         }
 
-        
+
 
 
         public NetworkTemplate(NetworkTemplateDto dto)
@@ -104,6 +104,7 @@ namespace Network
         {
             return new()
             {
+                Name = Name,
                 Layers = Layers,
                 WeightsCount = WeightsCount,
                 ActivationFunctions = ActivationFunction.ToStringArray(),

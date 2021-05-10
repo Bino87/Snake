@@ -15,50 +15,52 @@
         <StackPanel.Resources>
             <templateSelectors:NeuralNetDisplayShapeTemplateSelector  x:Key="NetDisplayShapeTemplateSelector"/>
         </StackPanel.Resources>
-        <ItemsControl ItemsSource="{Binding Path=DisplayItems }"
+        <GroupBox Header=" Neural Net Display">
+            <ItemsControl ItemsSource="{Binding Path=DisplayItems }"
                         ItemTemplateSelector="{StaticResource NetDisplayShapeTemplateSelector}">
-            <ItemsControl.Resources>
-                <SolidColorBrush x:Key="Negative" Color="Red"/>
-                <SolidColorBrush x:Key="Positive" Color="LawnGreen"/>
-                <converters:NeuralnetDisplayColorConvertor x:Key="LineColorConvertor" Negative="{StaticResource Negative}" Positive="{StaticResource Positive}"/>
-                <SolidColorBrush x:Key="Active" Color="GreenYellow"/>
-                <SolidColorBrush x:Key="NotActive" Color="Red"/>
-                <converters:NeuralnetDisplayColorConvertor x:Key="CircleColorConvertor" Negative="{StaticResource NotActive}" Positive="{StaticResource Active}"/>
-                <converters:NeuralnetDisplayLineThicknessConvertor x:Key="NeuralnetDisplayLineThicknessConvertor" Limit="1" Enabled="True"/>
+                <ItemsControl.Resources>
+                    <SolidColorBrush x:Key="Negative" Color="Red"/>
+                    <SolidColorBrush x:Key="Positive" Color="LawnGreen"/>
+                    <converters:NeuralnetDisplayColorConvertor x:Key="LineColorConvertor" Negative="{StaticResource Negative}" Positive="{StaticResource Positive}"/>
+                    <SolidColorBrush x:Key="Active" Color="GreenYellow"/>
+                    <SolidColorBrush x:Key="NotActive" Color="Red"/>
+                    <converters:NeuralnetDisplayColorConvertor x:Key="CircleColorConvertor" Negative="{StaticResource NotActive}" Positive="{StaticResource Active}"/>
+                    <converters:NeuralnetDisplayLineThicknessConvertor x:Key="NeuralnetDisplayLineThicknessConvertor" Limit="1" Enabled="True"/>
 
-                <DataTemplate x:Key="{x:Static constants:Cons.cShapeCircleDataTemplate}" DataType="neuralNetDisplay:PrimitiveCircle">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="{Binding Path=Radius}" 
+                    <DataTemplate x:Key="{x:Static constants:Cons.cShapeCircleDataTemplate}" DataType="neuralNetDisplay:PrimitiveCircle">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="{Binding Path=Radius}" 
                              Height="{Binding Path=Radius}"
                              Fill="{Binding Path=ValueProvider.Value, Converter={StaticResource CircleColorConvertor }}">
-                            <Ellipse.RenderTransform>
-                                <TranslateTransform X="{Binding Path = X}" Y="{Binding Y}"/>
-                            </Ellipse.RenderTransform>
-                        </Ellipse>
-                        <TextBlock  Text="{Binding StringFormat=N4, Path=ValueProvider.Value}" FontSize="8" Foreground="White">
-                            <TextBlock.RenderTransform>
-                                <TransformGroup>
+                                <Ellipse.RenderTransform>
                                     <TranslateTransform X="{Binding Path = X}" Y="{Binding Y}"/>
-                                    <RotateTransform Angle="-45" CenterX="{Binding Path=X}" CenterY="{Binding Y}"/>
-                                </TransformGroup>
-                            </TextBlock.RenderTransform>
-                        </TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="{x:Static constants:Cons.cShapeLineDataTemplate}" DataType="neuralNetDisplay:PrimitiveLine" >
-                    <Line X1="{Binding Path=X}"
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                            <TextBlock  Text="{Binding StringFormat=N4, Path=ValueProvider.Value}" FontSize="8" Foreground="White">
+                                <TextBlock.RenderTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform X="{Binding Path = X}" Y="{Binding Y}"/>
+                                        <RotateTransform Angle="-45" CenterX="{Binding Path=X}" CenterY="{Binding Y}"/>
+                                    </TransformGroup>
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="{x:Static constants:Cons.cShapeLineDataTemplate}" DataType="neuralNetDisplay:PrimitiveLine" >
+                        <Line X1="{Binding Path=X}"
                           X2="{Binding Path=X2}" 
                           Y1="{Binding Path=Y}" 
                           Y2="{Binding Path=Y2}" 
                           Stroke="{Binding Path=ValueProvider.Value, Converter={StaticResource LineColorConvertor}}"
                           StrokeThickness="{Binding Path=ValueProvider.Value, Converter={StaticResource NeuralnetDisplayLineThicknessConvertor}}"/>
-                </DataTemplate>
-            </ItemsControl.Resources>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas Background="Black" Width="{x:Static constants:Cons.cNetWidth}" Height="{x:Static constants:Cons.cNetHeight}"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Background="Black" Width="{x:Static constants:Cons.cNetWidth}" Height="{x:Static constants:Cons.cNetHeight}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </GroupBox>
     </StackPanel>
 </UserControl>
