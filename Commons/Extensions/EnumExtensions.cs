@@ -6,6 +6,11 @@ namespace Commons.Extensions
     {
         public static T CastTo<T>(this Enum value) where T : Enum => value is T @enum ? @enum : throw new Exception("Unable to cast to enum");
 
+        public static T ParseTo<T>(this string str) where T : Enum
+        {
+            return (T)Enum.Parse(typeof(T), str);
+        }
+
         public static string[] ToStringArray<T>(this T[] @enum) where T : Enum
         {
             string[] arr = new string[@enum.Length];

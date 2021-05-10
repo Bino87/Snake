@@ -29,6 +29,10 @@ namespace Network
 
         public int[] LayerSetup { get; set; }
 
+        public NetworkTemplate(Guid id, string name, int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers) : this(name, inputCount, output, hiddenLayers)
+        {
+            Id = id;
+        }
         public NetworkTemplate(string name, int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers)
         {
             Name = name;

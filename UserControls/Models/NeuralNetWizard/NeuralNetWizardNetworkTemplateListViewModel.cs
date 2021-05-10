@@ -27,11 +27,13 @@ namespace UserControls.Models.NeuralNetWizard
         public string Name => _networkTemplateDto.Name;
 
         public RelayCommand Delete { get; set; }
+        public RelayCommand Modify { get; set; }
 
-        public NeuralNetWizardNetworkTemplateDataViewModel(NetworkTemplateDto networkTemplateDto, Action<Guid, int> onDelete, int index)
+        public NeuralNetWizardNetworkTemplateDataViewModel(NetworkTemplateDto networkTemplateDto, int index, Action<Guid, int> onDelete, Action<NetworkTemplateDto> onModify)
         {
             _networkTemplateDto = networkTemplateDto;
             Delete = new RelayCommand(() => onDelete(_networkTemplateDto.Id, index));
+            Modify = new RelayCommand(() => onModify(_networkTemplateDto));
         }
 
 
@@ -39,17 +41,24 @@ namespace UserControls.Models.NeuralNetWizard
 
     public class NeuralNetWizardNetworkTemplateListViewModel : Observable
     {
+        private readonly NeuralNetWizardSettingsViewModel _neuralNetWizardSettingsViewModel;
         public ObservableCollection<NeuralNetWizardNetworkTemplateDataViewModel> NetworkTemplates { get; set; }
 
-        public NeuralNetWizardNetworkTemplateListViewModel()
+        public NeuralNetWizardNetworkTemplateListViewModel(NeuralNetWizardSettingsViewModel neuralNetWizardSettingsViewModel)
         {
+            _neuralNetWizardSettingsViewModel = neuralNetWizardSettingsViewModel;
             NetworkTemplates = new ObservableCollection<NeuralNetWizardNetworkTemplateDataViewModel>();
             NetworkTemplateAccess nta = new();
 
             foreach (NetworkTemplateDto dto in nta.GetAll())
             {
-                NetworkTemplates.Add(new NeuralNetWizardNetworkTemplateDataViewModel(dto, OnDelete, NetworkTemplates.Count));
+                NetworkTemplates.Add(new NeuralNetWizardNetworkTemplateDataViewModel(dto, NetworkTemplates.Count, OnDelete, OnModify));
             }
+        }
+
+        private void OnModify(NetworkTemplateDto dto)
+        {
+            _neuralNetWizardSettingsViewModel.SetToModify(dto);
         }
 
         private void OnDelete(Guid id, int index)

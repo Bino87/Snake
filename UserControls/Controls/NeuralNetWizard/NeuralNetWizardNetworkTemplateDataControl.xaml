@@ -10,6 +10,7 @@
              d:DataContext="{d:DesignInstance neuralNetWizard:NeuralNetWizardNetworkTemplateDataViewModel}">
     <StackPanel Orientation="Vertical">
         <TextBlock Text="{Binding Name, Mode=OneTime}"/>
-        <Button Content="Delete" Command="{Binding Delete}"></Button>
+        <Button Content="Delete" Command="{Binding Delete}"/>
+        <Button Content="Modify" Command="{Binding Modify}"/>
     </StackPanel>
 </UserControl>

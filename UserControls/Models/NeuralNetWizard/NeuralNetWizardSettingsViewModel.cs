@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using Commons.Extensions;
 using DataAccessLibrary.DataAccessors.Network;
+using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using Network;
 using Network.Enums;
 using UserControls.Core.Base;
@@ -66,7 +68,7 @@ namespace UserControls.Models.NeuralNetWizard
             set;
         }
 
-        public RelayCommand CreateTemplate
+        public RelayCommand Preview
         {
             get;
             set;
@@ -83,7 +85,7 @@ namespace UserControls.Models.NeuralNetWizard
             _nnDisplay = nnDisplay;
             HiddenLayers = new ObservableCollection<HiddenLayerDataViewModel>();
             AddLayer = new RelayCommand(OnAddLayer);
-            CreateTemplate = new RelayCommand(OnCreateTemplate);
+            Preview = new RelayCommand(() => OnPreview(_nnDisplay?.NetworkTemplate?.Id));
             SaveToDataBase = new RelayCommand(OnSaveToDataBase);
             PropertyChanged += OnPropertyChanged;
             HiddenLayers.CollectionChanged += HiddenLayersOnCollectionChanged;
@@ -105,16 +107,22 @@ namespace UserControls.Models.NeuralNetWizard
 
         private void OnSaveToDataBase()
         {
+            OnPreview(_nnDisplay?.NetworkTemplate?.Id);
+
             NetworkTemplateAccess nta = new();
 
-            if (_nnDisplay.NetworkTemplate.Id != default)
+
+            if (_nnDisplay?.NetworkTemplate?.Id == default)
                 _nnDisplay.NetworkTemplate.Id = nta.Insert(_nnDisplay.NetworkTemplate.ToDataTransferObject());
             else nta.Update(_nnDisplay.NetworkTemplate.ToDataTransferObject());
         }
 
-        private void OnCreateTemplate()
+        private void OnPreview(Guid? id)
         {
-            NetworkTemplate nt = new(Name, NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
+            NetworkTemplate nt = id == default
+                ? new NetworkTemplate(Name, NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos())
+                : new NetworkTemplate(id.Value, Name, NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
+
             _nnDisplay.Initialize(nt);
         }
 
@@ -153,6 +161,29 @@ namespace UserControls.Models.NeuralNetWizard
         private void OnAddLayer()
         {
             HiddenLayers.Add(new HiddenLayerDataViewModel(item => HiddenLayers.Remove(item), OnPropertyChanged));
+        }
+
+        public void SetToModify(NetworkTemplateDto dto)
+        {
+            OverrideName = true;
+            Name = dto.Name;
+            NumberOfInputs = dto.InputCount;
+            NumberOfOutputs = dto.OutputCount;
+            ActivationFunctionType[] activationFunc = dto.ActivationFunctions.FromStringArray<ActivationFunctionType>();
+            SelectedActivationFunctionType = activationFunc[^1];
+
+            HiddenLayers.Clear();
+
+            for (int i = 0; i < activationFunc.Length - 1; i++)
+            {
+                HiddenLayers.Add(new HiddenLayerDataViewModel(item => HiddenLayers.Remove(item), OnPropertyChanged));
+                HiddenLayers[i].NumberOfNodes = dto.LayerSetup[i];
+                HiddenLayers[i].SelectedActivationFunctionType = activationFunc[i];
+            }
+
+            OnPreview(dto.Id);
+
+
         }
     }
 }

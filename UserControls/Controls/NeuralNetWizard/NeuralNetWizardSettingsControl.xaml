@@ -52,7 +52,7 @@
                         <ComboBox HorizontalAlignment="Right" Margin="2" SelectedIndex="0" SelectedItem="{Binding SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}"/>
                     </StackPanel>
                 </GroupBox>
-                <Button HorizontalAlignment="Right" Content="Create Template" Command="{Binding CreateTemplate}"/>
+                <Button HorizontalAlignment="Right" Content="Preview" Command="{Binding Preview}"/>
                 <Button HorizontalAlignment="Right" Content="Save Template" Command="{Binding Path=SaveToDataBase}"/>
             </StackPanel>
         </GroupBox>

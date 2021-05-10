@@ -13,7 +13,7 @@ namespace UserControls.Models.NeuralNetWizard
         {
             NeuralNetDisplay = new NeuralNetDisplayViewModel();
             NeuralNetWizardSettingsViewModel = new NeuralNetWizardSettingsViewModel(NeuralNetDisplay);
-            NeuralNetWizardNetworkTemplateListViewModel = new NeuralNetWizardNetworkTemplateListViewModel();
+            NeuralNetWizardNetworkTemplateListViewModel = new NeuralNetWizardNetworkTemplateListViewModel(NeuralNetWizardSettingsViewModel);
         }
 
 
