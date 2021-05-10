@@ -13,11 +13,11 @@
         <GroupBox Header=" Neural Net Display">
             <neuralNetDisplay:NeuralNetDisplayControl DataContext="{Binding Path=NeuralNetDisplay}" />
         </GroupBox>
-        <GroupBox Header="Name" FontSize="8">
-            <TextBox Text="{Binding Path=Name}"/>
-        </GroupBox>
         <GroupBox Header="Settings">
             <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                <GroupBox Header="Name" FontSize="8">
+                    <TextBox FontSize="12" Text="{Binding Path=Name}"/>
+                </GroupBox>
 
                 <GroupBox Header="Input">
                     <TextBox Margin="2" MinWidth="50" HorizontalAlignment="Stretch">
