@@ -14,7 +14,13 @@ namespace UserControls.Models.NeuralNetWizard
     {
         private int _numberOfInputs = 1;
         private int _numberOfOutputs = 1;
+        private string _name;
 
+        public string Name
+        {
+            get => _name;
+            set => SetField(ref _name, value);
+        }
         public static ActivationFunctionType[] ActivationFunctionTypes => Enum.GetValues<ActivationFunctionType>();
 
         public NeuralNetDisplayViewModel NeuralNetDisplay { get; set; }
@@ -79,7 +85,7 @@ namespace UserControls.Models.NeuralNetWizard
 
         private void OnCreateTemplate()
         {
-            NetworkTemplate nt = new(NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
+            NetworkTemplate nt = new(Name,NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
             NeuralNetDisplay.Initialize(nt);
         }
 

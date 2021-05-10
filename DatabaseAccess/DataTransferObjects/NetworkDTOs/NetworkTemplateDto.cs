@@ -20,10 +20,12 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
         public int InputCount { get; set; }
 
         public int[] LayerSetup { get; set; }
+        public string Name { get; set; }
 
         public override MongoDbCallParameters CreateParameters()
         {
             return base.CreateParameters()
+                       .Add(ParameterNames.MongoDb.cName, Name)
                        .Add(ParameterNames.MongoDb.cBiasCount, BiasCount)
                        .Add(ParameterNames.MongoDb.cWeightsCount, WeightsCount)
                        .Add(ParameterNames.MongoDb.cActivationFunctions, ActivationFunctions)

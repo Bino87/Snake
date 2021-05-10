@@ -27,11 +27,7 @@ namespace UserControls.Models.SimulationRunner
             SimulationGuiViewModel = new SimulationGuiViewModel(new StartSimulationCommand(StartSimulation, this), new StopSimulationCommand(Abort, this));
             ProgressGraph = new ProgressGraphViewModel();
 
-            NetworkTemplate networkTemplate = new(
-                new LayerInfo(ActivationFunctionType.Identity, 2 * 4 + 8 * 7 + 6 + 3),
-                new LayerInfo(ActivationFunctionType.ReLu, 10),
-                new LayerInfo(ActivationFunctionType.ReLu, 10),
-                new LayerInfo(ActivationFunctionType.Sigmoid, 3));
+            NetworkTemplate networkTemplate = null;
             NeuralNetDisplay = new NeuralNetDisplayViewModel(networkTemplate);
             _mm = new MapManager(SimulationGuiViewModel, networkTemplate, new SimulationUpdateManager(NeuralNetDisplay, SimulationGuiViewModel, SnakeMapViewModel, ProgressGraph));
         }

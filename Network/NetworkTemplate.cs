@@ -13,6 +13,8 @@ namespace Network
         private const double cWeightRange = 1;
 
         public Guid Id { get; set; }
+
+        public string Name { get; set; }
         public int[] BiasCount { get; set; }
 
         public int[] WeightsCount { get; set; }
@@ -27,12 +29,17 @@ namespace Network
 
         public int[] LayerSetup { get; set; }
 
-        public NetworkTemplate(int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers)
+        public NetworkTemplate(string name, int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers)
         {
+            Name = name ?? GenerateName(inputCount, output, hiddenLayers);
+
             LayerSetup = new int[hiddenLayers.Length + 2];
             InputCount = inputCount;
             OutputCount = output.NodeCount;
             Layers = hiddenLayers.Length + 1;
+            ActivationFunction = new ActivationFunctionType[Layers];
+            WeightsCount = new int[Layers];
+            BiasCount = new int[Layers];
 
             LayerSetup[0] = inputCount;
             LayerSetup[^1] = output.NodeCount;
@@ -40,18 +47,12 @@ namespace Network
             for (int i = 0; i < hiddenLayers.Length; i++)
             {
                 LayerSetup[i + 1] = hiddenLayers[i].NodeCount;
-            }
-
-            ActivationFunction = new ActivationFunctionType[Layers];
-            WeightsCount = new int[Layers];
-            BiasCount = new int[Layers];
-
-            for (int i = 0; i < hiddenLayers.Length; i++)
-            {
                 ActivationFunction[i] = hiddenLayers[i].ActivationFunction;
                 BiasCount[i] = hiddenLayers[i].NodeCount;
 
-                WeightsCount[i] = i > 0 ? hiddenLayers[i - 1].NodeCount * hiddenLayers[i].NodeCount : inputCount * hiddenLayers[i].NodeCount;
+                WeightsCount[i] = i > 0
+                    ? hiddenLayers[i - 1].NodeCount * hiddenLayers[i].NodeCount
+                    : inputCount * hiddenLayers[i].NodeCount;
             }
 
             ActivationFunction[^1] = output.ActivationFunction;
@@ -59,8 +60,27 @@ namespace Network
             WeightsCount[^1] = (hiddenLayers.Length > 0 ? hiddenLayers[^1].NodeCount : inputCount) * output.NodeCount;
         }
 
+        private static string GenerateName(int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers)
+        {
+            object[] arr = new object[3 + hiddenLayers.Length * 2];
+            arr[0] = inputCount;
+
+            for (int i = 0; i < hiddenLayers.Length; i++)
+            {
+                arr[1 + i * 2] = hiddenLayers[1 + i].NodeCount;
+                arr[1 + i * 2 + 1] = hiddenLayers[i].ActivationFunction;
+            }
+
+            arr[^2] = output.NodeCount;
+            arr[^1] = output.ActivationFunction;
+
+            return string.Join("_", arr);
+        }
+
+
         public NetworkTemplate(NetworkTemplateDto dto)
         {
+            Name = dto.Name;
             Layers = dto.Layers;
             WeightsCount = dto.WeightsCount;
             BiasCount = dto.BiasCount;
@@ -68,34 +88,6 @@ namespace Network
             InputCount = dto.InputCount;
             OutputCount = dto.OutputCount;
             LayerSetup = dto.LayerSetup;
-        }
-
-        public NetworkTemplate(params LayerInfo[] layerInfos)
-        {
-            if (layerInfos.Length < 2)
-                throw new Exception();
-
-            LayerSetup = new int[layerInfos.Length];
-
-            for (int i = 0; i < layerInfos.Length; i++)
-            {
-                LayerSetup[i] = layerInfos[i].NodeCount;
-            }
-
-            InputCount = layerInfos[0].NodeCount;
-            OutputCount = layerInfos[^1].NodeCount;
-            Layers = layerInfos.Length - 1;
-            ActivationFunction = new ActivationFunctionType[Layers];
-
-            WeightsCount = new int[Layers];
-            BiasCount = new int[Layers];
-
-            for (int i = 1; i < layerInfos.Length; i++)
-            {
-                BiasCount[i - 1] = layerInfos[i].NodeCount;
-                WeightsCount[i - 1] = layerInfos[i - 1].NodeCount * layerInfos[i].NodeCount;
-                ActivationFunction[i - 1] = layerInfos[i].ActivationFunction;
-            }
         }
 
         public NetworkData ToNetworkData()
@@ -135,7 +127,6 @@ namespace Network
                 LayerSetup = LayerSetup,
                 OutputCount = OutputCount
             };
-
         }
     }
 }
