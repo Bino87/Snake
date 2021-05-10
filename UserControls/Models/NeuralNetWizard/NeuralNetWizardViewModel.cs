@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using Network;
@@ -14,7 +16,15 @@ namespace UserControls.Models.NeuralNetWizard
     {
         private int _numberOfInputs = 1;
         private int _numberOfOutputs = 1;
+        private ActivationFunctionType _selectedActivationFunctionForOutput;
         private string _name;
+        private bool _overrideName;
+
+        public bool OverrideName
+        {
+            get => _overrideName;
+            set => SetField(ref _overrideName, value);
+        }
 
         public string Name
         {
@@ -51,8 +61,8 @@ namespace UserControls.Models.NeuralNetWizard
 
         public ActivationFunctionType SelectedActivationFunctionType
         {
-            get;
-            set;
+            get => _selectedActivationFunctionForOutput;
+            set => SetField(ref _selectedActivationFunctionForOutput, value);
         }
 
         public RelayCommand CreateTemplate
@@ -74,7 +84,20 @@ namespace UserControls.Models.NeuralNetWizard
             AddLayer = new RelayCommand(OnAddLayer);
             CreateTemplate = new RelayCommand(OnCreateTemplate);
             SaveToDataBase = new RelayCommand(OnSaveToDataBase);
+            PropertyChanged += OnPropertyChanged;
+            HiddenLayers.CollectionChanged += HiddenLayersOnCollectionChanged;
+        }
 
+        private void HiddenLayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            TryGenerateName();
+        }
+
+        private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(Name)))
+                return;
+            TryGenerateName();
         }
 
         private void OnSaveToDataBase()
@@ -85,8 +108,28 @@ namespace UserControls.Models.NeuralNetWizard
 
         private void OnCreateTemplate()
         {
-            NetworkTemplate nt = new(Name,NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
+            NetworkTemplate nt = new(Name, NumberOfInputs, new LayerInfo(SelectedActivationFunctionType, NumberOfOutputs), GetLayerInfos());
             NeuralNetDisplay.Initialize(nt);
+        }
+
+        private void TryGenerateName()
+        {
+            if (OverrideName)
+                return;
+
+            object[] arr = new object[3 + HiddenLayers.Count * 2];
+            arr[0] = NumberOfInputs;
+
+            for (int i = 0; i < HiddenLayers.Count; i++)
+            {
+                arr[1 + i * 2] = HiddenLayers[i].NumberOfNodes;
+                arr[1 + i * 2 + 1] = HiddenLayers[i].SelectedActivationFunctionType;
+            }
+
+            arr[^2] = NumberOfOutputs;
+            arr[^1] = SelectedActivationFunctionType;
+
+            Name = string.Join("_", arr);
         }
 
         private LayerInfo[] GetLayerInfos()
@@ -103,7 +146,7 @@ namespace UserControls.Models.NeuralNetWizard
 
         private void OnAddLayer()
         {
-            HiddenLayers.Add(new HiddenLayerDataViewModel((item) => HiddenLayers.Remove(item)));
+            HiddenLayers.Add(new HiddenLayerDataViewModel(item => HiddenLayers.Remove(item), OnPropertyChanged));
         }
 
         public override void Abort()

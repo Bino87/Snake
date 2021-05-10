@@ -31,7 +31,7 @@ namespace Network
 
         public NetworkTemplate(string name, int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers)
         {
-            Name = name ?? GenerateName(inputCount, output, hiddenLayers);
+            Name = name;
 
             LayerSetup = new int[hiddenLayers.Length + 2];
             InputCount = inputCount;
@@ -60,22 +60,7 @@ namespace Network
             WeightsCount[^1] = (hiddenLayers.Length > 0 ? hiddenLayers[^1].NodeCount : inputCount) * output.NodeCount;
         }
 
-        private static string GenerateName(int inputCount, LayerInfo output, params LayerInfo[] hiddenLayers)
-        {
-            object[] arr = new object[3 + hiddenLayers.Length * 2];
-            arr[0] = inputCount;
-
-            for (int i = 0; i < hiddenLayers.Length; i++)
-            {
-                arr[1 + i * 2] = hiddenLayers[1 + i].NodeCount;
-                arr[1 + i * 2 + 1] = hiddenLayers[i].ActivationFunction;
-            }
-
-            arr[^2] = output.NodeCount;
-            arr[^1] = output.ActivationFunction;
-
-            return string.Join("_", arr);
-        }
+        
 
 
         public NetworkTemplate(NetworkTemplateDto dto)

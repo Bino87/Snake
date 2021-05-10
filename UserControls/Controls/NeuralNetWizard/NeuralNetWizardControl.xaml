@@ -15,8 +15,12 @@
         </GroupBox>
         <GroupBox Header="Settings">
             <StackPanel Orientation="Vertical" VerticalAlignment="Top">
-                <GroupBox Header="Name" FontSize="8">
-                    <TextBox FontSize="12" Text="{Binding Path=Name}"/>
+                <GroupBox >
+                    <GroupBox.Header>
+                        <CheckBox Content="Override Name" IsChecked="{Binding OverrideName}"/>
+                    </GroupBox.Header>
+
+                    <TextBox IsEnabled="{Binding OverrideName}"  Text="{Binding Path=Name}"/>
                 </GroupBox>
 
                 <GroupBox Header="Input">
