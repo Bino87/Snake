@@ -16,6 +16,8 @@ namespace UserControls.Models.NeuralNetDisplay
         private NetworkTemplate _networkTemplate;
         private const double cRadius = 10;
 
+        public NetworkTemplate NetworkTemplate => _networkTemplate;
+
         public ObservableCollection<PrimitiveShape> DisplayItems { get; set; }
 
 

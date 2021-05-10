@@ -2,11 +2,6 @@
 
 namespace Commons.Extensions
 {
-    public static class EnumExtensions
-    {
-        public static T CastTo<T>(this Enum value) where T : Enum => value is T @enum ? @enum : throw new Exception("Unable to cast to enum");
-
-    }
     public static class StringExtensions
     {
         public static byte ToByte(this string str, int fromBase) => Convert.ToByte(str, fromBase);

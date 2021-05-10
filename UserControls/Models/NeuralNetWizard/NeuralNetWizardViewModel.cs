@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using DataAccessLibrary.DataAccessors.Network;
+using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using Network;
 using Network.Enums;
 using UserControls.Core.Base;
@@ -10,7 +12,7 @@ namespace UserControls.Models.NeuralNetWizard
 {
     public class NeuralNetWizardViewModel : MainView
     {
-        private int _numberOfInputs  = 1;
+        private int _numberOfInputs = 1;
         private int _numberOfOutputs = 1;
 
         public static ActivationFunctionType[] ActivationFunctionTypes => Enum.GetValues<ActivationFunctionType>();
@@ -53,13 +55,26 @@ namespace UserControls.Models.NeuralNetWizard
             set;
         }
 
+        public RelayCommand SaveToDataBase
+        {
+            get;
+            set;
+        }
+
         public NeuralNetWizardViewModel()
         {
             NeuralNetDisplay = new NeuralNetDisplayViewModel();
             HiddenLayers = new ObservableCollection<HiddenLayerDataViewModel>();
             AddLayer = new RelayCommand(OnAddLayer);
             CreateTemplate = new RelayCommand(OnCreateTemplate);
+            SaveToDataBase = new RelayCommand(OnSaveToDataBase);
 
+        }
+
+        private void OnSaveToDataBase()
+        {
+            NetworkTemplateAccess nta = new NetworkTemplateAccess();
+            NeuralNetDisplay.NetworkTemplate.Id = nta.Insert(NeuralNetDisplay.NetworkTemplate.ToDataTransferObject());
         }
 
         private void OnCreateTemplate()

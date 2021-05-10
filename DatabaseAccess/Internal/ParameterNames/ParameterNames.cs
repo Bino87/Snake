@@ -25,6 +25,13 @@
             internal const string cNumberOfIterations = "NumberOfIterations";
             internal const string cMapSize = "MapSize";
             internal const string cRunInBackground = "RunInBackground";
+            internal const string cBiasCount = "BiasCount";
+            internal const string cWeightsCount = "WeightsCount";
+            internal const string cActivationFunctions = "ActivationFunctions";
+            internal const string cLayers = "Layers";
+            internal const string cOutputCount = "OutputCount";
+            internal const string cInputCount = "InputCount";
+            internal const string cLayerSetup = "LayerSetup";
         }
     }
 }

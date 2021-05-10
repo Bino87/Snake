@@ -1,5 +1,4 @@
-﻿using System;
-using DataAccessLibrary.Internal.MongoDB;
+﻿using DataAccessLibrary.Internal.MongoDB;
 using DataAccessLibrary.Internal.ParameterNames;
 
 namespace DataAccessLibrary.DataTransferObjects.SimulationGuiDTOs

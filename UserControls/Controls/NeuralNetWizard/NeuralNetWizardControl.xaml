@@ -50,6 +50,7 @@
                     </StackPanel>
                 </GroupBox>
                 <Button HorizontalAlignment="Right" Content="Create Template" Command="{Binding CreateTemplate}"/>
+                <Button HorizontalAlignment="Right" Content="Save Template" Command="{Binding Path=SaveToDataBase}"/>
             </StackPanel>
         </GroupBox>
 

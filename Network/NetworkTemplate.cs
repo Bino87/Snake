@@ -1,14 +1,18 @@
 ﻿using System;
 using Commons;
+using Commons.Extensions;
+using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
+using DataAccessLibrary.Interfaces;
 using Network.Enums;
 
 namespace Network
 {
-    public class NetworkTemplate
+    public class NetworkTemplate : IToMongoDbDataTransferObject<NetworkTemplateDto>
     {
         private const double cBiasRange = 10;
         private const double cWeightRange = 1;
 
+        public Guid Id { get; set; }
         public int[] BiasCount { get; set; }
 
         public int[] WeightsCount { get; set; }
@@ -53,6 +57,17 @@ namespace Network
             ActivationFunction[^1] = output.ActivationFunction;
             BiasCount[^1] = output.NodeCount;
             WeightsCount[^1] = (hiddenLayers.Length > 0 ? hiddenLayers[^1].NodeCount : inputCount) * output.NodeCount;
+        }
+
+        public NetworkTemplate(NetworkTemplateDto dto)
+        {
+            Layers = dto.Layers;
+            WeightsCount = dto.WeightsCount;
+            BiasCount = dto.BiasCount;
+            ActivationFunction = dto.ActivationFunctions.FromStringArray<ActivationFunctionType>();
+            InputCount = dto.InputCount;
+            OutputCount = dto.OutputCount;
+            LayerSetup = dto.LayerSetup;
         }
 
         public NetworkTemplate(params LayerInfo[] layerInfos)
@@ -106,6 +121,21 @@ namespace Network
 
 
             return new NetworkData(ActivationFunction, weights, bias, InputCount, OutputCount);
+        }
+
+        public NetworkTemplateDto ToDataTransferObject()
+        {
+            return new()
+            {
+                Layers = Layers,
+                WeightsCount = WeightsCount,
+                ActivationFunctions = ActivationFunction.ToStringArray(),
+                BiasCount = BiasCount,
+                InputCount = InputCount,
+                LayerSetup = LayerSetup,
+                OutputCount = OutputCount
+            };
+
         }
     }
 }

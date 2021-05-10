@@ -1,11 +1,12 @@
 ﻿using System;
 using DataAccessLibrary.DataAccessors.SimulationGui;
 using DataAccessLibrary.DataTransferObjects.SimulationGuiDTOs;
+using DataAccessLibrary.Interfaces;
 using Simulation.Enums;
 
 namespace UserControls.Core.Objects.SimulationGui
 {
-    public record SimulationGuiPreset
+    public record SimulationGuiPreset : IToMongoDbDataTransferObject<SimulationGuiPresetDto>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -20,7 +21,7 @@ namespace UserControls.Core.Objects.SimulationGui
         public Guid Save()
         {
             SimulationGuiPresetDataAccess dataAccess = new();
-            return dataAccess.Insert(GetDto());
+            return dataAccess.Insert(ToDataTransferObject());
         }
 
         public void Delete()
@@ -29,7 +30,8 @@ namespace UserControls.Core.Objects.SimulationGui
             dataAccess.DeleteById(Id);
         }
 
-        private SimulationGuiPresetDto GetDto()
+
+        public SimulationGuiPresetDto ToDataTransferObject()
         {
             return new()
             {

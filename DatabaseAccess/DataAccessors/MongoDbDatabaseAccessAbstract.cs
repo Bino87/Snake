@@ -74,7 +74,7 @@ namespace DataAccessLibrary.DataAccessors
             return res.UpsertedId?.AsGuid ?? item.Id;
         }
 
-        public abstract FilterDefinition<T> GetUpsertFilterDefinition(T mongoDbDataTransferObject);
+        public abstract FilterDefinition<T> GetUpsertFilterDefinition(T item);
 
         public override Guid Upsert(T item)
         {
