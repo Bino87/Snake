@@ -12,4 +12,11 @@
     <ProjectReference Include="..\UserControls\UserControls.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="Styles.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

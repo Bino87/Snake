@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:models="clr-namespace:UserControls.Models"
-             xmlns:enums="clr-namespace:UserControls.Core.Enums"
              xmlns:menu="clr-namespace:UserControls.Controls.Menu"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"

@@ -14,7 +14,7 @@ namespace UserControls.WpfOverrides.Validators
                 return new ValidationResult(false, $"Number of nodes must be 1 or higher, but was {i}");
             }
 
-            return new ValidationResult(false, $"unable to parse {value} to number");
+            return new ValidationResult(false, $"Unable to parse {value} to number");
         }
     }
 }

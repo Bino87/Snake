@@ -9,19 +9,22 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance neuralNetWizard:NeuralNetWizardSettingsViewModel}">
    <GroupBox Header="Settings">
-            <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+       <GroupBox.Resources>
+           
+       </GroupBox.Resources>
+       <StackPanel Orientation="Vertical" VerticalAlignment="Top">
                 <GroupBox >
                     <GroupBox.Header>
                         <CheckBox Content="Override Name" IsChecked="{Binding OverrideName}"/>
                     </GroupBox.Header>
 
-                    <TextBox IsEnabled="{Binding OverrideName}"  Text="{Binding Path=Name}"/>
+                <TextBox IsEnabled="{Binding OverrideName}"  Text="{Binding Path=Name}"/>
                 </GroupBox>
 
                 <GroupBox Header="Input">
-                    <TextBox Margin="2" MinWidth="50" HorizontalAlignment="Stretch">
+                <TextBox MinWidth="50" HorizontalAlignment="Stretch" >
                         <TextBox.Text>
-                            <Binding Path="NumberOfInputs" >
+                            <Binding Path="NumberOfInputs" UpdateSourceTrigger="PropertyChanged" >
                                 <Binding.ValidationRules>
                                     <validators:NeuralNetWizardNodeCountValidator/>
                                 </Binding.ValidationRules>
@@ -33,15 +36,15 @@
                 <GroupBox Header="Hidden Layers">
                     <StackPanel Orientation="Vertical">
                         <ListView ItemsSource="{Binding HiddenLayers}"/>
-                        <Button Margin="2" Content="Add Layer" HorizontalAlignment="Right" Command="{Binding  AddLayer}"></Button>
+                        <Button  Content="Add Layer" HorizontalAlignment="Right" Command="{Binding  AddLayer}"></Button>
                     </StackPanel>
                 </GroupBox>
 
                 <GroupBox Header="Output" >
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                        <TextBox Margin="2" MinWidth="50" HorizontalAlignment="Stretch">
+                        <TextBox  MinWidth="50" HorizontalAlignment="Stretch" >
                             <TextBox.Text>
-                                <Binding Path="NumberOfOutputs">
+                            <Binding Path="NumberOfOutputs" UpdateSourceTrigger="PropertyChanged" >
                                     <Binding.ValidationRules>
                                         <validators:NeuralNetWizardNodeCountValidator/>
                                     </Binding.ValidationRules>
@@ -49,7 +52,7 @@
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <ComboBox HorizontalAlignment="Right" Margin="2" SelectedIndex="0" SelectedItem="{Binding SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}"/>
+                        <ComboBox HorizontalAlignment="Right" SelectedIndex="0" SelectedItem="{Binding SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}"/>
                     </StackPanel>
                 </GroupBox>
                 <Button HorizontalAlignment="Right" Content="Preview" Command="{Binding Preview}"/>
