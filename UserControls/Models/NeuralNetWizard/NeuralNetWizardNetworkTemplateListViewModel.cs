@@ -2,7 +2,9 @@
 using System.Collections.ObjectModel;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
+using Network;
 using UserControls.Core.Base;
+using UserControls.Core.Objects.NeuralNetWizard;
 
 namespace UserControls.Models.NeuralNetWizard
 {
@@ -21,7 +23,26 @@ namespace UserControls.Models.NeuralNetWizard
             {
                 NetworkTemplates.Add(new NeuralNetWizardNetworkTemplateDataViewModel(dto, NetworkTemplates.Count, OnDelete, OnModify));
             }
+
+            neuralNetWizardSettingsViewModel.NetworkTemplateAdded += OnNetworkTemplateAdded;
         }
+
+        private void OnNetworkTemplateAdded(object? sender, NetworkTemplateSavedEventArgs e)
+        {
+            if(e.IsInserted)
+                NetworkTemplates.Add(new NeuralNetWizardNetworkTemplateDataViewModel(e.Template, NetworkTemplates.Count, OnDelete, OnModify));
+            else if (e.IsModified)
+            {
+                foreach (NeuralNetWizardNetworkTemplateDataViewModel data in NetworkTemplates)
+                {
+                    if (data.Id != e.Template.Id) 
+                        continue;
+                    data.Replace(e.Template);
+                    break;
+                }
+            }
+        }
+
 
         private void OnModify(NetworkTemplateDto dto)
         {
@@ -30,7 +51,7 @@ namespace UserControls.Models.NeuralNetWizard
 
         private void OnDelete(Guid id, int index)
         {
-            NetworkTemplateAccess nta = new NetworkTemplateAccess();
+            NetworkTemplateAccess nta = new();
             nta.DeleteById(id);
             NetworkTemplates.RemoveAt(index);
         }

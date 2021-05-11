@@ -19,8 +19,8 @@
             </TextBox.Text>
         </TextBox>
 
-        <ComboBox  SelectedIndex="0" SelectedItem="{Binding Path=SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}" ></ComboBox>
-
+        <ComboBox  SelectedItem="{Binding Path=SelectedActivationFunctionType, Mode=TwoWay}" 
+                   ItemsSource="{Binding ActivationFunctionTypes}" />
         <Button  Content="Remove" Command="{Binding Remove}"/>
     </StackPanel>
 </UserControl>

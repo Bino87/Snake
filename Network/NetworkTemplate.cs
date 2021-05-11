@@ -108,6 +108,7 @@ namespace Network
         {
             return new()
             {
+                Id = Id,
                 Name = Name,
                 Layers = Layers,
                 WeightsCount = WeightsCount,

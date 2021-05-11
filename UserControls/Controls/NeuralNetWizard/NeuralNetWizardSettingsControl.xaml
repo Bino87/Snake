@@ -8,55 +8,52 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance neuralNetWizard:NeuralNetWizardSettingsViewModel}">
-   <GroupBox Header="Settings">
-       <GroupBox.Resources>
-           
-       </GroupBox.Resources>
-       <StackPanel Orientation="Vertical" VerticalAlignment="Top">
-                <GroupBox >
-                    <GroupBox.Header>
-                        <CheckBox Content="Override Name" IsChecked="{Binding OverrideName}"/>
-                    </GroupBox.Header>
-
+    <GroupBox Header="Settings">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+            <GroupBox >
+                <GroupBox.Header>
+                    <CheckBox Content="Override Name" IsChecked="{Binding OverrideName}"/>
+                </GroupBox.Header>
                 <TextBox IsEnabled="{Binding OverrideName}"  Text="{Binding Path=Name}"/>
-                </GroupBox>
+            </GroupBox>
 
-                <GroupBox Header="Input">
+            <GroupBox Header="Input">
                 <TextBox MinWidth="50" HorizontalAlignment="Stretch" >
+                    <TextBox.Text>
+                        <Binding Path="NumberOfInputs" UpdateSourceTrigger="PropertyChanged" >
+                            <Binding.ValidationRules>
+                                <validators:NeuralNetWizardNodeCountValidator/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </GroupBox>
+            <GroupBox Header="Hidden Layers">
+                <StackPanel Orientation="Vertical">
+                    <ListView ItemsSource="{Binding HiddenLayers}"/>
+                    <Button  Content="Add Layer" HorizontalAlignment="Right" Command="{Binding  AddLayer}"></Button>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Output" >
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <TextBox  MinWidth="50" HorizontalAlignment="Stretch" >
                         <TextBox.Text>
-                            <Binding Path="NumberOfInputs" UpdateSourceTrigger="PropertyChanged" >
+                            <Binding Path="NumberOfOutputs" UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
                                     <validators:NeuralNetWizardNodeCountValidator/>
                                 </Binding.ValidationRules>
-
                             </Binding>
                         </TextBox.Text>
                     </TextBox>
-                </GroupBox>
-                <GroupBox Header="Hidden Layers">
-                    <StackPanel Orientation="Vertical">
-                        <ListView ItemsSource="{Binding HiddenLayers}"/>
-                        <Button  Content="Add Layer" HorizontalAlignment="Right" Command="{Binding  AddLayer}"></Button>
-                    </StackPanel>
-                </GroupBox>
-
-                <GroupBox Header="Output" >
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                        <TextBox  MinWidth="50" HorizontalAlignment="Stretch" >
-                            <TextBox.Text>
-                            <Binding Path="NumberOfOutputs" UpdateSourceTrigger="PropertyChanged" >
-                                    <Binding.ValidationRules>
-                                        <validators:NeuralNetWizardNodeCountValidator/>
-                                    </Binding.ValidationRules>
-
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>
-                        <ComboBox HorizontalAlignment="Right" SelectedIndex="0" SelectedItem="{Binding SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}"/>
-                    </StackPanel>
-                </GroupBox>
+                    <ComboBox HorizontalAlignment="Right" SelectedIndex="0" SelectedItem="{Binding SelectedActivationFunctionType}" ItemsSource="{Binding ActivationFunctionTypes}"/>
+                </StackPanel>
+            </GroupBox>
+            <StackPanel Orientation="Horizontal">
+                <Button HorizontalAlignment="Right" Content="New" Command="{Binding NewTemplate}"/>
                 <Button HorizontalAlignment="Right" Content="Preview" Command="{Binding Preview}"/>
                 <Button HorizontalAlignment="Right" Content="Save Template" Command="{Binding Path=SaveToDataBase}"/>
             </StackPanel>
-        </GroupBox>
+        </StackPanel>
+    </GroupBox>
 </UserControl>

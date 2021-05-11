@@ -33,9 +33,10 @@ namespace UserControls.Models.NeuralNetDisplay
         public void Initialize(NetworkTemplate networkTemplate)
         {
             Clear();
-            _lineValueProviders = new PrimitiveShapeValueProvider[networkTemplate.Layers][];
-            _circleValueProviders = new PrimitiveShapeValueProvider[networkTemplate.Layers + 1][];
             NetworkTemplate = networkTemplate;
+            _lineValueProviders = new PrimitiveShapeValueProvider[NetworkTemplate.Layers][];
+            _circleValueProviders = new PrimitiveShapeValueProvider[NetworkTemplate.Layers + 1][];
+
             CreateConnections();
         }
 
@@ -124,6 +125,7 @@ namespace UserControls.Models.NeuralNetDisplay
 
         public void Clear()
         {
+            NetworkTemplate = null;
             DisplayItems.Clear();
         }
     }

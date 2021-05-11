@@ -8,6 +8,6 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance neuralNetWizard:NeuralNetWizardNetworkTemplateListViewModel}">
     <Grid>
-            <ListView ItemsSource="{Binding Path=NetworkTemplates}" />
+            <ListView MinWidth="100" ItemsSource="{Binding Path=NetworkTemplates}" />
     </Grid>
 </UserControl>

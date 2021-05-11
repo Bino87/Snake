@@ -9,6 +9,7 @@ using Network;
 using Network.Enums;
 using UserControls.Core.Base;
 using UserControls.Core.Commands.Base;
+using UserControls.Core.Objects.NeuralNetWizard;
 using UserControls.Models.NeuralNetDisplay;
 
 namespace UserControls.Models.NeuralNetWizard
@@ -22,6 +23,7 @@ namespace UserControls.Models.NeuralNetWizard
         private string _name;
         private bool _overrideName;
         private readonly NeuralNetDisplayViewModel _nnDisplay;
+        public EventHandler<NetworkTemplateSavedEventArgs> NetworkTemplateAdded { get; set; }
 
 
         public bool OverrideName
@@ -74,6 +76,12 @@ namespace UserControls.Models.NeuralNetWizard
             set;
         }
 
+        public RelayCommand NewTemplate
+        {
+            get;
+            set;
+        }
+
         public RelayCommand SaveToDataBase
         {
             get;
@@ -85,10 +93,28 @@ namespace UserControls.Models.NeuralNetWizard
             _nnDisplay = nnDisplay;
             HiddenLayers = new ObservableCollection<HiddenLayerDataViewModel>();
             AddLayer = new RelayCommand(OnAddLayer);
-            Preview = new RelayCommand(() => OnPreview(_nnDisplay?.NetworkTemplate?.Id));
+            Preview = new RelayCommand(OnPreview);
+            NewTemplate = new RelayCommand(OnNewTemplate);
             SaveToDataBase = new RelayCommand(OnSaveToDataBase);
             PropertyChanged += OnPropertyChanged;
             HiddenLayers.CollectionChanged += HiddenLayersOnCollectionChanged;
+            TryGenerateName();
+        }
+
+        private void OnPreview()
+        {
+            OnPreview(_nnDisplay?.NetworkTemplate?.Id);
+        }
+
+        private void OnNewTemplate()
+        {
+            _nnDisplay.Clear();
+            HiddenLayers.Clear();
+
+            NumberOfInputs = 1;
+            NumberOfOutputs = 1;
+            SelectedActivationFunctionType = ActivationFunctionType.BinaryStep;
+            OverrideName = false;
             TryGenerateName();
         }
 
@@ -107,14 +133,26 @@ namespace UserControls.Models.NeuralNetWizard
 
         private void OnSaveToDataBase()
         {
-            OnPreview(_nnDisplay?.NetworkTemplate?.Id);
-
             NetworkTemplateAccess nta = new();
 
+            NetworkTemplateSavedEventArgs eventArgs;
 
-            if (_nnDisplay?.NetworkTemplate?.Id == default)
-                _nnDisplay.NetworkTemplate.Id = nta.Insert(_nnDisplay.NetworkTemplate.ToDataTransferObject());
-            else nta.Update(_nnDisplay.NetworkTemplate.ToDataTransferObject());
+            if (_nnDisplay.NetworkTemplate?.Id == default)
+            {
+                OnPreview(_nnDisplay?.NetworkTemplate?.Id);
+                NetworkTemplateDto dto = _nnDisplay.NetworkTemplate.ToDataTransferObject();
+                _nnDisplay.NetworkTemplate.Id = nta.Insert(dto);
+                eventArgs = new NetworkTemplateSavedEventArgs(dto, false, true);
+            }
+            else
+            {
+                OnPreview(_nnDisplay?.NetworkTemplate?.Id);
+                NetworkTemplateDto dto = _nnDisplay.NetworkTemplate.ToDataTransferObject();
+                nta.Update(dto);
+                eventArgs = new NetworkTemplateSavedEventArgs(dto, true, false);
+            }
+
+            NetworkTemplateAdded?.Invoke(this, eventArgs);
         }
 
         private void OnPreview(Guid? id)

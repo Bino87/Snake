@@ -5,23 +5,15 @@ using UserControls.Core.Commands.Base;
 
 namespace UserControls.Models.NeuralNetWizard
 {
+    public record NetworkTemplateInfo(int Nodes, string ActivationFunction, string Layer);
+
     public class NeuralNetWizardNetworkTemplateDataViewModel : Observable
     {
-        private readonly NetworkTemplateDto _networkTemplateDto;
+        private NetworkTemplateDto _networkTemplateDto;
 
-        public int[] BiasCount { get; set; }
+        public NetworkTemplateInfo[] NetworkTemplateInfos { get; private set; }
 
-        public int[] WeightsCount { get; set; }
-
-        public string[] ActivationFunctions { get; set; }
-
-        public int Layers { get; set; }
-
-        public int OutputCount { get; set; }
-
-        public int InputCount { get; set; }
-
-        public int[] LayerSetup { get; set; }
+        public Guid Id => _networkTemplateDto.Id;
         public string Name => _networkTemplateDto.Name;
 
         public RelayCommand Delete { get; set; }
@@ -30,10 +22,36 @@ namespace UserControls.Models.NeuralNetWizard
         public NeuralNetWizardNetworkTemplateDataViewModel(NetworkTemplateDto networkTemplateDto, int index, Action<Guid, int> onDelete, Action<NetworkTemplateDto> onModify)
         {
             _networkTemplateDto = networkTemplateDto;
+
+            SetNetworkInfo(networkTemplateDto);
+
             Delete = new RelayCommand(() => onDelete(_networkTemplateDto.Id, index));
             Modify = new RelayCommand(() => onModify(_networkTemplateDto));
         }
 
+        private void SetNetworkInfo(NetworkTemplateDto networkTemplateDto)
+        {
+            NetworkTemplateInfos = new NetworkTemplateInfo[networkTemplateDto.LayerSetup.Length];
+
+            for (int i = 0; i < networkTemplateDto.LayerSetup.Length; i++)
+            {
+                if (i is 0)
+                    NetworkTemplateInfos[i] = new NetworkTemplateInfo(networkTemplateDto.LayerSetup[i], "", "Input");
+                else
+                    NetworkTemplateInfos[i] = new NetworkTemplateInfo(networkTemplateDto.LayerSetup[i],
+                        networkTemplateDto.ActivationFunctions[i - 1],
+                        i < networkTemplateDto.LayerSetup.Length - 1 ? "Hidden" : "Output");
+            }
+        }
+
+        public void Replace(NetworkTemplateDto networkTemplateDto)
+        {
+            _networkTemplateDto = networkTemplateDto;
+            SetNetworkInfo(networkTemplateDto);
+            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(NetworkTemplateInfos));
+
+        }
 
     }
 }
