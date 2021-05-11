@@ -20,23 +20,23 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="00" FontWeight="Bold" Text="Generation:"/>
         <TextBlock Grid.Column="0" Grid.Row="01" FontWeight="Bold" Text="Individual:"/>
@@ -59,7 +59,8 @@
         <TextBlock Grid.Column="1" Grid.Row="02" Text="{Binding Moves, Mode=OneWay}" />
         <TextBlock Grid.Column="1" Grid.Row="03" Text="{Binding Points, Mode=OneWay}" />
         <ComboBox Grid.Column="1"  Grid.Row="04" DisplayMemberPath="Name" ItemsSource="{Binding Presets, Mode=OneTime}" SelectedItem="{Binding Preset, Mode=TwoWay}" />
-        <ComboBox Grid.Column="1"  Grid.Row="05" ItemsSource="{Binding MutationTechniques, Mode=OneTime}" SelectedItem="{Binding MutationTechnique, Mode=TwoWay}" />
+        <!--<ComboBox Grid.Column="1"  Grid.Row="05" ItemsSource="{Binding MutationTechniques, Mode=OneTime}" SelectedItem="{Binding MutationTechnique, Mode=TwoWay}" />-->
+        <ComboBox Grid.Column="1"  Grid.Row="05" DisplayMemberPath="Name" ItemsSource="{Binding Path=Templates}" SelectedItem="{Binding SelectedTemplate}" />
         <TextBox Grid.Column="1"   Grid.Row="06" Text="{Binding MutationChance, Mode=TwoWay}" />
         <TextBox Grid.Column="1"   Grid.Row="07" Text="{Binding MutationRate, Mode=TwoWay}" />
         <TextBox Grid.Column="1"   Grid.Row="08" Text="{Binding UpdateDelay, Mode=TwoWay}" />

@@ -19,11 +19,11 @@ namespace UserControls.Models.SimulationRunner
         private double _min = double.MaxValue;
         private double _max = double.MinValue;
 
-        public ObservableCollection<ProgressGraphLine> DataSource { get; set; }
+        public ObservableCollection<ProgressGraphLineViewModel> DataSource { get; set; }
 
         public ProgressGraphViewModel()
         {
-            DataSource = new ObservableCollection<ProgressGraphLine>();
+            DataSource = new ObservableCollection<ProgressGraphLineViewModel>();
             _results = new List<double>();
         }
 
@@ -45,7 +45,7 @@ namespace UserControls.Models.SimulationRunner
                     double y1 = Cons.cProgressGraphHeight - _results[x].InverseLerp(_min, _max) * Cons.cProgressGraphHeight;
                     double y2 = Cons.cProgressGraphHeight - _results[i].InverseLerp(_min, _max) * Cons.cProgressGraphHeight;
 
-                    ProgressGraphLine pgl = new(x1, x2, y1, y2);
+                    ProgressGraphLineViewModel pgl = new(x1, x2, y1, y2);
                     DataSource.Add(pgl);
                 }
             }

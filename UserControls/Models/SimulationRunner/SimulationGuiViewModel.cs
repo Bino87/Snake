@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Commons.Extensions;
+using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataAccessors.SimulationGui;
+using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using DataAccessLibrary.DataTransferObjects.SimulationGuiDTOs;
+using Network;
 using Simulation.Enums;
 using Simulation.Interfaces;
 using UserControls.Core.Base;
@@ -102,11 +105,14 @@ namespace UserControls.Models.SimulationRunner
         }
 
 
+        public ObservableCollection<NetworkTemplate> Templates { get; set; }
         public ObservableCollection<SimulationGuiPreset> Presets
         {
             get;
             set;
         }
+
+        public NetworkTemplate SelectedTemplate { get; set; }
 
         public SimulationGuiPreset Preset
         {
@@ -205,6 +211,15 @@ namespace UserControls.Models.SimulationRunner
                     MapSize = presetDto.MapSize,
                     Id = presetDto.Id
                 });
+            }
+
+            NetworkTemplateAccess nta = new();
+            NetworkTemplateDto[] nts = nta.GetAll();
+            Templates = new ObservableCollection<NetworkTemplate>();
+
+            foreach (NetworkTemplateDto dto in nts)
+            {
+                Templates.Add(new NetworkTemplate(dto));
             }
 
             Run = startSim;

@@ -5,15 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:models="clr-namespace:UserControls.Models"
              xmlns:constants="clr-namespace:UserControls.Constants"
-             xmlns:neuralNetDisplay="clr-namespace:UserControls.Core.Objects.NeuralNetDisplay"
              xmlns:simulationRunner="clr-namespace:UserControls.Models.SimulationRunner"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance simulationRunner:ProgressGraphViewModel}">
     <Grid>
         <ItemsControl ItemsSource="{Binding Path=DataSource}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="neuralNetDisplay:ProgressGraphLine">
+            <!--<ItemsControl.ItemTemplate>
+                <DataTemplate DataType="neuralNetDisplay:ProgressGraphLineViewModel">
                     <Line Stroke="Blue" StrokeThickness="1.5"
                           X1="{Binding X1}"
                           X2="{Binding X2}"
@@ -21,7 +20,7 @@
                           Y2="{Binding Y2}"
                     />
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
+            </ItemsControl.ItemTemplate>-->
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="Black" Width="{x:Static constants:Cons.cProgressGraphWidth}" Height="{x:Static constants:Cons.cProgressGraphHeight}"/>

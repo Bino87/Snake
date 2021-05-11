@@ -22,4 +22,8 @@
     <DataTemplate DataType="{x:Type neuralNetWizard:NeuralNetWizardNetworkTemplateDataViewModel}">
         <neuralNetWizard1:NeuralNetWizardNetworkTemplateDataControl/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type simRunnerModel:ProgressGraphLineViewModel}">
+        <simulationRunner:ProgressGraphLineControl/>
+    </DataTemplate>
 </ResourceDictionary>

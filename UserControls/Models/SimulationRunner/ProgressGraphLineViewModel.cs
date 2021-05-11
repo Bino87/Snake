@@ -1,8 +1,8 @@
 ﻿using UserControls.Core.Base;
 
-namespace UserControls.Core.Objects.NeuralNetDisplay
+namespace UserControls.Models.SimulationRunner
 {
-    public class ProgressGraphLine : Observable
+    public class ProgressGraphLineViewModel : Observable
     {
         private double _x1, _x2, _y1, _y2;
         public double X1
@@ -29,7 +29,7 @@ namespace UserControls.Core.Objects.NeuralNetDisplay
             set => SetField(ref _y2, value);
         }
 
-        public ProgressGraphLine(double x1, double x2, double y1, double y2)
+        public ProgressGraphLineViewModel(double x1, double x2, double y1, double y2)
         {
             _x1 = x1;
             _x2 = x2;

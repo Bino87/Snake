@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Network;
 using Network.Enums;
 using Simulation;
@@ -27,9 +28,8 @@ namespace UserControls.Models.SimulationRunner
             SimulationGuiViewModel = new SimulationGuiViewModel(new StartSimulationCommand(StartSimulation, this), new StopSimulationCommand(Abort, this));
             ProgressGraph = new ProgressGraphViewModel();
 
-            NetworkTemplate networkTemplate = null;
-            NeuralNetDisplay = new NeuralNetDisplayViewModel(networkTemplate);
-            _mm = new MapManager(SimulationGuiViewModel, networkTemplate, new SimulationUpdateManager(NeuralNetDisplay, SimulationGuiViewModel, SnakeMapViewModel, ProgressGraph));
+            NeuralNetDisplay = new NeuralNetDisplayViewModel();
+            _mm = new MapManager(SimulationGuiViewModel, new SimulationUpdateManager(NeuralNetDisplay, SimulationGuiViewModel, SnakeMapViewModel, ProgressGraph));
         }
 
         public override void Abort()
@@ -41,6 +41,15 @@ namespace UserControls.Models.SimulationRunner
         {
             if (IsBusy)
                 return;
+
+            if (SimulationGuiViewModel.SelectedTemplate is null)
+            {
+                MessageBox.Show("No Network Template is selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            _mm.SetTemplate(SimulationGuiViewModel.SelectedTemplate);
+            NeuralNetDisplay.Initialize(SimulationGuiViewModel.SelectedTemplate);
 
             IsBusy = true;
 

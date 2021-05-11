@@ -25,7 +25,6 @@ namespace UserControls.Models.NeuralNetWizard
         private readonly NeuralNetDisplayViewModel _nnDisplay;
         public EventHandler<NetworkTemplateSavedEventArgs> NetworkTemplateAdded { get; set; }
 
-
         public bool OverrideName
         {
             get => _overrideName;
@@ -117,7 +116,6 @@ namespace UserControls.Models.NeuralNetWizard
             OverrideName = false;
             TryGenerateName();
         }
-
 
         private void HiddenLayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
@@ -220,8 +218,6 @@ namespace UserControls.Models.NeuralNetWizard
             }
 
             OnPreview(dto.Id);
-
-
         }
     }
 }
