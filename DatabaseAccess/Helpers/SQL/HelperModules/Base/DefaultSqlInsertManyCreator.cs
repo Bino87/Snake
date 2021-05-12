@@ -3,11 +3,11 @@ using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers.SQL.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 {
-    internal class SqlInsertManyCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
+    internal class DefaultSqlInsertManyCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
     {
-        public SqlInsertManyCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.INSERT_MANY)
+        public DefaultSqlInsertManyCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.INSERT_MANY)
         {
         }
 

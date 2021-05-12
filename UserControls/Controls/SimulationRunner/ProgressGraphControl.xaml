@@ -11,22 +11,11 @@
              d:DataContext="{d:DesignInstance simulationRunner:ProgressGraphViewModel}">
     <Grid>
         <ItemsControl ItemsSource="{Binding Path=DataSource}">
-            <!--<ItemsControl.ItemTemplate>
-                <DataTemplate DataType="neuralNetDisplay:ProgressGraphLineViewModel">
-                    <Line Stroke="Blue" StrokeThickness="1.5"
-                          X1="{Binding X1}"
-                          X2="{Binding X2}"
-                          Y1="{Binding Y1}"
-                          Y2="{Binding Y2}"
-                    />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>-->
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="Black" Width="{x:Static constants:Cons.cProgressGraphWidth}" Height="{x:Static constants:Cons.cProgressGraphHeight}"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-
         </ItemsControl>
     </Grid>
 </UserControl>

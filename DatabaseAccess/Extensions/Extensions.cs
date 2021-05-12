@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Text;
 using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
-using DataAccessLibrary.Helpers.SQL.HelperModules;
+using DataAccessLibrary.Helpers.SQL.HelperModules.Base;
 using DataAccessLibrary.Internal.MongoDB;
-using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
-using DataAccessLibrary.Internal.SQL.Enums;
 using MongoDB.Driver;
 
 namespace DataAccessLibrary.Extensions

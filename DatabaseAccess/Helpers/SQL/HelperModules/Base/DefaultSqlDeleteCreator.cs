@@ -3,11 +3,11 @@ using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers.SQL.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 {
-    internal class SqlDeleteCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
+    internal class DefaultSqlDeleteCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
     {
-        public SqlDeleteCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.DELETE_BY_ID)
+        public DefaultSqlDeleteCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.DELETE_BY_ID)
         {
         }
 

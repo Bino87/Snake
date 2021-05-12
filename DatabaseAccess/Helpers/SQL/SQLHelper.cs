@@ -7,7 +7,8 @@ using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
-using DataAccessLibrary.Helpers.SQL.HelperModules;
+using DataAccessLibrary.Helpers.SQL.HelperModules.Base;
+using DataAccessLibrary.Helpers.SQL.HelperModules.CreatorProviders;
 using DataAccessLibrary.Internal.Enums;
 using DataAccessLibrary.Internal.SQL.Enums;
 
@@ -98,15 +99,27 @@ namespace DataAccessLibrary.Helpers.SQL
 
         private static IEnumerable<SqlCreator<T>> GetFilesData<T>(Table table, SqlDatabaseAccessAbstract<T> access, T item) where T : SqlDataTransferObject
         {
-            yield return new SqlTypeCreator<T>(access, item, table);
-            yield return new SqlGetAllCreator<T>(access, item, table);
-            yield return new SqlGetByIdCreator<T>(access, item, table);
-            yield return new SqlInsertCreator<T>(access, item, table);
-            yield return new SqlUpdateCreator<T>(access, item, table);
-            yield return new SqlUpsertCreator<T>(access, item, table);
-            yield return new SqlDeleteCreator<T>(access, item, table);
-            yield return new SqlInsertManyCreator<T>(access, item, table);
-            yield return new SqlUpdateManyCreator<T>(access, item, table);
+
+            ISqlCreatorProvider<T> provider = GetProvider(table, access, item);
+
+            yield return provider.Type(); 
+            yield return provider.GetAll();
+            yield return provider.GetById();
+            yield return provider.Insert();
+            yield return provider.Update();
+            yield return provider.Upsert();
+            yield return provider.Delete();
+            yield return provider.InsertMany();
+            yield return provider.UpdateMany();
         }
+
+        private static ISqlCreatorProvider<T> GetProvider<T>(Table table, SqlDatabaseAccessAbstract<T> access, T item) where T : SqlDataTransferObject  => table switch 
+        {
+            
+            Table.NETWORK_BIAS => new WeightAndBiasSqlCreatorProvider<T>(table, access, item),
+            Table.NETWORK_WEIGHT=> new WeightAndBiasSqlCreatorProvider<T>(table, access, item),
+            _ => new SqlCreatorProvider<T>(table, access, item)
+        };
+
     }
 }

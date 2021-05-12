@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers.SQL.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 {
     internal record CreatorResult(string Data, string Name);
     internal abstract class SqlCreator<T> where T : SqlDataTransferObject
@@ -37,9 +36,9 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
 
         protected abstract CreatorResult Return();
 
-        protected string GetParametrized(bool includeType = true) => string.Join("," + Environment.NewLine, GetParameterValues(includeType));
+        protected string GetParametrized() => string.Join("," + Environment.NewLine, GetParameterValues());
 
-        protected IEnumerable<string> GetParameterValues(bool includeType)
+        protected IEnumerable<string> GetParameterValues()
         {
             SqlCallParameters p = _access.CreateDefaultParameters(_item.ParametersCount, Actions.DELETE_BY_ID);
             SqlCallParameters parameters = _item.CreateParameters(p);

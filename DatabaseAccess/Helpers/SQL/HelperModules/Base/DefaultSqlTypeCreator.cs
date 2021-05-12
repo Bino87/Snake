@@ -4,11 +4,11 @@ using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers.SQL.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 {
-    internal class SqlTypeCreator<T> : SqlCreator<T> where T : SqlDataTransferObject
+    internal class DefaultSqlTypeCreator<T> : SqlCreator<T> where T : SqlDataTransferObject
     {
-        public SqlTypeCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table)
+        public DefaultSqlTypeCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table)
         {
         }
 

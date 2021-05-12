@@ -1,24 +1,23 @@
-﻿using System.Collections.Generic;
+﻿
+
+using System.Collections.Generic;
 using DataAccessLibrary.DataAccessors;
 using DataAccessLibrary.DataTransferObjects;
 using DataAccessLibrary.Internal.ParameterNames;
 using DataAccessLibrary.Internal.SQL;
 using DataAccessLibrary.Internal.SQL.Enums;
 
-namespace DataAccessLibrary.Helpers.SQL.HelperModules
+namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 {
-    internal class SqlUpsertCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
+    internal class DefaultSqlUpdateCreator<T> : SqlStoredProcedureCreator<T> where T : SqlDataTransferObject
     {
-        public SqlUpsertCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.UPSERT)
+        public DefaultSqlUpdateCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table) : base(access, item, table, Actions.UPDATE)
         {
         }
 
         protected override void CreateBody()
         {
             _sb.AppendLine("AS");
-            _sb.AppendLine("BEGIN");
-            _sb.AppendLine($"IF EXISTS(SELECT * FROM {_table} WHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId})");
-            _sb.AppendLine("BEGIN");
 
             IEnumerable<string> GetStuff()
             {
@@ -43,18 +42,6 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules
             _sb.AppendLine($"\tWHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId}");
             _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
             _sb.AppendLine("\tRETURN @ID");
-
-            _sb.AppendLine("END");
-            _sb.AppendLine("ELSE");
-            _sb.AppendLine("BEGIN");
-
-            _sb.AppendLine($"\tINSERT INTO {_table} VALUES({GetParameterNames(false, "@")})");
-            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            _sb.AppendLine("\tRETURN @ID");
-
-            _sb.AppendLine("END");
-
-            _sb.AppendLine("END");
         }
 
         protected override void CreateParameters()

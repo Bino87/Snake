@@ -16,6 +16,7 @@ namespace DataAccessLibrary.Internal.SQL.Enums
         SIMULATION_GUI_PRESET = 5,
         [TableAttribute(DatabaseType.MongoDB)]
         NETWORK_TEMPLATE = 6,
+        NETWORK_VALUE = 7,
     }
 
     internal  class TableAttribute : Attribute

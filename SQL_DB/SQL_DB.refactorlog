@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="e6ba6023-70c9-44ab-820e-6c06e9507bf4" ChangeDateTime="05/12/2021 07:57:54">
+    <Property Name="ElementName" Value="[dbo].[NETWORK_BIAS].[VALUE]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[NETWORK_BIAS]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VALUE_ID" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="91713f26-ea36-460a-8447-5c16a3484b42" ChangeDateTime="05/12/2021 07:58:07">
+    <Property Name="ElementName" Value="[dbo].[NETWORK_WEIGHT].[VALUE]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[NETWORK_WEIGHT]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VALUE_ID" />
+  </Operation>
+</Operations>
