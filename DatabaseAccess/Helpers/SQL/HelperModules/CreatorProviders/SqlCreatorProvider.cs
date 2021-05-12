@@ -5,18 +5,6 @@ using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.Helpers.SQL.HelperModules.CreatorProviders
 {
-    internal class WeightAndBiasSqlCreatorProvider<T> : SqlCreatorProvider<T> where T : SqlDataTransferObject
-    {
-        public WeightAndBiasSqlCreatorProvider(Table table, SqlDatabaseAccessAbstract<T> access, T item) : base(table, access, item)
-        {
-        }
-
-        public override SqlCreator<T> Insert()
-        {
-            return new WeightAndBiasSqlInsertCreator<T>(_access, _item, _table);
-        }
-    }
-
     internal class SqlCreatorProvider<T> : ISqlCreatorProvider<T> where T : SqlDataTransferObject
     {
         protected readonly Table _table;

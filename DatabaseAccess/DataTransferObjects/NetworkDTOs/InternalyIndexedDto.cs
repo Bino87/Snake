@@ -11,7 +11,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
     public class InternalyIndexedDto : SqlDataTransferObject
     {
-        public int InternalIndex { get; }
+        public int InternalIndex { get; set; }
         internal override int ParametersCount => base.ParametersCount + 1;
 
         internal InternalyIndexedDto() : base()

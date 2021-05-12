@@ -13,6 +13,7 @@
             internal const string cNetworkId = "NETWORK_ID";
             internal const string cNumberOfNodes = "NUMBER_OF_NODES";
             internal const string cDataTable = "DATA_TABLE";
+            internal const string cNewId = "NEW_ID";
         }
 
         internal static class MongoDb

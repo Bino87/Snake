@@ -15,7 +15,7 @@ namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 
         internal override int ParametersCount => base.ParametersCount + 2;
 
-        internal NetworkBiasDto() : base()
+        public NetworkBiasDto() : base()
         {
 
         }

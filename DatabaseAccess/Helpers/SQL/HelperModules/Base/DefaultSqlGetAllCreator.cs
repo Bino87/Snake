@@ -18,7 +18,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 
         protected override void CreateParameters()
         {
-            
+
         }
     }
 }
