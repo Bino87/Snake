@@ -18,12 +18,22 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 
         protected override void CreateName()
         {
-            _sb.AppendLine($"CREATE PROCEDURE [dbo].[{_table}_{_action}]");
+            AppendLine($"CREATE PROCEDURE [dbo].[{_table}_{_action}]");
             CreateParameters();
         }
 
+        protected sealed override void CreateBody()
+        {
+            AppendLine("AS");
+            AppendLine("BEGIN");
+            CreateStoredProcedureBody();
+            AppendLine("END");
+        }
+
+        protected abstract void CreateStoredProcedureBody();
+
         protected abstract void CreateParameters();
-        protected override CreatorResult Return() => new(_sb.ToString(), string.Join("_", _table, _action));
+        protected override CreatorResult Return() => new(ToString(), string.Join("_", _table, _action));
 
         protected string GetParameterNames(bool includeId, string prefix) => GetParameterNames(includeId, prefix, "");
 

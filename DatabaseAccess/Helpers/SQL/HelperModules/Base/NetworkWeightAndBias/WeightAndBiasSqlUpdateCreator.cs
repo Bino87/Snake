@@ -11,34 +11,36 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base.NetworkWeightAndBias
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
             const string id = ParameterNames.SQL.cId;
             const string value = ParameterNames.SQL.cValue;
             const string valueId = ParameterNames.SQL.cValueId;
             const string newId = ParameterNames.SQL.cNewId;
 
-            _sb.AppendLine($"DECLARE @{newId} INT;");
 
-            _sb.AppendLine($"IF NOT EXISTS(SELECT TOP(1) {id} ");
-            _sb.AppendLine($"FROM) {Table.NETWORK_VALUE} V");
-            _sb.AppendLine($"WHERE V.{value} = {value})");
-            _sb.AppendLine("BEGIN");
 
-            _sb.AppendLine($"INSERT INTO {Table.NETWORK_VALUE} ({value})");
-            _sb.AppendLine($"VALUES(@{value})");
-            _sb.AppendLine("SET @NEW_ID = SCOPE_IDENTITY()");
-            _sb.AppendLine("END");
-            _sb.AppendLine("ELSE");
-            _sb.AppendLine("BEGIN");
-            _sb.AppendLine($"SET @{newId} = (SELECT TOP(1) {id} FROM {Table.NETWORK_VALUE} V WHERE V.{value} = @{value})");
-            _sb.AppendLine("END");
+            AppendLine($"DECLARE @{newId} INT;");
 
-            _sb.AppendLine($"UPDATE {_table} SET");
-            _sb.AppendLine($"{valueId} = @{newId}");
-            _sb.AppendLine($"WHERE {id} = @{id}");
-            _sb.AppendLine($"SET @{id} = SCOPE_IDENTITY();");
-            _sb.AppendLine($"RETURN @{id}");
+            AppendLine($"IF NOT EXISTS(SELECT TOP(1) V.{id} ");
+            AppendLine($"FROM {Table.NETWORK_VALUES} V");
+            AppendLine($"WHERE V.{value} = {value})");
+            AppendLine("BEGIN");
+
+            AppendLine($"INSERT INTO {Table.NETWORK_VALUES} ({value})");
+            AppendLine($"VALUES(@{value})");
+            AppendLine("SET @NEW_ID = SCOPE_IDENTITY()");
+            AppendLine("END");
+            AppendLine("ELSE");
+            AppendLine("BEGIN");
+            AppendLine($"SET @{newId} = (SELECT TOP(1) {id} FROM {Table.NETWORK_VALUES} V WHERE V.{value} = @{value})");
+            AppendLine("END");
+
+            AppendLine($"UPDATE {_table} SET");
+            AppendLine($"{valueId} = @{newId}");
+            AppendLine($"WHERE {id} = @{id}");
+            AppendLine($"SET @{id} = SCOPE_IDENTITY();");
+            AppendLine($"RETURN @{id}");
         }
     }
 }

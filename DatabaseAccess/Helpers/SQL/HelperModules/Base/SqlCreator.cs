@@ -11,9 +11,9 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
     internal record CreatorResult(string Data, string Name);
     internal abstract class SqlCreator<T> where T : SqlDataTransferObject
     {
-        protected readonly StringBuilder _sb;
+        private readonly StringBuilder _sb;
         protected Table _table;
-        protected SqlDatabaseAccessAbstract<T>  _access;
+        protected SqlDatabaseAccessAbstract<T> _access;
         protected T _item;
         protected SqlCreator(SqlDatabaseAccessAbstract<T> access, T item, Table table)
         {
@@ -28,6 +28,21 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
             CreateName();
             CreateBody();
             return Return();
+        }
+
+        protected void AppendLine()
+        {
+            _sb.AppendLine();
+        }
+
+        protected void AppendLine(string str)
+        {
+            _sb.AppendLine(str);
+        }
+
+        public override string ToString()
+        {
+            return _sb.ToString();
         }
 
         protected abstract void CreateName();

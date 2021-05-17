@@ -15,22 +15,18 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
-            _sb.AppendLine("BEGIN");
+            AppendLine();
+            AppendLine("\tUPDATE AT");
+            AppendLine($"\tSET {string.Join(",", GetStuff())}");
+            AppendLine($"\tFROM {_table} tbl");
+            AppendLine($"\tINNER JOIN @{ParameterNames.SQL.cDataTable} dt");
+            AppendLine($"\t\tON tbl.ID = dt.ID");
+            AppendLine();
 
-            _sb.AppendLine();
-            _sb.AppendLine("\tUPDATE AT");
-            _sb.AppendLine($"\tSET {string.Join(",",GetStuff())}");
-            _sb.AppendLine($"\tFROM {_table} tbl");
-            _sb.AppendLine($"\tINNER JOIN @{ParameterNames.SQL.cDataTable} dt");
-            _sb.AppendLine($"\t\tON tbl.ID = dt.ID");
-            _sb.AppendLine();
-
-            _sb.AppendLine(";");
-            _sb.AppendLine("END");
-            _sb.AppendLine("RETURN 0");
+            AppendLine(";");
+            AppendLine("RETURN 0");
         }
 
         IEnumerable<string> GetStuff()
@@ -52,7 +48,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.SQL.cDataTable} [dbo].{_table}_TYPE READONLY");
+            AppendLine($"\t@{ParameterNames.SQL.cDataTable} [dbo].{_table}_TYPE READONLY");
         }
     }
 }

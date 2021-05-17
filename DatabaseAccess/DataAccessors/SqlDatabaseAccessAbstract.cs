@@ -190,12 +190,13 @@ namespace DataAccessLibrary.DataAccessors
                 };
                 cmd.Parameters.AddWithValue(ParameterNames.SQL.cDataTable, dataTablet);
 
-                DataTable result = new();
+                DataSet result = new();
 
                 using SqlDataAdapter adapter = new(cmd);
                 adapter.Fill(result);
 
-                return result;
+
+                return result.Tables[0];
             }
             catch (Exception e)
             {

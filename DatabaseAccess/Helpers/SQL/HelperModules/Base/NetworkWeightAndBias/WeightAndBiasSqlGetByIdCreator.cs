@@ -11,7 +11,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base.NetworkWeightAndBias
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
             const string id = ParameterNames.SQL.cId;
             const string internalIndex = ParameterNames.SQL.cInternalIndex;
@@ -21,11 +21,11 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base.NetworkWeightAndBias
             const string t1 = "A";
             const string t2 = "B";
 
-            _sb.AppendLine("AS");
-            _sb.AppendLine($"SELECT {t1}.{id},{t1}.{internalIndex},{t1}.{layerId},{t2}.{value}  FROM [dbo].{_table} {t1}");
-            _sb.AppendLine($"LEFT JOIN {Table.NETWORK_VALUE} {t2}");
-            _sb.AppendLine($"ON {t1}.{ParameterNames.SQL.cValueId} = {t2}.{ParameterNames.SQL.cId}");
-            _sb.AppendLine($"WHERE {t1}.{id} = @{id}");
+           
+            AppendLine($"SELECT {t1}.{id},{t1}.{internalIndex},{t1}.{layerId},{t2}.{value}  FROM [dbo].{_table} {t1}");
+            AppendLine($"LEFT JOIN {Table.NETWORK_VALUES} {t2}");
+            AppendLine($"ON {t1}.{ParameterNames.SQL.cValueId} = {t2}.{ParameterNames.SQL.cId}");
+            AppendLine($"WHERE {t1}.{id} = @{id}");
 
         }
     }

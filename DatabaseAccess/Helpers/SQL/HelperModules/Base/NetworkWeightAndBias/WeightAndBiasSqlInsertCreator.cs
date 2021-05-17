@@ -11,7 +11,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base.NetworkWeightAndBias
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
             const string value = ParameterNames.SQL.cValue;
             const string valueId = ParameterNames.SQL.cValueId;
@@ -19,12 +19,13 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base.NetworkWeightAndBias
             const string layerId = ParameterNames.SQL.cLayerID;
 
 
-            _sb.AppendLine($"DECLARE @{valueId} INT, @RETURN_VALUE INT");
-            _sb.AppendLine($"EXEC @{valueId} = [dbo].[dbo].[NETWORK_VALUE_TRY_INSERT] @{value} = @{value}");
-            _sb.AppendLine($"INSERT INTO {_table} ({internalIndex},{layerId},{valueId})");
-            _sb.AppendLine($"VALUES(@{internalIndex},@{layerId},@{valueId})");
+          
+            AppendLine($"DECLARE @{valueId} INT, @RETURN_VALUE INT");
+            AppendLine($"EXEC @{valueId} = [dbo].[NETWORK_VALUE_TRY_INSERT] @{value} = @{value}");
+            AppendLine($"INSERT INTO {_table} ({internalIndex},{layerId},{valueId})");
+            AppendLine($"VALUES(@{internalIndex},@{layerId},@{valueId})");
 
-            _sb.AppendLine("RETURN @RETURN_VALUE");
+            AppendLine("RETURN @RETURN_VALUE");
 
         }
 

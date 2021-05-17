@@ -11,16 +11,14 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
-
-            _sb.AppendLine($"\tDELETE FROM {_table} WHERE {ParameterNames.SQL.cId} = @{ParameterNames.SQL.cId}");
+            AppendLine($"\tDELETE FROM {_table} WHERE {ParameterNames.SQL.cId} = @{ParameterNames.SQL.cId}");
         }
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.SQL.cId} INT");
+            AppendLine($"\t@{ParameterNames.SQL.cId} INT");
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 
         protected override CreatorResult Return()
         {
-            return new(_sb.ToString(), string.Join("_", _table, "TYPE"));
+            return new(ToString(), string.Join("_", _table, "TYPE"));
         }
 
         protected override string GetValue(SqlCallParameter parameter)
@@ -24,16 +24,16 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
 
         protected override void CreateName()
         {
-            _sb.AppendLine($"CREATE TYPE {_table}_TYPE as TABLE");
+            AppendLine($"CREATE TYPE {_table}_TYPE as TABLE");
         }
 
         protected override void CreateBody()
         {
-            _sb.AppendLine("(");
+            AppendLine("(");
 
-            _sb.AppendLine(GetParametrized());
+            AppendLine(GetParametrized());
 
-            _sb.AppendLine(")");
+            AppendLine(")");
         }
 
     }

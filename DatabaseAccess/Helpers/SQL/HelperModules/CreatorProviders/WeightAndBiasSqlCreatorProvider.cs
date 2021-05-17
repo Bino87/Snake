@@ -22,6 +22,11 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.CreatorProviders
             return new WeightAndBiasSqlGetAllCreator<T>(_access, _item, _table);
         }
 
+        public override SqlCreator<T> InsertMany()
+        {
+            return new WeightAndBiasSqlInsertMany<T>(_access, _item, _table);
+        }
+
         public override SqlCreator<T> GetById()
         {
             return new WeightAndBiasSqlGetByIdCreator<T>(_access, _item, _table); 
@@ -30,6 +35,11 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.CreatorProviders
         public override SqlCreator<T> Update()
         {
             return new WeightAndBiasSqlUpdateCreator<T>(_access, _item, _table); 
+        }
+
+        public override SqlCreator<T> Upsert()
+        {
+            return new WeightAndBiasSqlUpsertCreator<T>(_access, _item, _table);
         }
     }
 }

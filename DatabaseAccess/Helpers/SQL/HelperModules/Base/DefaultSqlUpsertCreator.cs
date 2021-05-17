@@ -13,12 +13,11 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
-            _sb.AppendLine("BEGIN");
-            _sb.AppendLine($"IF EXISTS(SELECT * FROM {_table} WHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId})");
-            _sb.AppendLine("BEGIN");
+          
+            AppendLine($"IF EXISTS(SELECT * FROM {_table} WHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId})");
+            AppendLine("BEGIN");
 
             IEnumerable<string> GetStuff()
             {
@@ -36,30 +35,30 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
                 }
             }
 
-            _sb.AppendLine($"\tUPDATE {_table} SET ");
+            AppendLine($"\tUPDATE {_table} SET ");
 
-            _sb.AppendLine("\t" + string.Join(", ", GetStuff()));
+            AppendLine("\t" + string.Join(", ", GetStuff()));
 
-            _sb.AppendLine($"\tWHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId}");
-            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            _sb.AppendLine("\tRETURN @ID");
+            AppendLine($"\tWHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId}");
+            AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            AppendLine("\tRETURN @ID");
 
-            _sb.AppendLine("END");
-            _sb.AppendLine("ELSE");
-            _sb.AppendLine("BEGIN");
+            AppendLine("END");
+            AppendLine("ELSE");
+            AppendLine("BEGIN");
 
-            _sb.AppendLine($"\tINSERT INTO {_table} VALUES({GetParameterNames(false, "@")})");
-            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            _sb.AppendLine("\tRETURN @ID");
+            AppendLine($"\tINSERT INTO {_table} VALUES({GetParameterNames(false, "@")})");
+            AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            AppendLine("\tRETURN @ID");
 
-            _sb.AppendLine("END");
+            AppendLine("END");
 
-            _sb.AppendLine("END");
+           
         }
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine(GetParametrized());
+            AppendLine(GetParametrized());
         }
     }
 }

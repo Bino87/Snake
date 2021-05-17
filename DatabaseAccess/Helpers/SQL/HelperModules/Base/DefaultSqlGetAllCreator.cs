@@ -10,10 +10,9 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
-            _sb.AppendLine($"SELECT * FROM [dbo].{_table}");
+            AppendLine($"SELECT * FROM [dbo].{_table}");
         }
 
         protected override void CreateParameters()

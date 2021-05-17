@@ -6,6 +6,7 @@
         {
             internal const string cId = "ID";
             internal const string cValue = "VALUE";
+            internal const string cValues = "VALUES";
             internal const string cValueId = "VALUE_ID";
             internal const string cLayerID = "LAYER_ID";
             internal const string cInternalIndex = "INTERNAL_INDEX";

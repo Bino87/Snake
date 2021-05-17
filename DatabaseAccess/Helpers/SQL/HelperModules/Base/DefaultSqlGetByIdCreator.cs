@@ -12,18 +12,18 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
-            _sb.AppendLine($"\tSELECT * FROM [dbo].{_table}");
-            _sb.AppendLine("\tWHERE Id = @ID");
+            
+            AppendLine($"\tSELECT * FROM [dbo].{_table}");
+            AppendLine("\tWHERE Id = @ID");
 
-            _sb.AppendLine("RETURN 0");
+            
         }
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.SQL.cId} INT");
+            AppendLine($"\t@{ParameterNames.SQL.cId} INT");
         }
     }
 }

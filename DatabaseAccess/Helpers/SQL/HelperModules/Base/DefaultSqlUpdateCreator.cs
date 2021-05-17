@@ -15,9 +15,9 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
+          
 
             IEnumerable<string> GetStuff()
             {
@@ -35,18 +35,18 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
                 }
             }
 
-            _sb.AppendLine($"\tUPDATE {_table} SET ");
+            AppendLine($"\tUPDATE {_table} SET ");
 
-            _sb.AppendLine("\t" + string.Join(", ", GetStuff()));
+            AppendLine("\t" + string.Join(", ", GetStuff()));
 
-            _sb.AppendLine($"\tWHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId}");
-            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            _sb.AppendLine("\tRETURN @ID");
+            AppendLine($"\tWHERE {ParameterNames.SQL.cId}=@{ParameterNames.SQL.cId}");
+            AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            AppendLine("\tRETURN @ID");
         }
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine(GetParametrized());
+            AppendLine(GetParametrized());
         }
     }
 }

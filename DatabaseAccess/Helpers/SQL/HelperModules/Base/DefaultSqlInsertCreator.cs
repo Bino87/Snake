@@ -10,22 +10,21 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
-            _sb.AppendLine("BEGIN");
-            _sb.AppendLine("\tSET NOCOUNT ON");
-            _sb.AppendLine("");
-            _sb.AppendLine($"\tINSERT INTO {_table} VALUES({GetParameterNames(false, "@")})");
-            _sb.AppendLine("\tSET @ID = SCOPE_IDENTITY();");
-            _sb.AppendLine("\tRETURN @ID");
+            
+            AppendLine("\tSET NOCOUNT ON");
+            AppendLine("");
+            AppendLine($"\tINSERT INTO {_table} VALUES({GetParameterNames(false, "@")})");
+            AppendLine("\tSET @ID = SCOPE_IDENTITY();");
+            AppendLine("\tRETURN @ID");
 
-            _sb.AppendLine("END");
+           
         }
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine(GetParametrized());
+            AppendLine(GetParametrized());
         }
     }
 }

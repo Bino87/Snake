@@ -11,28 +11,20 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base
         {
         }
 
-        protected override void CreateBody()
+        protected override void CreateStoredProcedureBody()
         {
-            _sb.AppendLine("AS");
-            _sb.AppendLine("BEGIN");
-
-            _sb.AppendLine($"\tDECLARE @RETURN_VALUE [dbo].{_table}_TYPE");
-            _sb.AppendLine();
-            _sb.AppendLine($"\tINSERT INTO [dbo].{_table}");
-            _sb.AppendLine($"\tOUTPUT {GetParameterNames(true, "inserted.")} INTO @RETURN_VALUE");
-            _sb.AppendLine($"\tSELECT {GetParameterNames(false, "")} FROM @{ParameterNames.SQL.cDataTable}");
-            _sb.AppendLine();
-            _sb.AppendLine("\tSELECT * FROM @RETURN_VALUE");
-
-            _sb.AppendLine(";");
-
-            _sb.AppendLine("END");
-            _sb.AppendLine("RETURN 0");
+            AppendLine($"\tDECLARE @RETURN_VALUE [dbo].{_table}_TYPE");
+            AppendLine();
+            AppendLine($"\tINSERT INTO [dbo].{_table}");
+            AppendLine($"\tOUTPUT {GetParameterNames(true, "inserted.")} INTO @RETURN_VALUE");
+            AppendLine($"\tSELECT {GetParameterNames(false, "")} FROM @{ParameterNames.SQL.cDataTable}");
+            AppendLine();
+            AppendLine("\tSELECT * FROM @RETURN_VALUE");
         }
 
         protected override void CreateParameters()
         {
-            _sb.AppendLine($"\t@{ParameterNames.SQL.cDataTable} [dbo].{_table}_TYPE READONLY");
+            AppendLine($"\t@{ParameterNames.SQL.cDataTable} [dbo].{_table}_TYPE READONLY");
         }
     }
 }

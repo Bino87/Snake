@@ -10,5 +10,5 @@ BEGIN
 		ON tbl.ID = dt.ID
 
 ;
-END
 RETURN 0
+END

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Commons;
 using DataAccessLibrary.DataAccessors.Network;
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using DataAccessLibrary.Helpers.SQL;
@@ -15,18 +16,9 @@ namespace Snake
         {
             InitializeComponent();
             DataContext = new MainDisplayHandlerViewModel();
-            //SQLHelper.CreateStoredProcedures();
+            SQLHelper.CreateStoredProcedures();
 
-            NetworkBiasAccess nba = new NetworkBiasAccess();
 
-            NetworkBiasDto dto = new NetworkBiasDto();
-            dto.LayerId = 1;
-            dto.Value = 666.666;
-            dto.InternalIndex = 1;
-            nba.InsertMany(new[]
-            {
-                dto
-            });
         }
     }
 }
