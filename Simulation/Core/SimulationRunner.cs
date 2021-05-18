@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Network;
+using Network.Data;
 using Network.Mutators;
 using Simulation.Core.Internal;
 using Simulation.Extensions;
@@ -30,6 +31,7 @@ namespace Simulation.Core
             {
                 _agents[i] = new Bot(networkTemplate.ToNetworkData(), _simStateParameters.MapSize, _simStateParameters.MaxMoves, 1,  _simStateParameters.NumberOfIterations);
             }
+            BotDataFactory.SaveBots();
         }
 
         public void PropagateNewGeneration(IReadOnlyList<FitnessResults> fitnessResults, int generation)
@@ -57,6 +59,7 @@ namespace Simulation.Core
                 res[x + len] = new Bot(second, _simStateParameters.MapSize, _simStateParameters.MaxMoves, generation + 1, _simStateParameters.NumberOfIterations);
             });
 
+            BotDataFactory.SaveBots();
             _agents = res;
         }
 

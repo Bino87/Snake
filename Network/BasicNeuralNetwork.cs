@@ -1,7 +1,7 @@
 ﻿using System;
 using Commons.Extensions;
 using Network.ActivationFunctions;
-using Network.Enums;
+using Network.Data;
 using Network.Extensions;
 
 namespace Network
@@ -16,6 +16,7 @@ namespace Network
         private readonly IActivationFunction[] _activationFunction;
 
         public double[][] Weights => _weights;
+        public int Id { get; init; }
 
         private BasicNeuralNetwork(int layerCount, int inputCount)
         {
@@ -23,11 +24,14 @@ namespace Network
             _inputCount = inputCount;
         }
 
-        public BasicNeuralNetwork(NetworkData networkData) : this(networkData.Layers, networkData.InputCount)
+        public BasicNeuralNetwork(NetworkData networkData, int id) : this(networkData.Layers, networkData.InputCount)
         {
             _weights = networkData.Weights;
             _biases = networkData.Bias;
             _activationFunction = networkData.ActivationFunction.InitializeFunctions();
+            Id = id;
+
+            BotDataFactory.Register(Id, _activationFunction, _biases, _weights);
         }
 
         public NetworkData CreateNetworkData() => new(_activationFunction.ToActivationFunctionTypes().MakeCopy(), _weights.MakeCopy(), _biases.MakeCopy(), _inputCount,

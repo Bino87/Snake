@@ -19,13 +19,13 @@ namespace UserControls.Models.NeuralNetWizard
         public RelayCommand Delete { get; set; }
         public RelayCommand Modify { get; set; }
 
-        public NeuralNetWizardNetworkTemplateDataViewModel(NetworkTemplateDto networkTemplateDto, int index, Action<Guid, int> onDelete, Action<NetworkTemplateDto> onModify)
+        public NeuralNetWizardNetworkTemplateDataViewModel(NetworkTemplateDto networkTemplateDto, int index, Action<Guid, NeuralNetWizardNetworkTemplateDataViewModel> onDelete, Action<NetworkTemplateDto> onModify)
         {
             _networkTemplateDto = networkTemplateDto;
 
             SetNetworkInfo(networkTemplateDto);
 
-            Delete = new RelayCommand(() => onDelete(_networkTemplateDto.Id, index));
+            Delete = new RelayCommand(() => onDelete(_networkTemplateDto.Id, this));
             Modify = new RelayCommand(() => onModify(_networkTemplateDto));
         }
 

@@ -24,15 +24,12 @@ namespace DataAccessLibrary.Helpers.SQL.HelperModules.Base.NetworkWeightAndBias
 
         protected override void CreateStoredProcedureBody()
         {
-           
-            
             AppendLine($"\tDECLARE @{values} [dbo].[{Table.NETWORK_VALUES}_TYPE]");
 
             InsertUnknownToNetworkValues();
             InsertKnownToTempTable();
             InsertIntoTable();
             ReturnValue();
-           
         }
 
         private void ReturnValue()

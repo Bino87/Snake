@@ -53,11 +53,47 @@ namespace DataAccessLibrary.DataAccessors
         {
             if (items.IsNullOrEmpty())
                 return Array.Empty<T>();
-            DataTable dt = items.ToDataTable();
 
-            DataTable inserted = ExecuteNonQuery(dt, Actions.INSERT_MANY);
+            if (items.Length > 20000)
+            {
+                //stagger
 
-            return SetDataTransferObjectsFromDataTable(inserted);
+                T[] arr = new T[20000];
+                DataTable res = new DataTable();
+                foreach (ColumnDefinition cd in items[0].ColumnNames())
+                {
+                    res.Columns.Add(new DataColumn(cd.Name, cd.DataType.ToUnderlyingType()));
+                }
+
+                for (int i = 0; i < items.Length; i++)
+                {
+                    arr[i % 20000] = items[i];
+
+                    if (i % 20000 == 20000 - 1)
+                    {
+                        DataTable dt = arr.ToDataTable();
+
+                        DataTable inserted = ExecuteNonQuery(dt, Actions.INSERT_MANY);
+
+                        foreach (DataRow row in inserted.Rows)
+                        {
+
+                            res.Rows.Add(row.ItemArray);
+                        }
+                    }
+                }
+
+                return SetDataTransferObjectsFromDataTable(res);
+            }
+            else
+            {
+
+                DataTable dt = items.ToDataTable();
+
+                DataTable inserted = ExecuteNonQuery(dt, Actions.INSERT_MANY);
+
+                return SetDataTransferObjectsFromDataTable(inserted);
+            }
         }
 
         public override void UpdateMany(T[] items, int id)

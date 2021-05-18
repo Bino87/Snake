@@ -33,8 +33,6 @@ namespace Simulation.Core
 
         public Bot(NetworkData networkData, int mapSize, int maxMovesWithoutFood, int generation, int numberOfIterations)
         {
-            _networkAgent = new NetworkAgent(networkData);
-
             _takenCells = new Dictionary<(int, int), MapCellType>();
             Generation = generation;
             _numberOfIterations = numberOfIterations;
@@ -43,6 +41,8 @@ namespace Simulation.Core
             _maxMovesWithoutFood = maxMovesWithoutFood;
             _snake = new List<SnakePart>();
             _uniqueCells = new List<HashSet<int>>();
+
+            _networkAgent = new NetworkAgent(networkData, Id);
         }
 
         public SimulationResult Run(IUpdate<IOnMoveUpdateParameters> updater)

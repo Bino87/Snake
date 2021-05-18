@@ -10,7 +10,7 @@ using DataAccessLibrary.Internal.SQL.Enums;
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
     [DebuggerDisplay("Lid: {LayerId} II: {InternalIndex} V:{Value}")]
-    public class NetworkWeightDto : InternalyIndexedDto
+    public class NetworkWeightDto : InternallyIndexedDto
     {
         public int LayerId { get; set; }
         public double Value { get; set; }

@@ -8,7 +8,7 @@ using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class NetworkBiasDto : InternalyIndexedDto
+    public class NetworkBiasDto : InternallyIndexedDto
     {
         public int LayerId { get; set; }
         public double Value { get; set; }

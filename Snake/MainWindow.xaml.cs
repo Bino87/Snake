@@ -1,6 +1,5 @@
 ﻿using System.Windows;
-using Commons;
-using DataAccessLibrary.DataAccessors.Network;
+
 using DataAccessLibrary.DataTransferObjects.NetworkDTOs;
 using DataAccessLibrary.Helpers.SQL;
 using UserControls.Models;
@@ -17,8 +16,6 @@ namespace Snake
             InitializeComponent();
             DataContext = new MainDisplayHandlerViewModel();
             SQLHelper.CreateStoredProcedures();
-
-
         }
     }
 }

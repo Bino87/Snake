@@ -9,22 +9,22 @@ using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class InternalyIndexedDto : SqlDataTransferObject
+    public class InternallyIndexedDto : SqlDataTransferObject
     {
         public int InternalIndex { get; set; }
         internal override int ParametersCount => base.ParametersCount + 1;
 
-        internal InternalyIndexedDto() : base()
+        internal InternallyIndexedDto() : base()
         {
 
         }
 
-        public InternalyIndexedDto(int index)
+        public InternallyIndexedDto(int index)
         {
             InternalIndex = index;
         }
 
-        protected InternalyIndexedDto(DataRow row) : base(row)
+        protected InternallyIndexedDto(DataRow row) : base(row)
         {
             InternalIndex = row.GetAsInt(ParameterNames.SQL.cInternalIndex);
         }

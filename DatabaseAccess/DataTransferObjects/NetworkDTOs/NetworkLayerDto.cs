@@ -8,7 +8,7 @@ using DataAccessLibrary.Internal.SQL.Enums;
 
 namespace DataAccessLibrary.DataTransferObjects.NetworkDTOs
 {
-    public class NetworkLayerDto : InternalyIndexedDto
+    public class NetworkLayerDto : InternallyIndexedDto
     {
         public int ActivationFunctionId { get; }
         public int NetworkId { get; }

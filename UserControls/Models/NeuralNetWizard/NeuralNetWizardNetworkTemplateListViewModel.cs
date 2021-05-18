@@ -49,11 +49,11 @@ namespace UserControls.Models.NeuralNetWizard
             _neuralNetWizardSettingsViewModel.SetToModify(dto);
         }
 
-        private void OnDelete(Guid id, int index)
+        private void OnDelete(Guid id, NeuralNetWizardNetworkTemplateDataViewModel item)
         {
             NetworkTemplateAccess nta = new();
             nta.DeleteById(id);
-            NetworkTemplates.RemoveAt(index);
+            NetworkTemplates.Remove(item);
         }
     }
 }
